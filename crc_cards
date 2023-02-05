@@ -1,0 +1,19 @@
+Class: QRcode
+Collaborator: geoLocation
+Resposibility: has a score
+
+Class: Camera
+Collaborator: QRcode
+Responsibilities: Used to take photos of QR codes
+
+Class: geoLocation
+Collaborator: User
+Resposibility: Stores the location of a QR codes
+
+Class: User
+Collaborators: QRcode
+Responsibilities: Takes photos of QR codes
+
+Class: Map
+Collaborators: QRcode
+Responsibilities: Shows nearby QR codes
