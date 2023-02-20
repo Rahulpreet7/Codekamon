@@ -1,0 +1,74 @@
+
+
+Def of Noun + Verb:
+- A |noun| is the name of something - a person, place, thing, or idea. Buildings, windows, and gardens are three examples. 
+- A /verb/ is a word that expresses an action or state of being. Common verbs include like, want, be, or think
+
+Noun: |…|    
+Verb :/…/
+						Scenario/Story:
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+| I opened my QRHunter app. I see a QR code in my wallet. I indicate I want to add a new |QR code| and 	   		|
+| I use the |phone| |camera| to add the QR code. The QR code is |scored| and I’m /told/ that my QR score is 30. 	   	|
+| The system prompts me for a |photo| of the object /I/ /scanned/. I /declined/ since this was an ID card. I also 	   	|
+| /decline/ |geolocation| because it is in |my wallet|. The |system| /adds/ the 30 points to my total |score| and |records|  	|
+| a /hash/ of the QR code. I then see some |stickers| on a pole. I /scan/ it and am told it is worth 1000 points! 	   	|
+| I |record| the |geolocation| and /take/ a |photo| of the pole and /save/ it to my |account|. 1000 points wow. 	   		|
+| Then I see that other |users| have found this pole as well. So I /open/ the |map| for nearby QR codes and	   		| 
+| I see something worth 10000 is 100 meters away so I’m going to head on over there!			   		|
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Class: QRcode
+Collaborator: geoLocation, Photo, Camara
+Resposibility:
+	- Can be scanned by User Camara for points
+	- Has a visual representation (i.e a pokemon look)
+	- Has a unque hash value 
+	- Has a score
+
+Class: Camera
+Collaborator: QRcode, User
+Responsibilities: 
+	- Used to take photos of QR codes by User
+	- User can add photos 
+
+Class: geoLocation
+Collaborator: User
+Resposibility: 
+	- Stores the location of a QR codes
+
+Class: User
+Collaborators: QRcode
+Responsibilities: 
+	- Takes photos of QR codes
+
+Class: Map
+Collaborators: QRcode
+Responsibilities: 
+	- Shows nearby QR codes
+	- Shows the score amount for that QR code
+
+Class: Score:
+Collaborations: QRCode
+Responsibilities:
+	- Has QRCode value
+
+Class: System
+Collaborators: Users, Geolocation, QRcodes, Score
+Responsibilitioes:
+	- Gives user an option to upload the QRcode object and its geolocation (This is maditory). If it is a ID card decline automatically, however still assign points.
+	- Has all the found QRcodes, with a hash value
+	- Has the Geolocation of the QRcode that has been found with the distance from the user to that code.
+	- Show the Score of these QRcodes when found and scanned
+	- Gives out scores to User that finds a specific QRcode
+
+Class: Wallet/Records
+Collaboratos: QRcode, User, Camera, Geolocation, Photo
+Responsibilities:
+	- Tracks all of the QRcodes by user
+	- Tracks the total score value of all QRcodes by user
+
+
