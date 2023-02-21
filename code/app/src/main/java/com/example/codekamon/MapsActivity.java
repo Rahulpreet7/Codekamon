@@ -1,6 +1,7 @@
 package com.example.codekamon;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -15,16 +17,29 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.codekamon.databinding.ActivityMapsBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     Location currentLocation;
     FusedLocationProviderClient fusedClient;
+    FirebaseFirestore db;
+    private ArrayList<MarkerOptions> markers = new ArrayList<>();
     private static int REQUEST_CODE = 101;
     private ActivityMapsBinding binding;
 
@@ -36,6 +51,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(binding.getRoot());
 
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = db.collection("Test_Map");
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                // Clear the old list
+                markers.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                {
+                    // Add the New Ones
+                    LatLng latlng = new LatLng((Double) doc.getData().get("lati"), (Double) doc.getData().get("long"));
+                    MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
+                    markers.add(i);
+                }
+            }
+        });
 
         getLocation();
     }
@@ -72,10 +103,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng latlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title("You are here");
+        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title("You").
+                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 13));
         googleMap.addMarker(markerOptions);
+
+        // Populate The Map With QR Codes that are in the Database
+        if(markers != null){
+            for(int i = 0; i < markers.size(); i++){
+                googleMap.addMarker(markers.get(i));
+            }
+            markers.clear();
+        }
+
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
     }
 
     @Override
