@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -69,5 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
         //deviceId -> Needs to be passed to other activities that need the users details
         String deviceId = intent.getStringExtra(SignUpActivity.DEVICE_ID);
+
+        firestore = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = firestore.collection("Players");
+        collectionReference.document(deviceId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                TextView username = findViewById(R.id.username_text);
+                username.setText(task.getResult().get("Username").toString());
+            }
+        });
     }
 }
