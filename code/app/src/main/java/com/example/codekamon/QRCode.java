@@ -26,50 +26,59 @@ public class QRCode {
 
     public int calcScore()
     {
-        //needs further testing
-        int returner = 0;
-        char recChar;
-        int count = 0;
-        for(int i = 0; i < content.length(); i++)
-        {
+        int return_score = 0;
+        int repeat = 0;
+        if (content.length()==1){
+            return_score = 1;
+        }
+        else{
+            for(int i = 1; i < content.length(); i++){
+                if(content.charAt(i) == content.charAt(i-1)){
+                    repeat++;
 
-            if(i >= 1 && (content.charAt(i) == content.charAt(i - 1)))
-            {
-                count ++;
-            }else if(i >= 1)
-            {
-                if(content.charAt(i - 1) == '0')
-                {
-                    returner += Math.pow(20,count);
-                }
-                else if('1' <= content.charAt(i - 1) && content.charAt(i - 1) <= '9' && count > 0)
-                {
-                    returner += Math.pow((int)content.charAt(i - 1), count);
+                    if(i == content.length()-1){
+                        if(content.charAt(i) == '0'){
+                            return_score += Math.pow(20,repeat);
+                        }
+                        else if('1' <= content.charAt(i) && content.charAt(i) <= '9'){
+                            return_score += Math.pow(Character.getNumericValue(content.charAt(i)), repeat);
+                        }
+                        else if('a' <= content.charAt(i) && content.charAt(i) <= 'f'){
+                            return_score += Math.pow(content.charAt(i) + 10 - 'a', repeat);
+                        }
+                    }
 
                 }
-                else if('a' <= content.charAt(i - 1) && content.charAt(i - 1) <= 'f' && count > 0)
-                {
-                    returner += Math.pow(content.charAt(i - 1) + 10 - 'a', count);
+                else{
+                    if(content.charAt(i-1) == '0'){
+                        return_score += Math.pow(20,repeat);
+                    }
+                    else if('1' <= content.charAt(i-1) && content.charAt(i-1) <= '9'){
+                        return_score += Math.pow(Character.getNumericValue(content.charAt(i-1)), repeat);
+                    }
+                    else if('a' <= content.charAt(i-1) && content.charAt(i-1) <= 'f'){
+                        return_score += Math.pow(content.charAt(i - 1) + 10 - 'a', repeat);
+                    }
+                    repeat = 0;
+
+
+                    if(i == content.length()-1){
+                        if(content.charAt(i) == '0'){
+                            return_score += Math.pow(20,repeat);
+                        }
+                        else if('1' <= content.charAt(i) && content.charAt(i) <= '9'){
+                            return_score += Math.pow(Character.getNumericValue(content.charAt(i)), repeat);
+                        }
+                        else if('a' <= content.charAt(i) && content.charAt(i) <= 'f'){
+                            return_score += Math.pow(content.charAt(i) + 10 - 'a', repeat);
+                        }
+                    }
+
+
                 }
-                count = 0;
             }
-            recChar = content.charAt(i);
         }
-        if(content.charAt(content.length()-1) == '0')
-        {
-            returner += Math.pow(20,count);
-        }
-        else if('1' <= content.charAt(content.length()-1) && content.charAt(content.length()-1) <= '9' && count > 0)
-        {
-            returner += Math.pow((int)content.charAt(content.length()-1), count);
-
-        }
-        else if('a' <= content.charAt(content.length()-1) && content.charAt(content.length()-1) <= 'f' && count > 0)
-        {
-            returner += Math.pow(content.charAt(content.length()-1) + 10 - 'a', count);
-        }
-
-        return returner;
+        return return_score;
     }
 }
 
