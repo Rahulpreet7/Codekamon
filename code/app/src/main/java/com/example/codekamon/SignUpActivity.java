@@ -10,12 +10,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 
@@ -52,13 +54,24 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onClick(View view) {
                                 EditText username = findViewById(R.id.pick_username_edit_text);
                                 EditText email = findViewById(R.id.email_edit_text);
-                                HashMap<String,String> data = new HashMap<>();
-                                data.put("Username", username.getText().toString());
-                                data.put("Email", email.getText().toString());
-                                colRef.document(androidId).set(data);
-                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                                intent.putExtra(DEVICE_ID, androidId);
-                                startActivity(intent);
+
+                                colRef.whereEqualTo("Username", username.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (!task.getResult().isEmpty()){
+                                            Toast.makeText(SignUpActivity.this, "Username is taken", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else {
+                                            HashMap<String,String> data = new HashMap<>();
+                                            data.put("Username", username.getText().toString());
+                                            data.put("Email", email.getText().toString());
+                                            colRef.document(androidId).set(data);
+                                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                            intent.putExtra(DEVICE_ID, androidId);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
                             }
                         });
                     }
