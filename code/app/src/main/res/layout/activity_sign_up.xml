@@ -24,16 +24,35 @@
         android:layout_height="65dp"
         android:backgroundTint="#040404"
         android:ems="10"
+        android:gravity="center_horizontal"
         android:hint="Pick a username"
         android:inputType="textPersonName"
         android:textColor="#000000"
+        android:textColorHighlight="#918E8E"
+        android:textCursorDrawable="@null"
+        app:layout_constraintBottom_toTopOf="@+id/space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/email_edit_text"
+        android:layout_width="233dp"
+        android:layout_height="65dp"
+        android:backgroundTint="#040404"
+        android:ems="10"
         android:gravity="center_horizontal"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        android:textColor="#000000"
         android:textColorHighlight="#918E8E"
         android:textCursorDrawable="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/space"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sign_up_button"
@@ -46,7 +65,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pick_username_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/email_edit_text"
         tools:ignore="TextContrastCheck" />
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

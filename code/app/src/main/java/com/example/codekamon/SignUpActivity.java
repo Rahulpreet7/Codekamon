@@ -51,8 +51,10 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 EditText username = findViewById(R.id.pick_username_edit_text);
+                                EditText email = findViewById(R.id.email_edit_text);
                                 HashMap<String,String> data = new HashMap<>();
                                 data.put("Username", username.getText().toString());
+                                data.put("Email", email.getText().toString());
                                 colRef.document(androidId).set(data);
                                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                 intent.putExtra(DEVICE_ID, androidId);
