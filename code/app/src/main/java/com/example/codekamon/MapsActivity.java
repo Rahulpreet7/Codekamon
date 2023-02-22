@@ -54,13 +54,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
         db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Test_Map");
-        getLocation();
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 // Clear the old list
                 markers.clear();
+                assert queryDocumentSnapshots != null;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     // Add the New One
@@ -70,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        getLocation();
 
 
     }
@@ -114,14 +116,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.addMarker(markerOptions);
 
         // Populate The Map With QR Codes that are in the Database
+
+        ArrayList<MarkerOptions> new_markers = new ArrayList<>();
+
         if(markers != null){
             for(int i = 0; i < markers.size(); i++){
                 if(in_visibility(markers.get(i))){
+                    new_markers.add(markers.get(i));
                     googleMap.addMarker(markers.get(i));
                 }
             }
-            markers.clear();
+            markers = new_markers;
         }
+
 
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
@@ -140,10 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Only the markers that are within the visibility of vision from the player's current position
         double mLatitude = m.getPosition().latitude, mLongitude = m.getPosition().longitude;
         double pLatitude = currentLocation.getLatitude(), pLongitude = currentLocation.getLongitude();
-        if((mLatitude - this.visibility <= pLatitude && pLatitude <= mLatitude + this.visibility) &&
-                (mLongitude - this.visibility <= pLongitude && pLongitude <= mLongitude + this.visibility)){
-            return true;
-        }
-        return false;
+        return (mLatitude - this.visibility <= pLatitude && pLatitude <= mLatitude + this.visibility) &&
+                (mLongitude - this.visibility <= pLongitude && pLongitude <= mLongitude + this.visibility);
     }
 }
