@@ -42,6 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<MarkerOptions> markers = new ArrayList<>();
     private static int REQUEST_CODE = 101;
     private ActivityMapsBinding binding;
+    final float visibility = (float) 0.01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +54,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
         db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Test_Map");
+
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 // Clear the old list
                 markers.clear();
+                assert queryDocumentSnapshots != null;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
-                    // Add the New Ones
+                    // Add the New One
                     LatLng latlng = new LatLng((Double) doc.getData().get("lati"), (Double) doc.getData().get("long"));
                     MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
                     markers.add(i);
@@ -69,6 +72,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         getLocation();
+
+
     }
 
     private void getLocation(){
@@ -111,12 +116,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.addMarker(markerOptions);
 
         // Populate The Map With QR Codes that are in the Database
+
+        ArrayList<MarkerOptions> new_markers = new ArrayList<>();
+
         if(markers != null){
             for(int i = 0; i < markers.size(); i++){
-                googleMap.addMarker(markers.get(i));
+                if(in_visibility(markers.get(i))){
+                    new_markers.add(markers.get(i));
+                    googleMap.addMarker(markers.get(i));
+                }
             }
-            markers.clear();
+            markers = new_markers;
         }
+
 
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
@@ -130,5 +142,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getLocation();
             }
         }
+    }
+    private boolean in_visibility(MarkerOptions m){
+        // Only the markers that are within the visibility of vision from the player's current position
+        double mLatitude = m.getPosition().latitude, mLongitude = m.getPosition().longitude;
+        double pLatitude = currentLocation.getLatitude(), pLongitude = currentLocation.getLongitude();
+        return (mLatitude - this.visibility <= pLatitude && pLatitude <= mLatitude + this.visibility) &&
+                (mLongitude - this.visibility <= pLongitude && pLongitude <= mLongitude + this.visibility);
     }
 }
