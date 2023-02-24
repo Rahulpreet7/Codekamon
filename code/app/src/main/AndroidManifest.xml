@@ -4,6 +4,9 @@
     <uses-permission android:name="android.permission.CAMERA" /> <!-- use camera -->
     <uses-permission android:name="android.permission.VIBRATE" /><!-- use vibration -->
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
 
     <application
         android:allowBackup="true"
@@ -23,6 +26,25 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+
+        <activity
+            android:name=".QRCodeScanActivity"
+            android:exported="true">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".photoTakingActivity"
+            android:exported="true">
 
             <meta-data
                 android:name="android.app.lib_name"

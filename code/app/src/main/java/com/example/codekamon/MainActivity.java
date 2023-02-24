@@ -8,25 +8,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-import com.google.zxing.*;
 //import com.google.zxing.activity.CodeUtils;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.journeyapps.barcodescanner.CaptureActivity;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.w3c.dom.Text;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     FirebaseFirestore firestore;
+    //public static final String DEVICE_ID = "com.example.codekamon.DEVICE_ID";
+    //String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
     MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -38,8 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         //for algorithm testing
-        QRCode code = new QRCode("8a976a83da98f48f0b9f0");
+        QRCode code = new QRCode("bb999ee55abc");
         int a = code.getScore();
         Toast.makeText(MainActivity.this, Integer.toString(a), Toast.LENGTH_SHORT).show();
 
@@ -50,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
-        showScoreText = findViewById(R.id.show_score_text);
+        showScoreText = findViewById(R.id.show_name_text);
         ImageView map = findViewById(R.id.map_icon);
         map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,12 +57,22 @@ public class MainActivity extends AppCompatActivity {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
+                //intent.putExtra(DEVICE_ID, androidId);
+                startActivity(intent);
+/*
                 IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
                 intentIntegrator.setPrompt("Scan a QR code");
                 intentIntegrator.setOrientationLocked(false);
                 intentIntegrator.initiateScan();
+                */
+
 
                 Toast.makeText(MainActivity.this, "Clicked 'add code'", Toast.LENGTH_SHORT).show();
+
+
+
+
 
 
             }
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Clicked 'Your Codes'", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -102,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+/*
     //received help from https://www.geeksforgeeks.org/how-to-read-qr-code-using-zxing-library-in-android/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -139,4 +144,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+ */
 }

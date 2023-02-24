@@ -4,7 +4,7 @@ public class QRCode {
 
     private double latitude;
     private double longitude;
-
+    private String name;
     private int score;
     private String content;
 
@@ -26,6 +26,7 @@ public class QRCode {
 
     public int calcScore()
     {
+
         int return_score = 0;
         int repeat = 0;
         if (content.length()==1){
@@ -79,6 +80,9 @@ public class QRCode {
             }
         }
         return return_score;
+
+
+
     }
 }
 
