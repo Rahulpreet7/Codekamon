@@ -33,12 +33,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         //for algorithm testing
-        QRCode code = new QRCode("bb999ee55abc");
-        int a = code.getScore();
-        Toast.makeText(MainActivity.this, Integer.toString(a), Toast.LENGTH_SHORT).show();
+        //QRCode code = new QRCode("bb999ee55abc");
+        //int a = code.getScore();
+        //Toast.makeText(MainActivity.this, Integer.toString(a), Toast.LENGTH_SHORT).show();
 
-        //TextView messageText;
-        //TextView messageFormat;
 
 
         super.onCreate(savedInstanceState);
@@ -60,12 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
                 //intent.putExtra(DEVICE_ID, androidId);
                 startActivity(intent);
-/*
-                IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
-                intentIntegrator.setPrompt("Scan a QR code");
-                intentIntegrator.setOrientationLocked(false);
-                intentIntegrator.initiateScan();
-                */
+
 
 
                 Toast.makeText(MainActivity.this, "Clicked 'add code'", Toast.LENGTH_SHORT).show();
@@ -107,43 +100,5 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-/*
-    //received help from https://www.geeksforgeeks.org/how-to-read-qr-code-using-zxing-library-in-android/
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
-    {
-        MainActivity.super.onActivityResult(requestCode,resultCode,data);
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        // if the intentResult is null then
-        // toast a message as "cancelled"
-        if (intentResult != null) {
-            Bundle bundle = data.getExtras();
-            if (intentResult.getContents() == null) {
-                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
 
-            } else {
-
-                //Toast.makeText(getBaseContext(),intentResult.getRawBytes().toString(), Toast.LENGTH_SHORT).show();
-                byte[] encrypted = md.digest(intentResult.getRawBytes());
-
-                StringBuilder sb = new StringBuilder();
-                for(byte b : encrypted)
-                {
-                    sb.append(String.format("%02x", b));
-                }
-                Toast.makeText(getBaseContext(),sb, Toast.LENGTH_SHORT).show();
-                QRCode scannedResult = new QRCode(sb.toString());
-                showScoreText.setText("Points Earned: " + scannedResult.getScore());
-
-
-
-
-
-                //messageText.setText(intentResult.getContents());
-                //messageFormat.setText(intentResult.getFormatName());
-            }
-        }
-    }
-
- */
 }

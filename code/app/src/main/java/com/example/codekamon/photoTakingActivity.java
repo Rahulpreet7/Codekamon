@@ -5,18 +5,29 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class photoTakingActivity extends AppCompatActivity {
@@ -26,12 +37,25 @@ public class photoTakingActivity extends AppCompatActivity {
     private TextView query_text;
     private ImageView photo_show;
     int stage = 0;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    final CollectionReference collectionReference = db.collection("QRCodes");
+    final CollectionReference collectionReference2 = db.collection("Images");
+
+
+    QRCode passedResult;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+
+
+
+
         stage = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_taking);
+        Intent intent = getIntent();
+        passedResult = new QRCode(intent.getStringExtra("Name"), intent.getStringExtra("sb"));
         yes_button = findViewById(R.id.yes_button);
         no_button = findViewById(R.id.no_button);
         photo_show = findViewById(R.id.photo_show);
@@ -48,10 +72,44 @@ public class photoTakingActivity extends AppCompatActivity {
                 else if(stage == 1)
                 {
                     Toast.makeText(photoTakingActivity.this, "recording location...", Toast.LENGTH_SHORT).show();
-                    //record location
-                    Intent intent = new Intent(photoTakingActivity.this, QRCodeScanActivity.class);
+                    //fixme: record location
+                    double lati = 0;
+                    double longi = 0;
+                    passedResult.setLocation(lati, longi);
+                    stage ++;
+                    onStageChange();
+
+                }
+                else if(stage == 2)
+                {
+
+                    //upload to db
+                    HashMap<String, QRCode> data = new HashMap<>();
+                    data.put("QRCode content: ", passedResult);
+                    collectionReference
+                            .document(passedResult.getName())
+                            .set(data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(photoTakingActivity.this, "store success!", Toast.LENGTH_SHORT).show();
+                                    // These are a method which gets executed when the task is succeeded
+                                    //Log.d(TAG, "Data has been added successfully!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(photoTakingActivity.this, "store failed!", Toast.LENGTH_SHORT).show();
+                                    // These are a method which gets executed if there’s any problem
+                                    //Log.d(TAG, "Data could not be added!" + e.toString());
+                                }
+                            });
+                    //back to main
+                    Intent intent = new Intent(photoTakingActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                     startActivity(intent);
-                    setContentView(R.layout.show_score);
+
                 }
             }
         });
@@ -65,7 +123,7 @@ public class photoTakingActivity extends AppCompatActivity {
                 else if(stage == 1)
                 {
                     Toast.makeText(photoTakingActivity.this, "skip recording location...", Toast.LENGTH_SHORT).show();
-                    setContentView(R.layout.show_score);
+                    //setContentView(R.layout.show_score);
 
                 }
 
@@ -82,7 +140,23 @@ public class photoTakingActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+
+            //photo_show.setImageBitmap(imageBitmap);
+            //photo_show.setImageBitmap(passedResult.getPhotoSurrounding());
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            String s = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            passedResult.setPhotoAsBytes(s);
             photo_show.setImageBitmap(imageBitmap);
+            //photo_show.setImageBitmap(passedResult.getPhotoSurrounding());
+            //this will lead to err.
+            //passedResult.setPhotoSurrounding(imageBitmap);
+
+
             stage ++;
             onStageChange();
             //setPic(photo_show);
@@ -97,7 +171,9 @@ public class photoTakingActivity extends AppCompatActivity {
         }
         if(stage == 2)
         {
-            //query_text.setText();
+            query_text.setText("You earned " + passedResult.getScore() + " points!");
+            no_button.setVisibility(View.INVISIBLE);
+            yes_button.setText("Return");
 
         }
     }

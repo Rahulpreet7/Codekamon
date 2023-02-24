@@ -24,6 +24,8 @@ public class QRCodeScanActivity extends AppCompatActivity {
     TextView caughtText;
     TextView nameText;
     Button stage_one_button;
+    static QRCode scannedResult;
+    StringBuilder sb = new StringBuilder();
 
 
 
@@ -36,45 +38,39 @@ public class QRCodeScanActivity extends AppCompatActivity {
         stage = 0;
         showScoreText = findViewById(R.id.show_score_text);
         stage_one_button = findViewById(R.id.stage_one_button);
+        nameText = findViewById(R.id.naming_textframe);
         Toast.makeText(QRCodeScanActivity.this, "Clicked 'Your Codes!'", Toast.LENGTH_SHORT).show();
 
 
         getSupportActionBar().hide();
         showScoreText.setText("Points: " + 1);
-/*
+
+        //if test, command this.
+
         IntentIntegrator intentIntegrator = new IntentIntegrator(QRCodeScanActivity.this);
         intentIntegrator.setPrompt("Scan a QR code");
         intentIntegrator.setOrientationLocked(false);
         intentIntegrator.initiateScan();
 
 
- */
 
-
-
-
-
-
-
-        //ImageView yourCodes = findViewById(R.id.your_codes_icon);
-        /*
-        yourCodes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(QRCodeScanActivity.this, "Clicked 'Your Codes!'", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-         */
 
 
         stage_one_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(QRCodeScanActivity.this, "stage 1 finished!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(QRCodeScanActivity.this, "stage 1 finished!", Toast.LENGTH_SHORT).show();
+                scannedResult = new QRCode(nameText.getText().toString(), sb.toString());
                 Intent intent = new Intent(QRCodeScanActivity.this, photoTakingActivity.class);
-                //intent.putExtra(DEVICE_ID, androidId);
+                //can it be simplified?
+                intent.putExtra("Name", nameText.getText().toString());
+                intent.putExtra("sb", sb.toString());
+                //for testing
+                //intent.putExtra("Name", "abcd");
+                //intent.putExtra("sb", "sb");
                 startActivity(intent);
+
+
             }
         });
 
@@ -104,13 +100,13 @@ public class QRCodeScanActivity extends AppCompatActivity {
                 //Toast.makeText(getBaseContext(),intentResult.getRawBytes().toString(), Toast.LENGTH_SHORT).show();
                 byte[] encrypted = md.digest(intentResult.getRawBytes());
 
-                StringBuilder sb = new StringBuilder();
+
                 for(byte b : encrypted)
                 {
                     sb.append(String.format("%02x", b));
                 }
                 Toast.makeText(getBaseContext(),sb, Toast.LENGTH_SHORT).show();
-                QRCode scannedResult = new QRCode(sb.toString());
+                scannedResult = new QRCode(sb.toString());
                 stage ++;
                 showScoreText.setText("Points: " + scannedResult.getScore());
 

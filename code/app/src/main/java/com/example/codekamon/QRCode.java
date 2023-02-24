@@ -1,5 +1,8 @@
 package com.example.codekamon;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 public class QRCode {
 
     private double latitude;
@@ -7,11 +10,55 @@ public class QRCode {
     private String name;
     private int score;
     private String content;
+    private Bitmap photoSurrounding;
+    private String photoAsBytes = "";
 
     public QRCode(String content)
     {
+        this.name = "default";
         this.content = content;
         this.score = calcScore();
+    }
+
+    public QRCode(String name, String content)
+    {
+        this.name = name;
+        this.content = content;
+        this.score = calcScore();
+    }
+    public String getPhotoAsBytes()
+    {
+        return photoAsBytes;
+    }
+    public void setPhotoAsBytes(String photoAsBytes)
+    {
+        this.photoAsBytes = photoAsBytes;
+    }
+    public void setPhotoSurrounding(Bitmap _bitmap)
+    {
+        this.photoSurrounding = _bitmap;
+    }
+    public String getName(){return this.name;}
+
+    public Bitmap getPhotoSurrounding() {
+        Bitmap returner = BitmapFactory.decodeByteArray(photoAsBytes.getBytes(), 0, photoAsBytes.getBytes().length);
+        return returner;
+        //return photoSurrounding;
+    }
+
+    public void setLocation(double latitude, double longitude)
+    {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public double getLatitude()
+    {
+        return this.latitude;
+    }
+    public double getLongitude()
+    {
+        return this.longitude;
     }
 
     public String getContent()
@@ -50,7 +97,7 @@ public class QRCode {
                     }
 
                 }
-                else{
+                else if(repeat > 0){
                     if(content.charAt(i-1) == '0'){
                         return_score += Math.pow(20,repeat);
                     }
