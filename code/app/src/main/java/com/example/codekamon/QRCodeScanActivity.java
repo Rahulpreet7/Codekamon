@@ -63,11 +63,11 @@ public class QRCodeScanActivity extends AppCompatActivity {
                 scannedResult = new QRCode(nameText.getText().toString(), sb.toString());
                 Intent intent = new Intent(QRCodeScanActivity.this, photoTakingActivity.class);
                 //can it be simplified?
-                intent.putExtra("Name", nameText.getText().toString());
-                intent.putExtra("sb", sb.toString());
+                //intent.putExtra("Name", nameText.getText().toString());
+                //intent.putExtra("sb", sb.toString());
                 //for testing
-                //intent.putExtra("Name", "abcd");
-                //intent.putExtra("sb", "sb");
+                intent.putExtra("Name", "abcd");
+                intent.putExtra("sb", "sb");
                 startActivity(intent);
 
 

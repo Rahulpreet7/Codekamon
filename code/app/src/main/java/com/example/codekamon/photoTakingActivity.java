@@ -3,6 +3,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -142,19 +145,34 @@ public class photoTakingActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
 
+            String s = bitmapToString(imageBitmap);
             //photo_show.setImageBitmap(imageBitmap);
             //photo_show.setImageBitmap(passedResult.getPhotoSurrounding());
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-
-            String s = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
             passedResult.setPhotoAsBytes(s);
-            photo_show.setImageBitmap(imageBitmap);
-            //photo_show.setImageBitmap(passedResult.getPhotoSurrounding());
+            //WIP
+            /*
+            System.out.println(s == null);
+
+            YuvImage yuvimage = new YuvImage(s.getBytes(), ImageFormat.NV21, 600, 600, null);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            yuvimage.compressToJpeg(new Rect(0,0,20,20), 80, baos);
+            byte[] jdata = baos.toByteArray();
+            Bitmap s3 = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
+
+            //can't convert
+            //Bitmap s2 = BitmapFactory.decodeByteArray(s.getBytes(),0, s.getBytes().length);
+            System.out.println(s3 == null);
+            //System.out.println(bitmapToString(s2).substring(10));
+            //System.out.println("-----------------");
+            System.out.println(bitmapToString(s3).substring(10));
+            photo_show.setImageBitmap(s3);
+            //photo_show.setImageBitmap(imageBitmap);
+
             //this will lead to err.
             //passedResult.setPhotoSurrounding(imageBitmap);
+
+             */
 
 
             stage ++;
@@ -176,6 +194,16 @@ public class photoTakingActivity extends AppCompatActivity {
             yes_button.setText("Return");
 
         }
+    }
+
+    protected String bitmapToString(Bitmap imageBitmap)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        String s = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return s;
+
     }
 /*
     private void setPic(ImageView imageView) {
