@@ -6,18 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/game_title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Codekamon"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TableLayout
         android:id="@+id/tableLayout"
         android:layout_width="wrap_content"
@@ -38,13 +26,13 @@
 
                 <ImageView
                     android:id="@+id/other_player_icon"
-                    android:layout_width="145dp"
-                    android:layout_height="119dp"
+                    android:layout_width="113dp"
+                    android:layout_height="89dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.493"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
                     app:srcCompat="@drawable/other_people__2_" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -64,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:text="Other Players"
                     android:textColor="#000000"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -82,8 +70,8 @@
 
                 <ImageView
                     android:id="@+id/your_codes_icon"
-                    android:layout_width="117dp"
-                    android:layout_height="118dp"
+                    android:layout_width="105dp"
+                    android:layout_height="90dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -97,8 +85,8 @@
 
                 <ImageView
                     android:id="@+id/leaderboards_icon"
-                    android:layout_width="167dp"
-                    android:layout_height="101dp"
+                    android:layout_width="154dp"
+                    android:layout_height="89dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -122,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:text="Your Codes"
                     android:textColor="#000000"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:text="Leaderboards"
                     android:textColor="#000000"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -157,8 +145,8 @@
 
                 <ImageView
                     android:id="@+id/map_icon"
-                    android:layout_width="123dp"
-                    android:layout_height="103dp"
+                    android:layout_width="112dp"
+                    android:layout_height="86dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.489"
@@ -173,8 +161,8 @@
 
                 <ImageView
                     android:id="@+id/add_code_icon"
-                    android:layout_width="173dp"
-                    android:layout_height="113dp"
+                    android:layout_width="147dp"
+                    android:layout_height="89dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -198,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:text="Map"
                     android:textColor="#000000"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -215,7 +203,7 @@
                     android:layout_height="wrap_content"
                     android:text="Add Code"
                     android:textColor="#000000"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -228,5 +216,31 @@
         </TableRow>
 
     </TableLayout>
+
+    <TextView
+        android:id="@+id/game_title_text"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Codekamon"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/username_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_title_text"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

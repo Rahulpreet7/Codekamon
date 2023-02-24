@@ -1,5 +1,6 @@
 package com.example.codekamon;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,8 +9,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 //import com.google.zxing.activity.CodeUtils;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
@@ -41,13 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         getSupportActionBar().hide();
         showScoreText = findViewById(R.id.show_name_text);
         ImageView map = findViewById(R.id.map_icon);
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Clicked 'map' ", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -58,19 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
                 //intent.putExtra(DEVICE_ID, androidId);
                 startActivity(intent);
-
-
-
                 Toast.makeText(MainActivity.this, "Clicked 'add code'", Toast.LENGTH_SHORT).show();
 
-
-
-
-
-
             }
-
-
         });
 
         ImageView leaderboards = findViewById(R.id.leaderboards_icon);
@@ -99,6 +97,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        Intent intent = getIntent();
+
+        //deviceId -> Needs to be passed to other activities that need the users details
+        String deviceId = intent.getStringExtra(SignUpActivity.DEVICE_ID);
+
+        firestore = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = firestore.collection("Players");
+        collectionReference.document(deviceId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                TextView username = findViewById(R.id.username_text);
+                username.setText(task.getResult().get("Username").toString());
+            }
+        });
     }
 
 }
