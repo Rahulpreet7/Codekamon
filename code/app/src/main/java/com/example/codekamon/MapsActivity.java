@@ -9,7 +9,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -19,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.codekamon.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +36,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -39,7 +44,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Location currentLocation;
     FusedLocationProviderClient fusedClient;
     FirebaseFirestore db;
+    GoogleMap googleMa;
+    double latitude;
+    double longitude;
+
     private ArrayList<MarkerOptions> markers = new ArrayList<>();
+    private DistancePlayerCodeAdapter adapter;
+
     private static int REQUEST_CODE = 101;
     private ActivityMapsBinding binding;
     final float visibility = (float) 0.01;
@@ -107,31 +118,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng latlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions().position(latlng).title("You").
-                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-        
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 13));
-        googleMap.addMarker(markerOptions);
-
+        googleMa = googleMap;
+        displayPlayerLocation();
         // Populate The Map With QR Codes that are in the Database
+        place_nearby_markers();
 
-        ArrayList<MarkerOptions> new_markers = new ArrayList<>();
+    }
+    public void displayPlayerLocation() {
+        try {
+            latitude = currentLocation.getLatitude();
+            longitude = currentLocation.getLongitude();
+            LatLng latlng = new LatLng(latitude, longitude);
+
+            MarkerOptions playerMarker =
+                    new MarkerOptions().position(latlng).title("You").
+                    icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+            Toast.makeText(getApplicationContext(), "Latitude: " + latitude + " Longitude: " + longitude, Toast.LENGTH_LONG).show();
+
+            googleMa.animateCamera(CameraUpdateFactory.newLatLng(latlng));
+            googleMa.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 13));
+            googleMa.addMarker(playerMarker);
+            googleMa.getUiSettings().setZoomControlsEnabled(true);
+            googleMa.getUiSettings().setCompassEnabled(true);
+
+        } catch (Exception e) {
+
+            Toast.makeText(getApplicationContext(), (CharSequence) e, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void place_nearby_markers(){
+        ArrayList<DistancePlayerCode> tmp = new ArrayList<>();
 
         if(markers != null){
-            for(int i = 0; i < markers.size(); i++){
-                if(in_visibility(markers.get(i))){
-                    new_markers.add(markers.get(i));
-                    googleMap.addMarker(markers.get(i));
+            for(int i = 0; i < markers.size(); i++) {
+                if (in_visibility(markers.get(i))) {
+                    tmp.add(new DistancePlayerCode(markers.get(i),currentLocation));
+                    googleMa.addMarker(markers.get(i));
                 }
             }
-            markers = new_markers;
         }
 
+        Collections.sort(tmp);
+        adapter = new DistancePlayerCodeAdapter(this, tmp);
 
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
+        ListView markersList = findViewById(R.id.listviewNear);
+        markersList.setAdapter(adapter);
+
+        adapter.notifyDataSetChanged();
+
+    }
+
+    private boolean in_visibility(MarkerOptions m){
+        // Only the markers that are within the
+        // visibility of vision from the player's current position
+        double mLat = m.getPosition().latitude;
+        double mLong = m.getPosition().longitude;
+        return (latitude - visibility <= mLat && mLat <= latitude + visibility) &&
+                (longitude - visibility <= mLong && mLong <= longitude + visibility);
     }
 
     @Override
@@ -142,12 +187,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getLocation();
             }
         }
-    }
-    private boolean in_visibility(MarkerOptions m){
-        // Only the markers that are within the visibility of vision from the player's current position
-        double mLatitude = m.getPosition().latitude, mLongitude = m.getPosition().longitude;
-        double pLatitude = currentLocation.getLatitude(), pLongitude = currentLocation.getLongitude();
-        return (mLatitude - this.visibility <= pLatitude && pLatitude <= mLatitude + this.visibility) &&
-                (mLongitude - this.visibility <= pLongitude && pLongitude <= mLongitude + this.visibility);
     }
 }
