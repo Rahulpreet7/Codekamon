@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-//import com.google.zxing.activity.CodeUtils;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,38 +16,17 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class MainActivity extends AppCompatActivity {
 
     FirebaseFirestore firestore;
-    //public static final String DEVICE_ID = "com.example.codekamon.DEVICE_ID";
-    //String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-
-
-    MessageDigest md = MessageDigest.getInstance("SHA-256");
-    TextView showScoreText;
-
-    public MainActivity() throws NoSuchAlgorithmException {
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        //for algorithm testing
-        //QRCode code = new QRCode("bb999ee55abc");
-        //int a = code.getScore();
-        //Toast.makeText(MainActivity.this, Integer.toString(a), Toast.LENGTH_SHORT).show();
-
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
-        showScoreText = findViewById(R.id.show_name_text);
+
         ImageView map = findViewById(R.id.map_icon);
         map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,11 +40,7 @@ public class MainActivity extends AppCompatActivity {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
-                //intent.putExtra(DEVICE_ID, androidId);
-                startActivity(intent);
                 Toast.makeText(MainActivity.this, "Clicked 'add code'", Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -84,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Clicked 'Your Codes'", Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -95,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Clicked 'Other Players'", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         Intent intent = getIntent();
 
@@ -112,5 +83,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }
