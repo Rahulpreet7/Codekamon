@@ -44,7 +44,7 @@ public class DistancePlayerCode implements Comparable {
     @Override
     public int compareTo(Object o) {
        DistancePlayerCode player = (DistancePlayerCode) o;
-        int i = (distance < player.getDistance()) ? 1 : 0;
+        int i = (this.distance < player.getDistance()) ? 1 : 0;
         return i;
     }
 }

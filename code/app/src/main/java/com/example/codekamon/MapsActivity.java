@@ -7,9 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,10 +20,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.codekamon.databinding.ActivityMapsBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,8 +32,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -49,8 +43,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double longitude;
 
     private ArrayList<MarkerOptions> markers = new ArrayList<>();
-    private DistancePlayerCodeAdapter adapter;
-
+    DistancePlayerViewAdapter adapter;
+    private ArrayList<DistancePlayerCode> codes = new ArrayList<>();
     private static int REQUEST_CODE = 101;
     private ActivityMapsBinding binding;
     final float visibility = (float) 0.01;
@@ -59,18 +53,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMapsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+       // binding = ActivityMapsBinding.inflate(getLayoutInflater());
+        //setContentView(binding.getRoot());
+        setContentView(R.layout.activity_maps);
 
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
         db = FirebaseFirestore.getInstance();
         final CollectionReference collectionReference = db.collection("Test_Map");
 
+        adapter = new DistancePlayerViewAdapter(this, codes);
+        ListView markersList = findViewById(R.id.listviewNear);
+        markersList.setAdapter(adapter);
+
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                // Clear the old list
-                markers.clear();
+
                 assert queryDocumentSnapshots != null;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
@@ -99,6 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSuccess(Location location) {
                 if (location != null){
                     currentLocation = location;
+
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     assert supportMapFragment != null;
                     supportMapFragment.getMapAsync(MapsActivity.this);
@@ -119,13 +118,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMa = googleMap;
+        //googleMa.clear();
         displayPlayerLocation();
-        // Populate The Map With QR Codes that are in the Database
-        place_nearby_markers();
-
+        //Populate The Map With QR Codes that are in the Database
+        //if(markers != null){
+          //  for(int i = 0; i < markers.size(); i++) {
+            //    if (in_visibility(markers.get(i))) {
+              //      codes.add(new DistancePlayerCode(markers.get(i),currentLocation));
+                //    googleMa.addMarker(markers.get(i));
+                //}
+            //}
+       // }
+        //adapter.notifyDataSetChanged();
     }
     public void displayPlayerLocation() {
         try {
+            Log.d("Daf", "Here");
             latitude = currentLocation.getLatitude();
             longitude = currentLocation.getLongitude();
             LatLng latlng = new LatLng(latitude, longitude);
@@ -148,28 +156,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void place_nearby_markers(){
-        ArrayList<DistancePlayerCode> tmp = new ArrayList<>();
-
-        if(markers != null){
-            for(int i = 0; i < markers.size(); i++) {
-                if (in_visibility(markers.get(i))) {
-                    tmp.add(new DistancePlayerCode(markers.get(i),currentLocation));
-                    googleMa.addMarker(markers.get(i));
-                }
-            }
-        }
-
-        Collections.sort(tmp);
-        adapter = new DistancePlayerCodeAdapter(this, tmp);
-
-        ListView markersList = findViewById(R.id.listviewNear);
-        markersList.setAdapter(adapter);
-
-        adapter.notifyDataSetChanged();
-
-    }
-
     private boolean in_visibility(MarkerOptions m){
         // Only the markers that are within the
         // visibility of vision from the player's current position
@@ -185,6 +171,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQUEST_CODE){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getLocation();
+                Log.d("GetLOcaca", "Here");
+
             }
         }
     }
