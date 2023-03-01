@@ -8,9 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-public class DistancePlayerViewAdapter extends ArrayAdapter<DistancePlayerCode> {
+public class DistanceListViewAdapter extends ArrayAdapter<DistancePlayerToTarget> {
 
-    public DistancePlayerViewAdapter(Context context, ArrayList<DistancePlayerCode> arrayList) {
+    public DistanceListViewAdapter(Context context, ArrayList<DistancePlayerToTarget> arrayList) {
         super(context,0, arrayList);
     }
 
@@ -22,7 +22,7 @@ public class DistancePlayerViewAdapter extends ArrayAdapter<DistancePlayerCode> 
             viewing = LayoutInflater.from(getContext()).inflate(R.layout.adapter_view_codeby, parent, false);
         }
 
-        DistancePlayerCode item = getItem(position);
+        DistancePlayerToTarget item = getItem(position);
 
         Double latitude;
         latitude = item.getCoordinates().get(0);
@@ -34,11 +34,11 @@ public class DistancePlayerViewAdapter extends ArrayAdapter<DistancePlayerCode> 
 
         TextView txt_code_coordinates = viewing.findViewById(R.id.code_coordinates);
 
-        String location = "Location: ("+ latitude + "," + longitude + ")";
+        String location = "Location: \n("+ latitude + "," + longitude + ")";
         txt_code_coordinates.setText(location);
 
         TextView txt_code_distance = viewing.findViewById(R.id.code_distance);
-        String distance = "Distance: " + item.getDistance();
+        String distance = "Distance: \n" + item.getDistance();
         txt_code_distance.setText(distance);
 
         return viewing;

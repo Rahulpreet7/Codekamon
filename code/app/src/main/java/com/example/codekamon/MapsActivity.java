@@ -3,8 +3,11 @@ package com.example.codekamon;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,7 +24,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.codekamon.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,147 +32,162 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.DescriptorProtos;
 
 import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    Location currentLocation;
-    FusedLocationProviderClient fusedClient;
-    FirebaseFirestore db;
-    GoogleMap googleMa;
-    double latitude;
-    double longitude;
-
-    private ArrayList<MarkerOptions> markers = new ArrayList<>();
-    DistancePlayerViewAdapter adapter;
-    private ArrayList<DistancePlayerCode> codes = new ArrayList<>();
-    private static int REQUEST_CODE = 101;
-    private ActivityMapsBinding binding;
-    final float visibility = (float) 0.01;
-
+    private static final String TAG = "MapsActivity";
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int PERMISSION_REQUEST_CODE = 101;
+    private static final float DEFAULT_ZOOM = 16;
+    private Location currentLocation;
+    //private FusedLocationProviderClient fusedClient;
+    private FirebaseFirestore firebase;
+    private GoogleMap gMap;
+    private Boolean mLocationPermissionGranted = false;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private ArrayList<MarkerOptions> targetCoordinates = new ArrayList<>();
+    private ArrayList<DistancePlayerToTarget> targetsMarkers = new ArrayList<>();
+    private DistanceListViewAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-       // binding = ActivityMapsBinding.inflate(getLayoutInflater());
-        //setContentView(binding.getRoot());
         setContentView(R.layout.activity_maps);
 
-        fusedClient = LocationServices.getFusedLocationProviderClient(this);
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("Test_Map");
+        firebase = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = firebase.collection("Test_Map");
 
-        adapter = new DistancePlayerViewAdapter(this, codes);
+        adapter = new DistanceListViewAdapter(this, targetsMarkers);
         ListView markersList = findViewById(R.id.listviewNear);
         markersList.setAdapter(adapter);
+
+        getLocationPermission();
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                markers.clear();
+                targetCoordinates.clear();
+                targetsMarkers.clear();
+
+                Toast.makeText(MapsActivity.this, "database has changed. Updating...", Toast.LENGTH_SHORT).show();
                 assert queryDocumentSnapshots != null;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
-                    // Add the New One
+                    // Add new items in the Test_Map
                     LatLng latlng = new LatLng((Double) doc.getData().get("lati"), (Double) doc.getData().get("long"));
                     MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
-                    markers.add(i);
+                    targetCoordinates.add(i);
                 }
             }
         });
 
-        getLocation();
-
-
     }
+    private void getTargetsToGoogleMap(){
+        //Set Up The Adapter Here
+        Log.d(TAG, ""+ currentLocation);
+        Log.d(TAG, (gMap != null) ? "True" : "False");
 
-    private void getLocation(){
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-        }
-        Task<Location> task = fusedClient.getLastLocation();
+        targetsMarkers.clear();
 
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null){
-                    currentLocation = location;
+        for(int i = 0; i < targetCoordinates.size(); i++){
+            MarkerOptions m = targetCoordinates.get(i);
 
-                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                    assert supportMapFragment != null;
-                    supportMapFragment.getMapAsync(MapsActivity.this);
-                }
-            }
-        });
-    }
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMa = googleMap;
-        //googleMa.clear();
-        displayPlayerLocation();
-        //Populate The Map With QR Codes that are in the Database
-        if(markers != null){
-            for(int i = 0; i < markers.size(); i++) {
-                if (in_visibility(markers.get(i))) {
-                    codes.add(new DistancePlayerCode(markers.get(i),currentLocation));
-                    googleMa.addMarker(markers.get(i));
-                }
-            }
+            targetsMarkers.add(
+                    new DistancePlayerToTarget(
+                            m.getTitle(),
+                            m.getPosition(),
+                            currentLocation
+                    ));
+            gMap.addMarker(m);
         }
         adapter.notifyDataSetChanged();
     }
-    public void displayPlayerLocation() {
-        try {
-            latitude = currentLocation.getLatitude();
-            longitude = currentLocation.getLongitude();
-            LatLng latlng = new LatLng(latitude, longitude);
 
-            MarkerOptions playerMarker =
-                    new MarkerOptions().position(latlng).title("You").
-                    icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+    @Override
+    public void onMapReady(@NonNull GoogleMap gMapp) {
+        Toast.makeText(this, "Success: Map loaded!", Toast.LENGTH_LONG).show();
+        gMap = gMapp;
+        if (mLocationPermissionGranted) {
+            getDeviceLocation();
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        gMap.setMyLocationEnabled(true);
+        gMap.getUiSettings().setMyLocationButtonEnabled(false);
+    }
+    private void moveCamaraToCurrentLocation(LatLng latlng, float zoom){
+        gMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
+        // add extra options to manipulate map
+        gMap.getUiSettings().setZoomControlsEnabled(true);
+        gMap.getUiSettings().setCompassEnabled(true);
+    }
+    private void initMap(){
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(MapsActivity.this);
+    }
+    public void getDeviceLocation(){
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        try{
+            if(mLocationPermissionGranted){
+                Task<Location> t = mFusedLocationProviderClient.getLastLocation();
+                t.addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location != null){
+                            currentLocation = location;
+                            moveCamaraToCurrentLocation(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                            getTargetsToGoogleMap();
+                        }
+                    }
+                });
 
-            Toast.makeText(getApplicationContext(), "Latitude: " + latitude + " Longitude: " + longitude, Toast.LENGTH_LONG).show();
+            }
 
-            googleMa.animateCamera(CameraUpdateFactory.newLatLng(latlng));
-            googleMa.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 13));
-            googleMa.addMarker(playerMarker);
-            googleMa.getUiSettings().setZoomControlsEnabled(true);
-            googleMa.getUiSettings().setCompassEnabled(true);
-
-        } catch (Exception e) {
-
-            Toast.makeText(getApplicationContext(), (CharSequence) e, Toast.LENGTH_LONG).show();
+        }catch (SecurityException s){
+            Toast.makeText(this, "ERROR: current location not found", Toast.LENGTH_LONG).show();
         }
     }
-
-    private boolean in_visibility(MarkerOptions m){
-        // Only the markers that are within the
-        // visibility of vision from the player's current position
-        double mLat = m.getPosition().latitude;
-        double mLong = m.getPosition().longitude;
-        return (latitude - visibility <= mLat && mLat <= latitude + visibility) &&
-                (longitude - visibility <= mLong && mLong <= longitude + visibility);
+    private void getLocationPermission(){
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+                initMap();
+            }else{
+                ActivityCompat.requestPermissions(this, permissions
+                        ,PERMISSION_REQUEST_CODE);
+            }
+        }else{
+            ActivityCompat.requestPermissions(this, permissions,
+                    PERMISSION_REQUEST_CODE);
+        }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getLocation();
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    for(int i = 0; i < grantResults.length; i++){
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                            mLocationPermissionGranted = false;
+                            return;
+                        }
+                    }
+                    mLocationPermissionGranted = true;
+                    initMap();
+                    //init map
+                }
             }
         }
     }
+
 }
