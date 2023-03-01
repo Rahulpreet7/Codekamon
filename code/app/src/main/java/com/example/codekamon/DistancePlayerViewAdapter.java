@@ -14,6 +14,7 @@ public class DistancePlayerViewAdapter extends ArrayAdapter<DistancePlayerCode> 
         super(context,0, arrayList);
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View viewing = convertView;
 

@@ -68,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-
+                markers.clear();
                 assert queryDocumentSnapshots != null;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
@@ -121,19 +121,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //googleMa.clear();
         displayPlayerLocation();
         //Populate The Map With QR Codes that are in the Database
-        //if(markers != null){
-          //  for(int i = 0; i < markers.size(); i++) {
-            //    if (in_visibility(markers.get(i))) {
-              //      codes.add(new DistancePlayerCode(markers.get(i),currentLocation));
-                //    googleMa.addMarker(markers.get(i));
-                //}
-            //}
-       // }
-        //adapter.notifyDataSetChanged();
+        if(markers != null){
+            for(int i = 0; i < markers.size(); i++) {
+                if (in_visibility(markers.get(i))) {
+                    codes.add(new DistancePlayerCode(markers.get(i),currentLocation));
+                    googleMa.addMarker(markers.get(i));
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
     public void displayPlayerLocation() {
         try {
-            Log.d("Daf", "Here");
             latitude = currentLocation.getLatitude();
             longitude = currentLocation.getLongitude();
             LatLng latlng = new LatLng(latitude, longitude);
@@ -171,8 +170,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQUEST_CODE){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getLocation();
-                Log.d("GetLOcaca", "Here");
-
             }
         }
     }
