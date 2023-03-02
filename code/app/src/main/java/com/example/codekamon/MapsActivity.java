@@ -10,12 +10,14 @@ import androidx.viewpager.widget.ViewPager;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,13 +44,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int PERMISSION_REQUEST_CODE = 101;
     private static final float DEFAULT_ZOOM = 16;
+    private static final float RADIUS = (float) 5.2;
     private Location currentLocation;
     //private FusedLocationProviderClient fusedClient;
     private FirebaseFirestore firebase;
+    private LocationRequest locationRequest;
     private GoogleMap gMap;
     private Boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private ArrayList<MarkerOptions> targetCoordinates = new ArrayList<>();
     private ArrayList<DistancePlayerToTarget> targetsMarkers = new ArrayList<>();
     private DistanceListViewAdapter adapter;
     private CollectionReference collectionReference;
@@ -68,42 +71,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     private void getTargetsToGoogleMap(){
         //Set Up The Adapter Here
-        Log.d(TAG, ""+ currentLocation);
-        Log.d(TAG, (gMap != null) ? "True" : "False");
+        //Log.d(TAG, ""+ currentLocation);
+        //Log.d(TAG, (gMap != null) ? "True" : "False");
 
-        targetsMarkers.clear();
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
-                targetCoordinates.clear();
                 targetsMarkers.clear();
+                gMap.clear();
 
-                Toast.makeText(MapsActivity.this, "database has changed. Updating...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "fetching latest db changes...", Toast.LENGTH_SHORT).show();
                 assert queryDocumentSnapshots != null;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
-                    // Add new items in the Test_Map
-                    if(doc != null) {
-                        Object lat = doc.getData().get("lati");
-                        Object lon = doc.getData().get("long");
-                        LatLng latlng = new LatLng( lat !=null ? (Double) lat : 0, lon != null ? (Double) lon : 0);
+
+                    double lat = (double) doc.getData().get("lati"), lon = (double) doc.getData().get("long");
+                    LatLng latlng = new LatLng(lat, lon);
+                    if (DistancePlayerToTarget.isDistanceInRadius(currentLocation, latlng,RADIUS)){
                         MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
-                        targetCoordinates.add(i);
+                        targetsMarkers.add(
+                                new DistancePlayerToTarget(
+                                        i.getTitle(), i.getPosition(), currentLocation
+                                ));
+                        gMap.addMarker(i);
                     }
-                }
 
-                for(int i = 0; i < targetCoordinates.size(); i++){
-                    MarkerOptions m = targetCoordinates.get(i);
-
-                    targetsMarkers.add(
-                            new DistancePlayerToTarget(
-                                    m.getTitle(),
-                                    m.getPosition(),
-                                    currentLocation
-                            ));
-                    gMap.addMarker(m);
-                }
                 adapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -140,6 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             if(mLocationPermissionGranted){
                 Task<Location> t = mFusedLocationProviderClient.getLastLocation();
+
                 t.addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -150,7 +145,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 });
-
             }
 
         }catch (SecurityException s){
@@ -188,7 +182,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     mLocationPermissionGranted = true;
                     initMap();
-                    //init map
                 }
             }
         }

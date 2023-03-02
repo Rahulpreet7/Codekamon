@@ -38,7 +38,7 @@ public class DistanceListViewAdapter extends ArrayAdapter<DistancePlayerToTarget
         txt_code_coordinates.setText(location);
 
         TextView txt_code_distance = viewing.findViewById(R.id.code_distance);
-        String distance = "Distance: \n" + item.getDistance();
+        String distance = "Distance: \n" + item.getDistance() + "m";
         txt_code_distance.setText(distance);
 
         return viewing;
