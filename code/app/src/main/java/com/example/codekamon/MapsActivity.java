@@ -51,20 +51,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<MarkerOptions> targetCoordinates = new ArrayList<>();
     private ArrayList<DistancePlayerToTarget> targetsMarkers = new ArrayList<>();
     private DistanceListViewAdapter adapter;
+    private CollectionReference collectionReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
         firebase = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = firebase.collection("Test_Map");
+        collectionReference = firebase.collection("Test_Map");
 
         adapter = new DistanceListViewAdapter(this, targetsMarkers);
         ListView markersList = findViewById(R.id.listviewNear);
         markersList.setAdapter(adapter);
 
         getLocationPermission();
+    }
+    private void getTargetsToGoogleMap(){
+        //Set Up The Adapter Here
+        Log.d(TAG, ""+ currentLocation);
+        Log.d(TAG, (gMap != null) ? "True" : "False");
 
+        targetsMarkers.clear();
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -76,33 +83,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     // Add new items in the Test_Map
-                    LatLng latlng = new LatLng((Double) doc.getData().get("lati"), (Double) doc.getData().get("long"));
-                    MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
-                    targetCoordinates.add(i);
+                    if(doc != null) {
+                        Object lat = doc.getData().get("lati");
+                        Object lon = doc.getData().get("long");
+                        LatLng latlng = new LatLng( lat !=null ? (Double) lat : 0, lon != null ? (Double) lon : 0);
+                        MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
+                        targetCoordinates.add(i);
+                    }
                 }
+
+                for(int i = 0; i < targetCoordinates.size(); i++){
+                    MarkerOptions m = targetCoordinates.get(i);
+
+                    targetsMarkers.add(
+                            new DistancePlayerToTarget(
+                                    m.getTitle(),
+                                    m.getPosition(),
+                                    currentLocation
+                            ));
+                    gMap.addMarker(m);
+                }
+                adapter.notifyDataSetChanged();
             }
         });
 
-    }
-    private void getTargetsToGoogleMap(){
-        //Set Up The Adapter Here
-        Log.d(TAG, ""+ currentLocation);
-        Log.d(TAG, (gMap != null) ? "True" : "False");
-
-        targetsMarkers.clear();
-
-        for(int i = 0; i < targetCoordinates.size(); i++){
-            MarkerOptions m = targetCoordinates.get(i);
-
-            targetsMarkers.add(
-                    new DistancePlayerToTarget(
-                            m.getTitle(),
-                            m.getPosition(),
-                            currentLocation
-                    ));
-            gMap.addMarker(m);
-        }
-        adapter.notifyDataSetChanged();
     }
 
     @Override
