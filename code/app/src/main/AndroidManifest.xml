@@ -66,6 +66,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name=".QRCodeScanActivity"/>
+        <activity android:name=".photoTakingActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

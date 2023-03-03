@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -40,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Clicked 'add code'", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
+                //intent.putExtra(DEVICE_ID, androidId);
+                startActivity(intent);
             }
         });
 
@@ -71,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         //deviceId -> Needs to be passed to other activities that need the users details
-        String deviceId = intent.getStringExtra(SignUpActivity.DEVICE_ID);
+        String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         firestore = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = firestore.collection("Players");
