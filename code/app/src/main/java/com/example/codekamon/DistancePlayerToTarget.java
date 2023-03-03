@@ -5,6 +5,7 @@ import android.location.Location;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,15 +52,18 @@ public class DistancePlayerToTarget implements Comparable {
      */
     public static Boolean isDistanceInRadius(Location currentLocation, LatLng latLng, float RADIUS){
 
-        double
-                φ1 = currentLocation.getLatitude() * Math.PI/180,
-                φ2 = latLng.latitude * Math.PI/180,
-                Δλ = (latLng.longitude - currentLocation.getLongitude()) * Math.PI/180;
+        double φ1 = currentLocation.getLatitude() * Math.PI/180; // φ, λ in radians
+        double φ2 = latLng.latitude * Math.PI/180;
+        double Δφ = (latLng.latitude-currentLocation.getLatitude()) * Math.PI/180;
+        double Δλ = (latLng.longitude-currentLocation.getLongitude()) * Math.PI/180;
 
-        double distance = Math.acos( Math.sin(φ1)*Math.sin(φ2) + Math.cos(φ1)*Math.cos(φ2) * Math.cos(Δλ) ) * EARTH_RADIUS;
-        double convert_km_to_m = distance/KM_TO_M;
+        double a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-        return (convert_km_to_m <= RADIUS) ? true : false;
+        double d = EARTH_RADIUS * c; // in metres
+        return (d < RADIUS) ? true : false;
 
     }
 
@@ -68,15 +72,21 @@ public class DistancePlayerToTarget implements Comparable {
      * @param currentLocation       Type: Location         This parameters contains the location of the player.
      */
     private double distance(Location currentLocation){
+        double φ1 = currentLocation.getLatitude() * Math.PI/180; // φ, λ in radians
+        double φ2 = this.target.latitude * Math.PI/180;
+        double Δφ = (this.target.latitude-currentLocation.getLatitude()) * Math.PI/180;
+        double Δλ = (this.target.longitude-currentLocation.getLongitude()) * Math.PI/180;
 
-        double
-                φ1 = currentLocation.getLatitude() * Math.PI/180,
-                φ2 = this.target.latitude * Math.PI/180,
-                Δλ = (this.target.longitude - currentLocation.getLongitude()) * Math.PI/180;
+        double a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                  Math.cos(φ1) * Math.cos(φ2) *
+                          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-        double distance = Math.acos( Math.sin(φ1)*Math.sin(φ2) + Math.cos(φ1)*Math.cos(φ2) * Math.cos(Δλ) ) * EARTH_RADIUS;
-        double convert_km_to_m = Math.round(distance/KM_TO_M * 100) / 100;
-        return convert_km_to_m;
+        double d = EARTH_RADIUS * c; // in metres
+        DecimalFormat df = new DecimalFormat("#.###");
+        d = Double.valueOf(df.format(d));
+
+        return d;
     }
     /**
      * This method "getName" gets the name of the codekamon
