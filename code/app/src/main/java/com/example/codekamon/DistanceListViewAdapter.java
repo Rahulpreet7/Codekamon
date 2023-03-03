@@ -8,6 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+/**
+ * <h1>This class "DistanceListViewAdapter" is used to display a cell in the list of the codekamon and its details.
+ * @author Elisandro Cruz Martinez
+ *
+ */
 public class DistanceListViewAdapter extends ArrayAdapter<DistancePlayerToTarget> {
 
     public DistanceListViewAdapter(Context context, ArrayList<DistancePlayerToTarget> arrayList) {

@@ -5,25 +5,22 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationRequest;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,27 +31,50 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.protobuf.DescriptorProtos;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+/**
+ * <h1>This class contains the Google map, the location of the codes, and the player
+ * @author Elisandro Cruz Martinez, Ryan Rom
+ *
+ */
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-    private static final String TAG = "MapsActivity";
+
+    /**
+     * The Class "Viewing" obtains the data the user wants to add/edit to his/her records!.
+     * @param FINE_LOCATION                Type:String.                         Constant ACESS_FINE_LOCATION. Used to not write this all the time
+     * @param COURSE_LOCATION              Type:String.                         Constant ACESS_COARSE_LOCATION Stores the diesel constant value. This is final.
+     * @param PERMISSION_REQUEST_CODE      Type:Integer.                        Constant PERMISSION_REQUEST_CODE. Value 101 used to keep a permission value
+     * @param DEFAULT_ZOOM                 Type:Float.                          Constant zoom value in order to zoom in to either the player or target marker in the map.
+     * @param RADIUS                       Type:Float.                          Constant radius value, visibility of the other targets from the player.
+     * @param currentLocation              Type:Location.                       Stores the location of the current player of type LatLng
+     * @param collectionReference          Type:CollectionReference.            Stores the collection that is obtained from firebase firestore database for "Codekamon" project.
+     * @param firebase                     Type:FirebaseFirestore.              Stores the reference to the remote database for the "Codekamon" project.
+     * @param gMap                         Type:GoogleMap.                      Stores map when it is loaded up
+     * @param mLocationPermissionGranted   Type:Boolean.                        Stores a true/false value if user allowed access to the player's current location
+     * @param mFusedLocationProviderClient Type:FusedLocationProviderClient.    This is used to obtain the current location if all of the permissions are past
+     * @param targetsMakers                Type:ArrayList.                      Stores the targets/QR codes of from the database
+     * @param adapter                      Type:DistanceListViewAdapter.        This is used to show the near by QR codes/targets in the database that are within the RADIUS.
+     */
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int PERMISSION_REQUEST_CODE = 101;
     private static final float DEFAULT_ZOOM = 16;
     private static final float RADIUS = (float) 5.2;
+
     private Location currentLocation;
-    //private FusedLocationProviderClient fusedClient;
+    private CollectionReference collectionReference;
     private FirebaseFirestore firebase;
-    private LocationRequest locationRequest;
     private GoogleMap gMap;
+
     private Boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private ArrayList<DistancePlayerToTarget> targetsMarkers = new ArrayList<>();
     private DistanceListViewAdapter adapter;
-    private CollectionReference collectionReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +87,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ListView markersList = findViewById(R.id.listviewNear);
         markersList.setAdapter(adapter);
 
+        markersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(gMap != null){
+                    DistancePlayerToTarget t = (DistancePlayerToTarget) parent.getAdapter().getItem(position);
+                    moveCamaraToCurrentLocation(t.getTarget(), DEFAULT_ZOOM);
+                }
+            }
+        });
+
         getLocationPermission();
     }
-    private void getTargetsToGoogleMap(){
-        //Set Up The Adapter Here
-        //Log.d(TAG, ""+ currentLocation);
-        //Log.d(TAG, (gMap != null) ? "True" : "False");
 
+    /**
+     * The method "getTargetsToGoogleMap" checks if thd database has gotten new Codekamons appearing in the map
+     * , it will only allow to show and display the codekamons that are within the RADIUS of visibility of the player
+     * @return null
+     */
+    private void getTargetsToGoogleMap(){
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -87,6 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     double lat = (double) doc.getData().get("lati"), lon = (double) doc.getData().get("long");
                     LatLng latlng = new LatLng(lat, lon);
+
                     if (DistancePlayerToTarget.isDistanceInRadius(currentLocation, latlng,RADIUS)){
                         MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
                         targetsMarkers.add(
@@ -95,9 +128,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 ));
                         gMap.addMarker(i);
                     }
-
-                adapter.notifyDataSetChanged();
                 }
+
+                Collections.sort(targetsMarkers);
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -117,18 +151,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         gMap.setMyLocationEnabled(true);
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
-    }
-    private void moveCamaraToCurrentLocation(LatLng latlng, float zoom){
-        gMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
-        // add extra options to manipulate map
         gMap.getUiSettings().setZoomControlsEnabled(true);
         gMap.getUiSettings().setCompassEnabled(true);
     }
+
+    /**
+     * The method "moveCamaraToCurrentLocation" zooms in at a marker or player location based on the DEFUALT_ZOOM and LngLon
+     * @return null
+     */
+    private void moveCamaraToCurrentLocation(LatLng latlng, float zoom){
+        gMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
+    }
+
+    /**
+     * The method "initMap" this is used to add the map to the fragment "map" inside the "activity_maps" layout.
+     * @return null
+     */
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapsActivity.this);
     }
+    /**
+     * The method "getDeviceLocation" checks the permission to access the location and than zooms in to the location of the player
+     * @return null
+     */
     public void getDeviceLocation(){
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         try{
@@ -151,6 +198,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "ERROR: current location not found", Toast.LENGTH_LONG).show();
         }
     }
+    /**
+     * The method "getLocationPermission" checks and obtains the permission to access the location for the device this app is running
+     * @return null
+     */
     private void getLocationPermission(){
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -167,6 +218,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     PERMISSION_REQUEST_CODE);
         }
     }
+    /**
+     * The method "onRequestPermissionsResult" gets
+     * @return null
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
