@@ -1,11 +1,14 @@
 package com.example.codekamon;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
     String userName;
     String email;
-    ArrayList<QRCode> playerCodes;
+    HashMap<String,String> playerCodes;
     Integer highestScore;
     Integer lowestScore;
     Integer totalScore;
@@ -22,6 +25,39 @@ public class Player {
         numScanned = 0;
     }
 
+
+
+    public Boolean addQR(QRCode code) {
+        String name = code.getName();
+        String id = code.getContent();
+        int score = code.getScore();
+        if (playerCodes.containsValue(id)) {
+            return false;
+        }
+
+        if (score > highestScore) {
+            highestScore = score;
+        }
+        if (score < lowestScore || lowestScore == -1) {
+            lowestScore = score;
+        }
+        totalScore += score;
+        playerCodes.put(name, id);
+        numScanned++;
+        return true;
+    }
+
+    public Boolean deleteQR(QRCode code){
+        String name = code.getName();
+        if(!playerCodes.containsKey(name)){
+            return false;
+        }
+        // TODO: change highest/lowest score if this is that code
+        totalScore -= code.getScore();
+        playerCodes.remove(name);
+        numScanned--;
+        return true;
+    }
 
     public String getUserName() {
         return userName;
@@ -77,5 +113,9 @@ public class Player {
 
     public void setAndroidId(String androidId){
         this.androidId = androidId;
+    }
+
+    public HashMap<String, String> getPlayerCodes() {
+        return playerCodes;
     }
 }
