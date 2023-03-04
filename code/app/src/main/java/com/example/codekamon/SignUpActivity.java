@@ -19,9 +19,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity  {
     public static final String DEVICE_ID = "com.example.codekamon.DEVICE_ID";
 
     @Override
@@ -66,6 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             new PlayersDB().addPlayer(player);
                                             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                             intent.putExtra(DEVICE_ID, androidId);
+                                            intent.putExtra("PLAYER",player);
                                             startActivity(intent);
                                         }
                                     }
