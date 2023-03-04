@@ -43,6 +43,7 @@ public class PlayersDB {
         data.put("Number Of Codes Scanned", player.getNumScanned());
         data.put("Lowest Score", player.getLowestScore());
         data.put("Total Score", player.getTotalScore());
+        data.put("ScannedCodes",player.getPlayerCodes());
         playersRef.document(player.getAndroidId()).set(data);
     }
 }

@@ -2,10 +2,11 @@ package com.example.codekamon;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Player {
+public class Player implements Serializable {
     String userName;
     String email;
     HashMap<String,String> playerCodes;
