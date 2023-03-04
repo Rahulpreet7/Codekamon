@@ -10,15 +10,18 @@ public class Player {
     Integer lowestScore;
     Integer totalScore;
     Integer numScanned;
+    String androidId;
 
-    public Player(String userName, String email) {
+    public Player(String userName, String email, String androidId) {
         this.userName = userName;
         this.email = email;
+        this.androidId = androidId;
         highestScore = 0;
         lowestScore = 0;
         totalScore = 0;
         numScanned = 0;
     }
+
 
     public String getUserName() {
         return userName;
@@ -66,5 +69,13 @@ public class Player {
 
     public void setNumScanned(Integer numScanned) {
         this.numScanned = numScanned;
+    }
+
+    public String getAndroidId() {
+        return androidId;
+    }
+
+    public void setAndroidId(String androidId){
+        this.androidId = androidId;
     }
 }

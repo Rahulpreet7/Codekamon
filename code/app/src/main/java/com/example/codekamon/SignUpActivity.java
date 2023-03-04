@@ -54,7 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onClick(View view) {
                                 EditText username = findViewById(R.id.pick_username_edit_text);
                                 EditText email = findViewById(R.id.email_edit_text);
-                                Player player = new Player(username.getText().toString(),email.getText().toString());
+                                Player player = new Player(username.getText().toString(),email.getText().toString(), androidId);
 
                                 colRef.whereEqualTo("Username", username.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
@@ -63,10 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             Toast.makeText(SignUpActivity.this, "Username is taken", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
-                                            HashMap<String,String> data = new HashMap<>();
-                                            data.put("Username", player.getUserName());
-                                            data.put("Email", player.getEmail());
-                                            colRef.document(androidId).set(data);
+                                            new PlayersDB().addPlayer(player);
                                             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                             intent.putExtra(DEVICE_ID, androidId);
                                             startActivity(intent);
