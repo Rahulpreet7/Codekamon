@@ -7,8 +7,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,12 +67,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int PERMISSION_REQUEST_CODE = 101;
     private static final float DEFAULT_ZOOM = 16;
-    private static final float RADIUS = (float) 5.2;
+    private static final float RADIUS = (float) 50.2;
 
     private Location currentLocation;
     private CollectionReference collectionReference;
     private FirebaseFirestore firebase;
     private GoogleMap gMap;
+    private LocationManager lm;
 
     private Boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -82,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         firebase = FirebaseFirestore.getInstance();
         collectionReference = firebase.collection("Test_Map");
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         adapter = new DistanceListViewAdapter(this, targetsMarkers);
         ListView markersList = findViewById(R.id.listviewNear);
@@ -90,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(gMap != null){
+                if (gMap != null) {
                     DistancePlayerToTarget t = (DistancePlayerToTarget) parent.getAdapter().getItem(position);
                     moveCamaraToCurrentLocation(t.getTarget(), DEFAULT_ZOOM);
                 }
@@ -99,28 +105,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         getLocationPermission();
     }
-
     /**
      * The method "getTargetsToGoogleMap" checks if thd database has gotten new Codekamons appearing in the map
      * , it will only allow to show and display the codekamons that are within the RADIUS of visibility of the player
      * @return null
      */
-    private void getTargetsToGoogleMap(){
+    private void getTargetsToGoogleMap() {
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 targetsMarkers.clear();
                 gMap.clear();
+                findPlayerMarker();
 
                 Toast.makeText(MapsActivity.this, "fetching latest db changes...", Toast.LENGTH_SHORT).show();
                 assert queryDocumentSnapshots != null;
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     double lat = (double) doc.getData().get("lati"), lon = (double) doc.getData().get("long");
                     LatLng latlng = new LatLng(lat, lon);
 
-                    if (DistancePlayerToTarget.isDistanceInRadius(currentLocation, latlng,RADIUS)){
+                    if (DistancePlayerToTarget.isDistanceInRadius(currentLocation, latlng, RADIUS)) {
                         MarkerOptions i = new MarkerOptions().position(latlng).title((String) doc.getData().get("name"));
                         targetsMarkers.add(
                                 new DistancePlayerToTarget(
@@ -137,23 +141,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    public void findPlayerMarker(){
+        LatLng playerPos = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+        MarkerOptions marker = new MarkerOptions().position(playerPos).title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        gMap.addMarker(marker);
+    }
+
     @Override
     public void onMapReady(@NonNull GoogleMap gMapp) {
         Toast.makeText(this, "Success: Map loaded!", Toast.LENGTH_LONG).show();
         gMap = gMapp;
         if (mLocationPermissionGranted) {
             getDeviceLocation();
+            //if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+               //     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+              //      this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+             //   return;
+            //}
+            //gMap.setMyLocationEnabled(true);
+            //gMap.getUiSettings().setMyLocationButtonEnabled(false);
+            gMap.getUiSettings().setZoomControlsEnabled(true);
+            gMap.getUiSettings().setCompassEnabled(true);
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        gMap.setMyLocationEnabled(true);
-        gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        gMap.getUiSettings().setZoomControlsEnabled(true);
-        gMap.getUiSettings().setCompassEnabled(true);
     }
+
 
     /**
      * The method "moveCamaraToCurrentLocation" zooms in at a marker or player location based on the DEFUALT_ZOOM and LngLon
@@ -187,6 +198,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onSuccess(Location location) {
                         if(location != null){
                             currentLocation = location;
+                            findPlayerMarker();
                             moveCamaraToCurrentLocation(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
                             getTargetsToGoogleMap();
                         }
