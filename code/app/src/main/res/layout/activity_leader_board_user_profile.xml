@@ -10,7 +10,7 @@
         android:layout_width="320dp"
         android:layout_height="54dp"
         android:layout_marginTop="30dp"
-        android:text="User Profile: "
+        android:text="User Profile"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
@@ -49,8 +49,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="145dp"
-        android:layout_height="165dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,4 +67,13 @@
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:text="Score: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 </androidx.constraintlayout.widget.ConstraintLayout>
