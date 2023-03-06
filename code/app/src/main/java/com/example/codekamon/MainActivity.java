@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        PlayersDB players = new PlayersDB();
-        players.getPlayer(this, new com.example.codekamon.OnCompleteListener<Player>() {
+        PlayersDB playersDB = new PlayersDB();
+        playersDB.getPlayer(this, new com.example.codekamon.OnCompleteListener<Player>() {
             @Override
             public void onComplete(Player item, boolean success) {
                 TextView username = findViewById(R.id.username_text);
