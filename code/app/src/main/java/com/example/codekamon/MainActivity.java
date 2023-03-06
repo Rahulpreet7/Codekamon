@@ -17,15 +17,23 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This class handles the logic of the main screen.
+ */
 public class MainActivity extends AppCompatActivity {
 
     FirebaseFirestore firestore;
 
+    /**
+     * onCreate is method is called when the activity is created and sets
+     * the icons to start different activities when clicked.
+     *
+     * @param savedInstanceState The saved instance state of the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getSupportActionBar().hide();
 
         ImageView map = findViewById(R.id.map_icon);
@@ -73,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        //deviceId -> Needs to be passed to other activities that need the users details
         String deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
