@@ -104,6 +104,11 @@ public class PlayersDB {
         listener.onComplete(player, true);
     }
 
+    /**
+     * Gets the Players collection reference.
+     *
+     * @return The Players collection reference
+     */
     public CollectionReference getCollectionReference() {
         return collectionReference;
     }

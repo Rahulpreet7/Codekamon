@@ -27,9 +27,17 @@ import java.util.HashMap;
  */
 public class SignUpActivity extends AppCompatActivity  {
 
+    /**
+     * Holds the tag for this class for logging purposes.
+     */
     public static String TAG = "SignUpActivity";
-    public static final String DEVICE_ID = "com.example.codekamon.DEVICE_ID";
 
+    /**
+     * onCreate is called when the activity is created and sets
+     * views to ask the user to make an account if they don't have one.
+     *
+     * @param savedInstanceState The saved instance state of the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
