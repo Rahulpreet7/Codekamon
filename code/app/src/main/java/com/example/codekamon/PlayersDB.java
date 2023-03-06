@@ -1,8 +1,20 @@
 package com.example.codekamon;
 
+import android.content.Context;
+import android.provider.Settings;
+import android.util.Log;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,6 +22,10 @@ import java.util.HashMap;
  * the Players collection in the database.
  */
 public class PlayersDB {
+    /**
+     * Stores the tag for this class for logging purposes.
+     */
+    public static String TAG = "PlayersDB";
 
     /**
      * Stores the database instance.
@@ -45,5 +61,55 @@ public class PlayersDB {
         data.put("Total Score", player.getTotalScore());
         data.put("ScannedCodes",player.getPlayerCodes());
         playersRef.document(player.getAndroidId()).set(data);
+    }
+
+    /**
+     * Gets the player from the database.
+     *
+     * @param context The context of the application
+     * @param listener The listener to handle the result
+     */
+    public void getPlayer(Context context, OnCompleteListener<Player> listener){
+        String deviceId = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+        db = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = db.collection("Players");
+        collectionReference.document(deviceId).get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()){
+                        Log.i(TAG, "Player found .");
+                        this.getPlayer(snapshot, listener);
+                    }else{
+                        Log.i(TAG, "Failed to get Player from database.");
+                        listener.onComplete(null, false);
+                    }
+                })
+                .addOnFailureListener(failure -> {
+                    Log.i(TAG, "Failed to get Player from database.");
+                    listener.onComplete(null, false);
+                });
+    }
+
+    /**
+     * Gets a player from the database.
+     *
+     * @param snapshot The snapshot of the player to get
+     * @param listener The listener to handle the result
+     */
+    public void getPlayer(DocumentSnapshot snapshot, OnCompleteListener<Player> listener){
+        String username = snapshot.get("Username").toString();
+        String email = snapshot.get("Email").toString();
+        String androidId = snapshot.get("Android Id").toString();
+        Integer highestScore = Integer.parseInt(snapshot.get("Highest Score").toString());
+        Integer lowestScore = Integer.parseInt(snapshot.get("Lowest Score").toString());
+        Integer numScanned = Integer.parseInt(snapshot.get("Number Of Codes Scanned").toString());
+        HashMap<String, String> QRcodes = (HashMap<String, String>) snapshot.get("ScannedCodes");
+        Player player = new Player(username, email, androidId);
+        player.setHighestScore(highestScore);
+        player.setLowestScore(lowestScore);
+        player.setNumScanned(numScanned);
+        player.setPlayerCodes(QRcodes);
+        listener.onComplete(player, true);
     }
 }

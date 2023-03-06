@@ -26,8 +26,6 @@ public class Player implements Serializable {
         numScanned = 0;
     }
 
-
-
     public Boolean addQR(QRCode code) {
         String name = code.getName();
         String id = code.getContent();
@@ -118,5 +116,9 @@ public class Player implements Serializable {
 
     public HashMap<String, String> getPlayerCodes() {
         return playerCodes;
+    }
+
+    public void setPlayerCodes(HashMap<String, String> playerCodes) {
+        this.playerCodes = playerCodes;
     }
 }
