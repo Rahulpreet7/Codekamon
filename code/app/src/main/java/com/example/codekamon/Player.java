@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player implements Serializable {
-    String userName;
-    String email;
-    HashMap<String,String> playerCodes;
-    Integer highestScore;
-    Integer lowestScore;
-    Integer totalScore;
-    Integer numScanned;
-    String androidId;
+    private String userName;
+    private String email;
+    private HashMap<String,String> playerCodes;
+    private Integer highestScore;
+    private Integer lowestScore;
+    private Integer totalScore;
+    private Integer numScanned;
+    private String androidId;
 
     public Player(String userName, String email, String androidId) {
         this.userName = userName;
