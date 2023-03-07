@@ -23,12 +23,12 @@ public class PlayersDB {
     /**
      * Stores the database instance.
      */
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     /**
      * Stores the Players collection reference.
      */
-    CollectionReference collectionReference;
+    private CollectionReference collectionReference;
 
     /**
      * Creates the instance of PlayersDB.
