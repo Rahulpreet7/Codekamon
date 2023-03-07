@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -15,6 +16,8 @@ import java.util.ArrayList;
  *
  */
 public class DistanceListViewAdapter extends ArrayAdapter<DistancePlayerToTarget> {
+
+    private static final DecimalFormat df = new DecimalFormat("0.0000");
 
     public DistanceListViewAdapter(Context context, ArrayList<DistancePlayerToTarget> arrayList) {
         super(context,0, arrayList);
@@ -40,11 +43,11 @@ public class DistanceListViewAdapter extends ArrayAdapter<DistancePlayerToTarget
 
         TextView txt_code_coordinates = viewing.findViewById(R.id.code_coordinates);
 
-        String location = "Location: \n("+ latitude + "," + longitude + ")";
+        String location = "Location: \n("+ df.format(latitude) + "," + df.format(longitude) + ")";
         txt_code_coordinates.setText(location);
 
         TextView txt_code_distance = viewing.findViewById(R.id.code_distance);
-        String distance = "Distance: \n" + item.getDistance() + "m";
+        String distance = "Distance: \n" + item.getDistance() + "miles";
         txt_code_distance.setText(distance);
 
         return viewing;
