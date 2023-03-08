@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param savedInstanceState The saved instance state of the activity
      */
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Clicked the 'leaderboards'", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, leaderBoard.class);
+                startActivity(intent);
             }
         });
 

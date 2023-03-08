@@ -56,6 +56,11 @@ public class Player implements Serializable {
      */
     private String androidId;
 
+    public Player() {
+
+    }
+
+
     /**
      * Creates a player object which represents a player with details about the player.
      *
