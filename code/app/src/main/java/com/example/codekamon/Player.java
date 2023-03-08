@@ -2,6 +2,10 @@ package com.example.codekamon;
 
 import android.util.Log;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,8 +97,33 @@ public class Player implements Serializable {
         totalScore += score;
         playerCodes.put(name, id);
         numScanned++;
+        updateDatabase();
         return true;
     }
+
+    /**
+     * This updates the database with the data contained in the current player object
+     */
+    public void updateDatabase() {
+        // Create Firestore collection
+        FirebaseFirestore db;
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference =
+                db.collection("Players");
+        DocumentReference myAccountRef = collectionReference.document(androidId);
+
+        myAccountRef
+                .update("ScannedCodes", playerCodes);
+        myAccountRef
+                .update("Number Of Codes Scanned", numScanned);
+        myAccountRef
+                .update("Total Score", totalScore);
+        myAccountRef
+                .update("Highest Score", highestScore);
+        myAccountRef
+                .update("Lowest Score", lowestScore);
+
+    } //
 
     /**
      * Deletes the specified qr code from the player object.
