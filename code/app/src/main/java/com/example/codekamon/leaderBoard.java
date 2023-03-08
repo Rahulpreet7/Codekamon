@@ -2,8 +2,11 @@ package com.example.codekamon;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -92,6 +95,16 @@ public class leaderBoard extends AppCompatActivity {
                                 playerScore.setText("Score: " + item.getTotalScore().toString());
                                 playerRank.setText("Rank: "+item.getUserRank().toString());
 
+                            }
+                        });
+
+                        rankingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(leaderBoard.this, OtherUserProfile.class);
+
+                                intent.putExtra("PLAYER",playerArrayList.get(position));
+                                startActivity(intent);
                             }
                         });
 
