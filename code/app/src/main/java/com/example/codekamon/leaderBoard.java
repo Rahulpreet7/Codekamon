@@ -2,7 +2,6 @@ package com.example.codekamon;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -16,13 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Collections;
 
 public class leaderBoard extends AppCompatActivity {
 
@@ -31,7 +29,7 @@ public class leaderBoard extends AppCompatActivity {
     private ListView rankingList;
     private Spinner sortbyOption;
     private ArrayList<Player> playerArrayList = new ArrayList<>();
-    private customPlayerRankArrayAdapter playerRankArrayAdapter;
+    private totalScoreRankArrayAdapter totalScoreRankArrayAdapter;
 
 
 
@@ -63,21 +61,32 @@ public class leaderBoard extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            playerArrayList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Player player = document.toObject(Player.class);
-                                playerArrayList.add(player);
+                                //Player player = document.toObject(Player.class);
+                                PlayersDB playersDB = new PlayersDB();
+                                playersDB.getPlayer(document, new com.example.codekamon.OnCompleteListener<Player>() {
+                                    @Override
+                                    public void onComplete(Player item, boolean success) {
+                                        playerArrayList.add(item);
+                                    }
+                                });
 
-                                //Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
+                            }// Populate the listview
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
+
+                        totalScoreRankArrayAdapter = new totalScoreRankArrayAdapter(leaderBoard.this,playerArrayList);
+                        Collections.sort(playerArrayList, new TotalScoreComparator());
+                        totalScoreRankArrayAdapter.notifyDataSetChanged();
+
+                        rankingList.setAdapter(totalScoreRankArrayAdapter);
+
+
                     }
                 });
 
-        playerRankArrayAdapter = new customPlayerRankArrayAdapter(this,playerArrayList);
-
-        rankingList.setAdapter(playerRankArrayAdapter);
 
 
         PlayersDB playersDB = new PlayersDB();

@@ -99,7 +99,7 @@ public class Player implements Serializable {
         if(score < lowestScore || lowestScore == -1){
             lowestScore = score;
         }
-        totalScore = totalScore + score;
+        totalScore += score;
         playerCodes.put(name, id);
         numScanned++;
         updateDatabase();

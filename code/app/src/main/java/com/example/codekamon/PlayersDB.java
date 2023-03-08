@@ -4,10 +4,13 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,7 +111,7 @@ public class PlayersDB {
         Integer highestScore = Integer.parseInt(snapshot.get("Highest Score").toString());
         Integer lowestScore = Integer.parseInt(snapshot.get("Lowest Score").toString());
         Integer numScanned = Integer.parseInt(snapshot.get("Number Of Codes Scanned").toString());
-        Integer totalScore = Integer.parseInt(snapshot.get("Number Of Codes Scanned").toString());
+        Integer totalScore = Integer.parseInt(snapshot.get("Total Score").toString());
         HashMap<String, String> qrCodes = (HashMap<String, String>) snapshot.get("ScannedCodes");
         Player player = new Player(username, email, androidId);
         player.setHighestScore(highestScore);
@@ -118,6 +121,8 @@ public class PlayersDB {
         player.setTotalScore(totalScore);
         listener.onComplete(player, true);
     }
+
+
 
 
 
