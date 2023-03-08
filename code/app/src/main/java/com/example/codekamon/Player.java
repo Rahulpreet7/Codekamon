@@ -6,16 +6,59 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class represents a player and has details about a player
+ * such as username, email, and etc.
+ */
 public class Player implements Serializable {
-    String userName;
-    String email;
-    HashMap<String,String> playerCodes;
-    Integer highestScore;
-    Integer lowestScore;
-    Integer totalScore;
-    Integer numScanned;
-    String androidId;
 
+    /**
+     * Holds the username of the player.
+     */
+    private String userName;
+
+    /**
+     * Holds the email of the player.
+     */
+    private String email;
+
+    /**
+     * Holds the codes scanned by the player.
+     */
+    private HashMap<String,String> playerCodes;
+
+    /**
+     * Holds the highest score of the player.
+     */
+    private Integer highestScore;
+
+    /**
+     * Holds the lowest score of the player.
+     */
+    private Integer lowestScore;
+
+    /**
+     * Holds the total score of the player.
+     */
+    private Integer totalScore;
+
+    /**
+     * Holds the number of codes scanned by the player.
+     */
+    private Integer numScanned;
+
+    /**
+     * Holds the android id of the player.
+     */
+    private String androidId;
+
+    /**
+     * Creates a player object which represents a player with details about the player.
+     *
+     * @param userName The username of the player
+     * @param email The email of the player
+     * @param androidId The android id of the player
+     */
     public Player(String userName, String email, String androidId) {
         this.userName = userName;
         this.email = email;
@@ -24,10 +67,15 @@ public class Player implements Serializable {
         lowestScore = 0;
         totalScore = 0;
         numScanned = 0;
+        playerCodes = new HashMap<>();
     }
 
-
-
+    /**
+     * Adds the specified qr code to the player object.
+     *
+     * @param code The QR code to be added
+     * @return true (Qr code added successfully) or false ( Qr code could not be added because the player has already scanned this code )
+     */
     public Boolean addQR(QRCode code) {
         String name = code.getName();
         String id = code.getContent();
@@ -48,6 +96,12 @@ public class Player implements Serializable {
         return true;
     }
 
+    /**
+     * Deletes the specified qr code from the player object.
+     *
+     * @param code The QR code to be deleted
+     * @return true (Qr code deleted successfully) or false ( Qr code could not be deleted because the player have not scanned this code )
+     */
     public Boolean deleteQR(QRCode code){
         String name = code.getName();
         if(!playerCodes.containsKey(name)){
@@ -60,63 +114,147 @@ public class Player implements Serializable {
         return true;
     }
 
+    /**
+     * Gets the username of the player.
+     *
+     * @return The username of the player
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Sets the username of the player
+     *
+     * @param userName The username of the player
+     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    /**
+     * Gets the email of the player.
+     *
+     * @return The email of the player.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the email of the player.
+     *
+     * @param email The email of the player
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Gets the highest score of the player.
+     *
+     * @return The highest score of the player
+     */
     public Integer getHighestScore() {
         return highestScore;
     }
 
+    /**
+     * Sets the highest score of the player.
+     *
+     * @return The highest score of the player
+     */
     public void setHighestScore(Integer highestScore) {
         this.highestScore = highestScore;
     }
 
+    /**
+     * Gets the lowest score of the player.
+     *
+     * @return The lowest score of the player
+     */
     public Integer getLowestScore() {
         return lowestScore;
     }
 
+    /**
+     * Sets the lowest score of the player.
+     *
+     * @return The lowest score of the player
+     */
     public void setLowestScore(Integer lowestScore) {
         this.lowestScore = lowestScore;
     }
 
+    /**
+     * Gets the total score of the player.
+     *
+     * @return The total score of the player
+     */
     public Integer getTotalScore() {
         return totalScore;
     }
 
+    /**
+     * Sets the total score of the player.
+     *
+     * @return The total score of the player
+     */
     public void setTotalScore(Integer totalScore) {
         this.totalScore = totalScore;
     }
 
+    /**
+     * Gets the number of codes scanned by the player.
+     *
+     * @return The number of codes scanned by the player.
+     */
     public Integer getNumScanned() {
         return numScanned;
     }
 
+    /**
+     * Sets the number of codes scanned by the player.
+     *
+     * @return The number of codes scanned by the player.
+     */
     public void setNumScanned(Integer numScanned) {
         this.numScanned = numScanned;
     }
 
+    /**
+     * Gets the android id of the player
+     *
+     * @return The android id of the player in String format
+     */
     public String getAndroidId() {
         return androidId;
     }
 
+    /**
+     * Sets the android id of the player
+     *
+     * @return The android id of the player in String format
+     */
     public void setAndroidId(String androidId){
         this.androidId = androidId;
     }
 
+    /**
+     * Gets the QR codes scanned by the player
+     *
+     * @return The QR codes scanned by the player
+     */
     public HashMap<String, String> getPlayerCodes() {
         return playerCodes;
+    }
+
+    /**
+     * Sets the QR codes scanned by the player
+     *
+     * @param playerCodes The QR codes scanned by the player
+     */
+    public void setPlayerCodes(HashMap<String, String> playerCodes) {
+        this.playerCodes = playerCodes;
     }
 }
