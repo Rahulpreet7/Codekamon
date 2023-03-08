@@ -1,5 +1,7 @@
 package com.example.codekamon;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DecimalFormat;
@@ -110,24 +112,24 @@ public class DistancePlayerToTarget implements Comparable {
      *  returns this.name
      */
     public String getName(){
-        return this.name;
-    }
+                          return this.name;
+                                           }
     /**
      * This method "getDistance" gets the distance of the player and the codekamon.
      * @return
      *  returns this.distance
      */
     public double getDistance(){
-        return this.distance;
-    }
+                              return this.distance;
+                                                   }
     /**
      * This method "getTarget" gets the LatLng of the codekamon
      * @return
      *  returns this.target
      */
     public LatLng getTarget(){
-        return this.targetLocation;
-    }
+                            return this.targetLocation;
+                                                       }
     /**
      * This method "getCoordinates" gets the coordinates location of the codekamon
      * @return
@@ -145,7 +147,7 @@ public class DistancePlayerToTarget implements Comparable {
      */
     @Override
     public int compareTo(Object o) {
-        DistancePlayerToTarget player = (DistancePlayerToTarget) o;
+        com.example.codekamon.DistancePlayerToTarget player = (com.example.codekamon.DistancePlayerToTarget) o;
         return (this.distance < player.getDistance()) ? 1 : 0;
     }
 }
