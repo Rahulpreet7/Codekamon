@@ -27,10 +27,12 @@ public class PlayersDB {
      */
     private FirebaseFirestore db;
 
+
     /**
      * Stores the Players collection reference.
      */
     private CollectionReference collectionReference;
+
 
     private ArrayList<Player> playerArrayList = new ArrayList<>();
 
@@ -41,6 +43,10 @@ public class PlayersDB {
 
     public PlayersDB() {
         this.db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        db.setFirestoreSettings(settings);
         this.collectionReference = db.collection("Players");
 
     }
@@ -102,12 +108,14 @@ public class PlayersDB {
         Integer highestScore = Integer.parseInt(snapshot.get("Highest Score").toString());
         Integer lowestScore = Integer.parseInt(snapshot.get("Lowest Score").toString());
         Integer numScanned = Integer.parseInt(snapshot.get("Number Of Codes Scanned").toString());
+        Integer totalScore = Integer.parseInt(snapshot.get("Number Of Codes Scanned").toString());
         HashMap<String, String> qrCodes = (HashMap<String, String>) snapshot.get("ScannedCodes");
         Player player = new Player(username, email, androidId);
         player.setHighestScore(highestScore);
         player.setLowestScore(lowestScore);
         player.setNumScanned(numScanned);
         player.setPlayerCodes(qrCodes);
+        player.setTotalScore(totalScore);
         listener.onComplete(player, true);
     }
 

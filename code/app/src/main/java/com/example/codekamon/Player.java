@@ -73,7 +73,7 @@ public class Player implements Serializable {
         this.email = email;
         this.androidId = androidId;
         highestScore = 0;
-        lowestScore = 0;
+        lowestScore = -1;
         totalScore = 0;
         numScanned = 0;
         playerCodes = new HashMap<>();
@@ -85,21 +85,21 @@ public class Player implements Serializable {
      * @param code The QR code to be added
      * @return true (Qr code added successfully) or false ( Qr code could not be added because the player has already scanned this code )
      */
-    public Boolean addQR(QRCode code) {
+    public Boolean addQR(QRCode code){
         String name = code.getName();
         String id = code.getContent();
         int score = code.getScore();
-        if (playerCodes.containsValue(id)) {
+        if(playerCodes.containsValue(id)){
             return false;
         }
 
-        if (score > highestScore) {
+        if(score > highestScore){
             highestScore = score;
         }
-        if (score < lowestScore || lowestScore == -1) {
+        if(score < lowestScore || lowestScore == -1){
             lowestScore = score;
         }
-        totalScore += score;
+        totalScore = totalScore + score;
         playerCodes.put(name, id);
         numScanned++;
         updateDatabase();
