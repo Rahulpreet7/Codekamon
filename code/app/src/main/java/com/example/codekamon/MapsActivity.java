@@ -53,15 +53,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * The Class "Viewing" obtains the data the user wants to add/edit to his/her records!.
-     * @param FINE_LOCATION
-     *  Type:String. Constant ACESS_FINE_LOCATION. Used to not write this all the time
-     * @param COURSE_LOCATION
+     * @param fineLocation
+     *  Type:String. Constant ACESS_fineLocation. Used to not write this all the time
+     * @param courseLocation
      *  Type:String. Constant ACESS_COARSE_LOCATION Stores the diesel constant value. This is final.
-     * @param PERMISSION_REQUEST_CODE
-     *  Type:Integer. Constant PERMISSION_REQUEST_CODE. Value 101 used to keep a permission value
+     * @param permissionRequestCode
+     *  Type:Integer. Constant permissionRequestCode. Value 101 used to keep a permission value
      * @param DEFAULT_ZOOM
      *  Type:Float. Constant zoom value in order to zoom in to either the player or target marker in the map.
-     * @param RADIUS
+     * @param radius
      *  Type:Float. Constant radius value, visibility of the other targets from the player.
      * @param currentLocation
      *  Type:Location. Stores the location of the current player of type LatLng
@@ -78,23 +78,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param targetsMakers
      *  Type:ArrayList. Stores the targets/QR codes of from the database
      * @param adapter
-     *  Type:DistanceListViewAdapter. This is used to show the near by QR codes/targets in the database that are within the RADIUS.
+     *  Type:DistanceListViewAdapter. This is used to show the near by QR codes/targets in the database that are within the radius.
      */
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int PERMISSION_REQUEST_CODE = 101;
-    private static final float RADIUS = (float) 50.2;
+    private static final String fineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String courseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int permissionRequestCode = 101;
+    private static final float radius = (float) 50.2;
 
     private LatLng currentLocation;
     private CollectionReference collectionReference;
     private FirebaseFirestore firebase;
     private GoogleMap gMap;
-    private Boolean firstTimeStartingUp = true;
+    private Boolean first_time = true;
     private Boolean mLocationPermissionGranted = false;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
     private ArrayList<DistancePlayerToTarget> targetsMarkers = new ArrayList<>();
     private DistanceListViewAdapter adapter;
-
     private LocationManager locationManager;
 
     @Override
@@ -123,7 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * The method "getTargetsToGoogleMap" checks if thd database has gotten new Codekamons appearing in the map
-     * , it will only allow to show and display the codekamons that are within the RADIUS of visibility of the player
+     * , it will only allow to show and display the codekamons that are within the radius of visibility of the player
      */
     private void getTargetsToGoogleMap() {
         collectionReference.addSnapshotListener((QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException error) -> {
@@ -131,9 +129,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             gMap.clear();
             findPlayerMarker();
 
-            if (firstTimeStartingUp) {
+            if (first_time) {
                 Toast.makeText(MapsActivity.this, "Db Updated. Refresh map to see changes!", Toast.LENGTH_SHORT).show();
-                firstTimeStartingUp = false;
+                first_time = false;
             }
 
             assert queryDocumentSnapshots != null;
@@ -142,7 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double lat = (double) doc.getData().get("lati"), lon = (double) doc.getData().get("long");
                     LatLng targetLatlng = new LatLng(lat, lon);
 
-                    if (DistancePlayerToTarget.isDistanceInRadius(currentLocation, targetLatlng, RADIUS)) {
+                    if (DistancePlayerToTarget.isDistanceInRadius(currentLocation, targetLatlng, radius)) {
                         if (doc.getData().get("name") != null) {
                             MarkerOptions i = new MarkerOptions().position(targetLatlng).title((String) doc.getData().get("name"));
                             targetsMarkers.add(
@@ -203,7 +201,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @SuppressLint("MissingPermission")
     public void getDeviceLocation() {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -220,16 +217,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), fineLocation) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), courseLocation) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionGranted = true;
             }else{
                 ActivityCompat.requestPermissions(this, permissions
-                        ,PERMISSION_REQUEST_CODE);
+                        ,permissionRequestCode);
             }
         }else{
             ActivityCompat.requestPermissions(this, permissions,
-                    PERMISSION_REQUEST_CODE);
+                    permissionRequestCode);
         }
     }
     /**
@@ -240,7 +237,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mLocationPermissionGranted = false;
 
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (requestCode == permissionRequestCode) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 for (int grantResult : grantResults)
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
