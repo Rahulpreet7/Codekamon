@@ -193,6 +193,15 @@ public class photoTakingActivity extends AppCompatActivity {
             no_button.setVisibility(View.INVISIBLE);
             yes_button.setText("Return");
 
+            PlayersDB playersDB = new PlayersDB();
+            playersDB.getPlayer(this, new OnCompleteListener<Player>() {
+                @Override
+                public void onComplete(Player item, boolean success) {
+                    item.addQR(passedResult);
+
+                }
+            });
+
         }
     }
 
