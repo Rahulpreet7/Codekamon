@@ -7,7 +7,9 @@ import android.util.Log;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -30,12 +32,17 @@ public class PlayersDB {
      */
     private CollectionReference collectionReference;
 
+    private ArrayList<Player> playerArrayList = new ArrayList<>();
+
+
     /**
      * Creates the instance of PlayersDB.
      */
+
     public PlayersDB() {
         this.db = FirebaseFirestore.getInstance();
         this.collectionReference = db.collection("Players");
+
     }
 
     /**
@@ -103,6 +110,8 @@ public class PlayersDB {
         player.setPlayerCodes(qrCodes);
         listener.onComplete(player, true);
     }
+
+
 
     /**
      * Gets the Players collection reference.
