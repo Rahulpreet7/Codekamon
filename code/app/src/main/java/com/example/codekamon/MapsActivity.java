@@ -3,29 +3,22 @@ package com.example.codekamon;
 import static android.location.LocationManager.GPS_PROVIDER;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,10 +26,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -48,30 +39,27 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import org.gavaghan.geodesy.GlobalPosition;
+
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 /**
- * <h1>This class contains the Google map, the location of the codes, and the player
+ * <h1> This class contains the Google map, the location of nearby codes to the player(Red Markers)
+ * and the position of the player(Blue Marker)
+ *
  * @author Elisandro Cruz Martinez, Ryan Rom
  *
+ * Package References:
+ * Karumi(2021) Dexter (Version 6.2.3) [Package] https://github.com/Karumi/Dexter
  */
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     /**
-     * The Class "Viewing" obtains the data the user wants to add/edit to his/her records!.
-     * @param fineLocation
-     *  Type:String. Constant ACESS_fineLocation. Used to not write this all the time
-     * @param courseLocation
-     *  Type:String. Constant ACESS_COARSE_LOCATION Stores the diesel constant value. This is final.
-     * @param permissionRequestCode
-     *  Type:Integer. Constant permissionRequestCode. Value 101 used to keep a permission value
-     * @param DEFAULT_ZOOM
-     *  Type:Float. Constant zoom value in order to zoom in to either the player or target marker in the map.
      * @param radius
      *  Type:Float. Constant radius value, visibility of the other targets from the player.
-     * @param currentLocation
+     * @param currentPosition
      *  Type:Location. Stores the location of the current player of type LatLng
      * @param collectionReference
      *  Type:CollectionReference. Stores the collection that is obtained from firebase firestore database for "Codekamon" project.
@@ -79,30 +67,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      *  Type:FirebaseFirestore. Stores the reference to the remote database for the "Codekamon" project.
      * @param gMap
      *  Type:GoogleMap. Stores map when it is loaded up
-     * @param mLocationPermissionGranted
-     *  Type:Boolean. Stores a true/false value if user allowed access to the player's current location
-     * @param mFusedLocationProviderClient
-     *  Type:FusedLocationProviderClient. This is used to obtain the current location if all of the permissions are past
-     * @param targetsMakers
-     *  Type:ArrayList. Stores the targets/QR codes of from the database
+     * @param qr_code_markers
+     *  Type:ArrayList<MarkersOptions>. Stores the marker of targets/QR codes of from the database at that snapshot.
+     * @param qr_code_items
+     *  Type:ArrayList<DistancePlayerToTarget>. Stores the distance of player to the target and vice versa instance of the DistancePlayerToTarget class.
      * @param adapter
      *  Type:DistanceListViewAdapter. This is used to show the near by QR codes/targets in the database that are within the radius.
+     * @param showDatabaseUpdated
+     * Type:Boolean. This is used to notify the player if the database markers had change, so they know after 100 m and 3000 mili seconds the map will change.
      */
-    private static final String fineLocation = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String courseLocation = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int permissionRequestCode = 101;
-    private static final float radius = (float) 50.2;
-
+    private LatLng currentPosition;
+    private static final int radius = 200;
     private CollectionReference collectionReference;
     private FirebaseFirestore firebase;
     private GoogleMap gMap;
-    private Boolean first_time = true;
-    private Boolean mLocationPermissionGranted = false;
-    private ArrayList<DistancePlayerToTarget> targetsMarkers = new ArrayList<>();
+    private ArrayList<DistancePlayerToTarget> qr_code_items = new ArrayList<>();
+    private ArrayList<MarkerOptions> qr_code_markers = new ArrayList<>();
     private DistanceListViewAdapter adapter;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private LatLng currentLocation;
+
+    private boolean showDatabaseUpdated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +98,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         collectionReference = firebase.collection("Test_Map");
 
 
-        adapter = new DistanceListViewAdapter(this, targetsMarkers);
-        ListView markersList = findViewById(R.id.listviewNear);
-        markersList.setAdapter(adapter);
+        adapter = new DistanceListViewAdapter(this, qr_code_items);
+        ListView listViewNear = findViewById(R.id.listviewNear);
+        listViewNear.setAdapter(adapter);
+
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                qr_code_markers.clear();
+                if(showDatabaseUpdated)
+                    Toast.makeText(MapsActivity.this, "Change: Updated Codes In List", Toast.LENGTH_SHORT).show();
+                showDatabaseUpdated = true;
+                assert queryDocumentSnapshots != null;
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    MarkerOptions item = new MarkerOptions()
+                            .position(new LatLng((Double) doc.getData().get("lati"), (Double) doc.getData().get("long")))
+                            .title((String) doc.getData().get("name"));
+                    qr_code_markers.add(item);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+        listViewNear.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DistancePlayerToTarget click_point = (DistancePlayerToTarget) parent.getAdapter().getItem(position);
+                GlobalPosition getCodePosition = click_point.getCodePosition();
+                move_camara(
+                        new LatLng(getCodePosition.getLatitude(), getCodePosition.getLongitude())
+                );
+            }
+        });
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapsActivity.this);
@@ -130,55 +144,90 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                gMap.clear();
-                findPlayerMarker();
-                moveCamara(currentLocation);
+                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
+                gMap.clear();
+                qr_code_items.clear();
+
+                addPlayerMarker();
+
+                Toast.makeText(MapsActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
+
+                for (MarkerOptions marker : qr_code_markers) {
+                    if(isThisIsTheSameLocation(currentPosition, marker.getPosition())){
+                        if(DistancePlayerToTarget.pointsAreWithinRadius(currentPosition, marker.getPosition(), radius)){
+                            qr_code_items.add(
+                                    new DistancePlayerToTarget(marker.getTitle(), currentPosition, marker.getPosition())
+                            );
+                            gMap.addMarker(marker);
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
             }
         };
-        askLocationPermission();
+
+        getLocationPermission();
     }
 
-    private void askLocationPermission() {
+    /**
+     * The method "getLocationPermission" prompts the user with the option to allow/disallow the use of their current location.
+     * If permission is granted, than the Map will show the current position of the user.
+     **/
+
+    private void getLocationPermission() {
         Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                 if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {return;}
 
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 100, locationListener);
+
+
+                // This is called when we first get the location. Never called again
                 Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                currentLocation = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-                findPlayerMarker();
-                moveCamara(currentLocation);
+                currentPosition = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
+                addPlayerMarker();
+                move_camara(currentPosition);
             }
-
             @Override
-            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-
-            }
-
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {}
             @Override
             public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
                 permissionToken.continuePermissionRequest();
             }
         }).check();
     }
+
+    /**
+     * The method "isThisIsTheSameLocation" is used to determine whether the user's current
+     * position (i.e Blue Marker) matches one of the markers that symbolises the QR code(i.e Red Marker) . This difference
+     * is critical since we would have markers that overlapped (e.g the player and the qr code markers). We would want to avoid this/
+     * @param point1
+     * @param point2
+     * @return
+     */
+    private boolean isThisIsTheSameLocation(LatLng point1, LatLng point2){
+        return (point1.latitude != point2.latitude) && (point1.longitude != point2.longitude);
+    }
     /**
      * The method "findPlauerMaker" adds a marker to the current location of the player.
      */
-    public void findPlayerMarker() {
-        MarkerOptions marker = new MarkerOptions().position(currentLocation).title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+    public void addPlayerMarker() {
+        MarkerOptions marker = new MarkerOptions().
+                position(currentPosition).
+                title("You").
+                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         gMap.addMarker(marker);
+        move_camara(marker.getPosition());
     }
     /**
-     * The method "moveCamara" zooms in at a marker or player location based on the DEFUALT_ZOOM and LngLon
+     * The method "move" zooms in at a marker or player location based on a zoom of 16 and a LatLng of that area being zoomed in.
+     * @param latlng
      */
-    private void moveCamara(LatLng latlng) {
+    private void move_camara(LatLng latlng) {
         gMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
     }

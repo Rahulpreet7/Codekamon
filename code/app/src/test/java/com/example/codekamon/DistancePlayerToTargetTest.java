@@ -16,8 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import androidx.annotation.NonNull;
 
+import org.gavaghan.geodesy.GlobalPosition;
 import org.junit.jupiter.api.Test;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -28,78 +30,81 @@ import java.util.List;
  */
 
 public class DistancePlayerToTargetTest {
+    private String test_name = "null";
 
-   //53.56591,-113.5206902 <- current
-     //53.5265693, -113.5208212 <- target
-
-    //distance should be: 8.989m
     @NonNull
-    private MarkerOptions mockTargetTest(){
-        LatLng latLng = new LatLng(53.5264693, -113.5208212);
-        return new MarkerOptions().position(latLng).title("target");
+    private LatLng mock_target_test(){
+        LatLng latLng = new LatLng(53.5225, -113.5244);
+        return latLng;
     }
 
     @NonNull
-    private LatLng mockCurrentTest(){
-        return new LatLng(53.56591, -113.5206902);
+    private LatLng mock_current_test(){
+        return new LatLng(53.5232, -113.5263);
     }
 
     @Test
     void checkParameters(){
-        LatLng curr = mockCurrentTest();
-        MarkerOptions tar = mockTargetTest();
+        LatLng curr = mock_current_test();
+        LatLng tar = mock_target_test();
 
-        assertEquals(53.56591,curr.latitude);
-        assertEquals(-113.5206902,curr.longitude);
+        assertEquals(53.5232,curr.latitude);
+        assertEquals(-113.5263,curr.longitude);
 
-        assertEquals(53.5264693, tar.getPosition().latitude);
-        assertEquals(-113.5208212, tar.getPosition().longitude);
+        assertEquals(53.5225, tar.latitude);
+        assertEquals(-113.5244, tar.longitude);
 
     }
     @Test
-    void checkIfDistanceProduceDoubleValue(){
-        //LatLng curr = mockCurrentTest();
-        //MarkerOptions tar = mockTargetTest();
+    void testDistanceBetweenPoints(){
+        //Expected: Distance is: 0.09 miles / 0.15 kilometers / 0.08 nautical miles
+        // 0.09 miles -> 144.841 m
+        // I get approx 148.841 m. Decent Enough
 
-        //DistancePlayerToTarget dp = new DistancePlayerToTarget(tar.getTitle(), tar.getPosition(), curr);
-        //double d = dp.getDistance();
-        //assertEquals(8.989, d);
-        //From: (53°31'53.513513513526"N -113°31'34.68"E) To: (53°31'53.513513513526"N -113°31'32.741760147744"E)
-        //Distance is: 0.02 miles / 0.04 kilometers / 0.02 nautical miles
-        //32.18m
+        LatLng curr = mock_current_test();
+        LatLng tar = mock_target_test();
+        DistancePlayerToTarget points = new DistancePlayerToTarget(this.test_name,curr, tar);
+        double dis = points.get_distance();
+        boolean approximatelyEqual = (Math.abs(144.841 - dis) < 5) ? true : false;
+        assertTrue(approximatelyEqual);
     }
-
     @Test
-    void testGetCoordinates(){
-
-        LatLng curr = mockCurrentTest();
-        MarkerOptions tar = mockTargetTest();
-
-        DistancePlayerToTarget t = new DistancePlayerToTarget(tar.getTitle(), tar.getPosition(), curr);
-
-        //check if coordinates is of size 2
-        List<Double> crd = t.getCoordinates();
-        assertEquals(2, crd.size());
-
-        // check if it saves the right coordinates for the target value.
-        double target_mark_latitude = tar.getPosition().latitude;
-        double target_mark_longitude = tar.getPosition().longitude;
-        double target_tar_latitude = crd.get(0);
-        double target_tar_longitude = crd.get(1);
-
-        assertEquals(target_mark_latitude,target_tar_latitude);
-        assertEquals(target_mark_longitude, target_tar_longitude);
-
+    void testIfCoordinatesOfQRcodeWorks(){
+        /*
+            We already know the coordinates of the player.
+            We want to know if we can properly retrieve that of the QR code near it.
+         */
+        DecimalFormat df = new DecimalFormat("#.####");
+        LatLng curr = mock_current_test();
+        LatLng tar = mock_target_test();
+        DistancePlayerToTarget points = new DistancePlayerToTarget(this.test_name,curr, tar);
+        GlobalPosition qr_codePosition = points.getCodePosition();
+        Boolean approxLat = (Math.abs(qr_codePosition.getLatitude() - 53.5225) < 0.001) ? true : false;
+        Boolean approxLon = (Math.abs(qr_codePosition.getLongitude() - -113.5244) < 0.001) ? true : false;
+        assertTrue(approxLat);
+        assertTrue(approxLon);
     }
-
     @Test
-    void testGetName(){
-        LatLng curr = mockCurrentTest();
-        MarkerOptions tar = mockTargetTest();
-
-        DistancePlayerToTarget t = new DistancePlayerToTarget(tar.getTitle(), tar.getPosition(), curr);
-        assertEquals("target", t.getName());
-
+    void testIfPointsAreWithinDistance(){
+        //Expected: Distance is: 0.09 miles / 0.15 kilometers / 0.08 nautical miles
+        // 0.09 miles -> 144.841 m
+        // I get approx 148.841 m. Decent Enough
+        LatLng curr = mock_current_test();
+        LatLng tar = mock_target_test();
+        float radius = (float) 150.2;
+        boolean isItInRange = DistancePlayerToTarget.pointsAreWithinRadius(curr, tar, radius);
+        assertTrue(isItInRange);
+        radius = (float) 140.2;
+        isItInRange = DistancePlayerToTarget.pointsAreWithinRadius(curr, tar,radius);
+        assertFalse(isItInRange);
+    }
+    @Test
+    void testIfGetCurrentName(){
+        //check if name is gotten properly
+        LatLng curr = mock_current_test();
+        LatLng tar = mock_target_test();
+        DistancePlayerToTarget points = new DistancePlayerToTarget(this.test_name,curr, tar);
+        assertEquals("null", points.get_name());
     }
 }
 
