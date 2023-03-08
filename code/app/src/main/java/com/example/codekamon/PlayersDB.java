@@ -69,6 +69,7 @@ public class PlayersDB {
         data.put("Lowest Score", player.getLowestScore());
         data.put("Total Score", player.getTotalScore());
         data.put("ScannedCodes", player.getPlayerCodes());
+        data.put("Player Ranking", player.getUserRank());
         collectionReference.document(player.getAndroidId()).set(data);
     }
 
@@ -112,6 +113,7 @@ public class PlayersDB {
         Integer lowestScore = Integer.parseInt(snapshot.get("Lowest Score").toString());
         Integer numScanned = Integer.parseInt(snapshot.get("Number Of Codes Scanned").toString());
         Integer totalScore = Integer.parseInt(snapshot.get("Total Score").toString());
+        Integer playerRank = Integer.parseInt(snapshot.get("Player Ranking").toString());
         HashMap<String, String> qrCodes = (HashMap<String, String>) snapshot.get("ScannedCodes");
         Player player = new Player(username, email, androidId);
         player.setHighestScore(highestScore);
@@ -119,6 +121,7 @@ public class PlayersDB {
         player.setNumScanned(numScanned);
         player.setPlayerCodes(qrCodes);
         player.setTotalScore(totalScore);
+        player.setUserRank(playerRank);
         listener.onComplete(player, true);
     }
 

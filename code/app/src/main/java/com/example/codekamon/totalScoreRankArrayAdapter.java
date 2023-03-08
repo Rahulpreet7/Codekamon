@@ -38,17 +38,21 @@ public class totalScoreRankArrayAdapter extends ArrayAdapter<Player> {
 
         Player currentPlayer = playerArrayList.get(position);
 
+
+
         TextView userRank = (TextView) view.findViewById(R.id.userRank);
         TextView userName = (TextView) view.findViewById(R.id.userName);
         TextView userScore = (TextView) view.findViewById(R.id.userScore);
 
 
 
+        String userRankText = String.valueOf(playerArrayList.indexOf(currentPlayer) + 1);
+        currentPlayer.setUserRank(playerArrayList.indexOf(currentPlayer)+1);
 
         String userNameText =currentPlayer.getUserName();
         String userScoreText = currentPlayer.getTotalScore().toString();
 
-
+        userRank.setText(userRankText);
         userName.setText(userNameText);
         userScore.setText(userScoreText);
 

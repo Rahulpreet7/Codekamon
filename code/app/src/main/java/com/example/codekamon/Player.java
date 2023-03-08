@@ -56,6 +56,13 @@ public class Player implements Serializable {
      */
     private String androidId;
 
+    /**
+     * Holds the rank of the user
+     */
+    private Integer userRank;
+
+
+
     public Player() {
 
     }
@@ -76,6 +83,7 @@ public class Player implements Serializable {
         lowestScore = -1;
         totalScore = 0;
         numScanned = 0;
+        userRank = 0;
         playerCodes = new HashMap<>();
     }
 
@@ -127,8 +135,21 @@ public class Player implements Serializable {
                 .update("Highest Score", highestScore);
         myAccountRef
                 .update("Lowest Score", lowestScore);
+        myAccountRef
+                .update("Player Ranking", userRank);
 
     } //
+
+    public void updateRanking(){
+        FirebaseFirestore db;
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference =
+                db.collection("Players");
+        DocumentReference myAccountRef = collectionReference.document(androidId);
+
+        myAccountRef
+                .update("Player Ranking", userRank);
+    }
 
     /**
      * Deletes the specified qr code from the player object.
@@ -291,4 +312,25 @@ public class Player implements Serializable {
     public void setPlayerCodes(HashMap<String, String> playerCodes) {
         this.playerCodes = playerCodes;
     }
+
+    /**
+     * Gets the ranking of the player
+     *
+     * @return  The ranking of the player in Integer form
+     */
+    public Integer getUserRank() {
+        return userRank;
+    }
+
+    /**
+     * Sets the ranking of the player
+     *
+     * @param userRank The ranking of the player
+     */
+    public void setUserRank(Integer userRank) {
+        this.userRank = userRank;
+        updateRanking();
+
+    }
+
 }

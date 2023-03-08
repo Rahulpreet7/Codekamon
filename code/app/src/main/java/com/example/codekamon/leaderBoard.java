@@ -83,21 +83,25 @@ public class leaderBoard extends AppCompatActivity {
 
                         rankingList.setAdapter(totalScoreRankArrayAdapter);
 
+                        PlayersDB playersDB = new PlayersDB();
+                        playersDB.getPlayer(leaderBoard.this, new com.example.codekamon.OnCompleteListener<Player>() {
+                            @Override
+                            public void onComplete(Player item, boolean success) {
+
+
+                                playerScore.setText("Score: " + item.getTotalScore().toString());
+                                playerRank.setText("Rank: "+item.getUserRank().toString());
+
+                            }
+                        });
+
 
                     }
                 });
 
 
 
-        PlayersDB playersDB = new PlayersDB();
-        playersDB.getPlayer(this, new com.example.codekamon.OnCompleteListener<Player>() {
-            @Override
-            public void onComplete(Player item, boolean success) {
-                Integer userScoreText = item.getTotalScore();
-                playerScore.setText("Score: " + userScoreText.toString());
 
-            }
-        });
     }
 
 
