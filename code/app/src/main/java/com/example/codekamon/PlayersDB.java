@@ -4,10 +4,13 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,10 +30,12 @@ public class PlayersDB {
      */
     private FirebaseFirestore db;
 
+
     /**
      * Stores the Players collection reference.
      */
     private CollectionReference collectionReference;
+
 
     private ArrayList<Player> playerArrayList = new ArrayList<>();
 
@@ -41,6 +46,10 @@ public class PlayersDB {
 
     public PlayersDB() {
         this.db = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        db.setFirestoreSettings(settings);
         this.collectionReference = db.collection("Players");
 
     }
@@ -60,6 +69,7 @@ public class PlayersDB {
         data.put("Lowest Score", player.getLowestScore());
         data.put("Total Score", player.getTotalScore());
         data.put("ScannedCodes", player.getPlayerCodes());
+        data.put("Player Ranking", player.getUserRank());
         collectionReference.document(player.getAndroidId()).set(data);
     }
 
@@ -102,14 +112,20 @@ public class PlayersDB {
         Integer highestScore = Integer.parseInt(snapshot.get("Highest Score").toString());
         Integer lowestScore = Integer.parseInt(snapshot.get("Lowest Score").toString());
         Integer numScanned = Integer.parseInt(snapshot.get("Number Of Codes Scanned").toString());
+        Integer totalScore = Integer.parseInt(snapshot.get("Total Score").toString());
+        Integer playerRank = Integer.parseInt(snapshot.get("Player Ranking").toString());
         HashMap<String, String> qrCodes = (HashMap<String, String>) snapshot.get("ScannedCodes");
         Player player = new Player(username, email, androidId);
         player.setHighestScore(highestScore);
         player.setLowestScore(lowestScore);
         player.setNumScanned(numScanned);
         player.setPlayerCodes(qrCodes);
+        player.setTotalScore(totalScore);
+        player.setUserRank(playerRank);
         listener.onComplete(player, true);
     }
+
+
 
 
 

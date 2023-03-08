@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/UserProfileHeader"
         android:layout_width="320dp"
         android:layout_height="54dp"
         android:layout_marginTop="30dp"
@@ -18,47 +18,47 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/OtherUserName"
         android:layout_width="320dp"
         android:layout_height="54dp"
         android:layout_marginTop="30dp"
-        android:text="Name: "
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="320dp"
-        android:layout_height="54dp"
         android:text="Username: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserQRCodes" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/OtherUserEmail"
         android:layout_width="320dp"
         android:layout_height="54dp"
         android:text="Email: "
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserName" />
+
+    <TextView
+        android:id="@+id/OtherUserScore"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:text="User score: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserEmail" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/QRCodeImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/UserProfileHeader"
         app:srcCompat="@drawable/your_code" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/OtherUserQRCodes"
         android:layout_width="320dp"
         android:layout_height="54dp"
         android:text="QR Codes"
@@ -66,14 +66,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/QRCodeImage" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/OtherUserCodes"
         android:layout_width="320dp"
         android:layout_height="54dp"
-        android:text="Score: "
+        android:text="Total scanned codes: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserScore" />
 </androidx.constraintlayout.widget.ConstraintLayout>
