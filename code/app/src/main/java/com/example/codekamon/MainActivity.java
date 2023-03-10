@@ -17,15 +17,23 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This class handles the logic of the main screen.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseFirestore firestore;
+    /**
+     * onCreate is method is called when the activity is created and sets
+     * the icons to start different activities when clicked.
+     *
+     * @param savedInstanceState The saved instance state of the activity
+     */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getSupportActionBar().hide();
 
         ImageView map = findViewById(R.id.map_icon);
@@ -52,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Clicked the 'leaderboards'", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, leaderBoard.class);
+                startActivity(intent);
             }
         });
 
@@ -71,19 +81,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Intent intent = getIntent();
-
-        //deviceId -> Needs to be passed to other activities that need the users details
-        String deviceId = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-
-        firestore = FirebaseFirestore.getInstance();
-        CollectionReference collectionReference = firestore.collection("Players");
-        collectionReference.document(deviceId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        PlayersDB playersDB = new PlayersDB();
+        playersDB.getPlayer(this, new com.example.codekamon.OnCompleteListener<Player>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(Player item, boolean success) {
                 TextView username = findViewById(R.id.username_text);
-                username.setText(task.getResult().get("Username").toString());
+                username.setText(item.getUserName());
             }
         });
     }

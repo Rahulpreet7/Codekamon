@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Codekamon</string>
+    <string-array name="rankingsortby">
+        <item>Highest Score</item>
+        <item>Highest Scoring Unique QR Codes</item>
+    </string-array>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="longitude">Longitude:</string>
     <string name="latitude">Latitude:</string>

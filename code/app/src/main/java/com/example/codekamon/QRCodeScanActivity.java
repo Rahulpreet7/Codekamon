@@ -61,13 +61,15 @@ public class QRCodeScanActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Toast.makeText(QRCodeScanActivity.this, "stage 1 finished!", Toast.LENGTH_SHORT).show();
                 scannedResult = new QRCode(nameText.getText().toString(), sb.toString());
+                //dPlayer player = (Player) getIntent().getSerializableExtra("PLAYER");
+                //player.addQR(scannedResult);
                 Intent intent = new Intent(QRCodeScanActivity.this, photoTakingActivity.class);
                 //can it be simplified?
-                //intent.putExtra("Name", nameText.getText().toString());
-                //intent.putExtra("sb", sb.toString());
+                intent.putExtra("Name", nameText.getText().toString());
+                intent.putExtra("sb", sb.toString());
                 //for testing
-                intent.putExtra("Name", "abcd");
-                intent.putExtra("sb", "sb");
+                //intent.putExtra("Name", "abcd");
+                //intent.putExtra("sb", "sb");
                 startActivity(intent);
 
 
