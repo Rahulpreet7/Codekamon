@@ -54,4 +54,7 @@ dependencies {
     androidTestImplementation "androidx.test:rules:1.2.0"
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
 
+    implementation 'com.karumi:dexter:6.2.3'
+    implementation 'org.gavaghan:geodesy:1.1.3'
+
 }
