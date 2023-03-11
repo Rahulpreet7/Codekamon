@@ -5,14 +5,36 @@ import android.graphics.BitmapFactory;
 
 public class QRCode {
 
+    /**
+     * Stores the latitude value.
+     */
     private double latitude;
+    /**
+     * Stores the longitude value.
+     */
     private double longitude;
+    /**
+     * Stores the QRcode name.
+     */
     private String name;
+    /**
+     * Stores the score based on hash value.
+     */
     private int score;
+    /**
+     * Stores the hash value of the code.
+     */
     private String content;
-    //private Bitmap photoSurrounding;
+    /**
+     * Stores the image taken converted to string.
+     */
     private String photoAsBytes = "";
 
+    /**
+     * constructor
+     *
+     * @param content: hash value of QR code
+     */
     public QRCode(String content)
     {
         this.name = "default";
@@ -20,6 +42,12 @@ public class QRCode {
         this.score = calcScore();
     }
 
+    /**
+     * constructor
+     *
+     * @param name: name of QR code
+     * @param content: hash value of QR code
+     */
     public QRCode(String name, String content)
     {
         this.name = name;
@@ -34,23 +62,23 @@ public class QRCode {
     {
         this.photoAsBytes = photoAsBytes;
     }
-    //public void setPhotoSurrounding(Bitmap _bitmap)
-    //{
-        //this.photoSurrounding = _bitmap;
-    //}
+
+
     public String getName(){return this.name;}
 
-    public Bitmap getPhotoSurrounding() {
-        Bitmap returner = BitmapFactory.decodeByteArray(photoAsBytes.getBytes(), 0, photoAsBytes.getBytes().length);
-        return returner;
-        //return photoSurrounding;
-    }
 
+    /**
+     * set the location of QR code
+     *
+     * @param latitude: latitude of QR code scanned
+     * @param longitude: longitude of QR code scanned
+     */
     public void setLocation(double latitude, double longitude)
     {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
 
     public double getLatitude()
     {
@@ -71,6 +99,11 @@ public class QRCode {
         return score;
     }
 
+    /**
+     * calculate the score based on the hash value
+     *
+     * @return the score calculated.
+     */
     private int calcScore()
     {
 

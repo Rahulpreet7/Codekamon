@@ -27,27 +27,51 @@ import java.security.NoSuchAlgorithmException;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-
+/**
+ * This class handles the logic of scanning process.
+ */
 public class QRCodeScanActivity extends AppCompatActivity {
-    public static final String DEVICE_ID = "com.example.codekamon.DEVICE_ID";
-    private MessageDigest md = MessageDigest.getInstance("SHA-256");
-    private int stage = 0;
-    private TextView showScoreText;
-    private TextView caughtText;
-    private TextView nameText;
-    private Button stage_one_button;
-    private static QRCode scannedResult;
-    private StringBuilder sb = new StringBuilder();
 
+    public static final String DEVICE_ID = "com.example.codekamon.DEVICE_ID";
+    /**
+     * the digest rule to convert QRcode to bytes.
+     */
+    private MessageDigest md = MessageDigest.getInstance("SHA-256");
+    /**
+     * the text showing scores.
+     */
+    private TextView showScoreText;
+    /**
+     * the text frame for input name.
+     */
+    private TextView nameText;
+    /**
+     * the button for proceed.
+     */
+    private Button stage_one_button;
+    /**
+     * stores the scanned result as QRcode.
+     */
+    private static QRCode scannedResult;
+    /**
+     * stores the built up raw bytes.
+     */
+    private StringBuilder sb = new StringBuilder();
 
 
     public QRCodeScanActivity() throws NoSuchAlgorithmException {
     }
+    /**
+     * onCreate is method is called when the activity is created and sets
+     * the views and activities when clicked.
+     *
+     * @param savedInstanceState The saved instance state of the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.show_score);
         super.onCreate(savedInstanceState);
-        stage = 0;
+
         showScoreText = findViewById(R.id.show_score_text);
         stage_one_button = findViewById(R.id.stage_one_button);
         nameText = findViewById(R.id.naming_textframe);
@@ -62,56 +86,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
         IntentIntegrator intentIntegrator = new IntentIntegrator(QRCodeScanActivity.this);
         //intentIntegrator.setPrompt("Scan a QR code");
         //intentIntegrator.setOrientationLocked(false);
-        //intentIntegrator.initiateScan();
-
-
-
-
-/*
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted, display a dialog or notification to prompt the user
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)) {
-
-
-
-            }
-            else {
-
-                intentIntegrator.initiateScan();
-            }
-
-        } else {
-
-            // Camera permission is already granted, proceed with taking photos
-            intentIntegrator.initiateScan();
-        }
-
-*/
-
-        //String[] PERMISSIONS = {android.Manifest.permission.CAMERA}
-/*
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 100);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is granted
-        } else {
-            // Permission is not granted
-            Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
-            startActivity(intent);
-        }
-
- */
-
-
-
-
-
+        intentIntegrator.initiateScan();
 
 
 
@@ -120,15 +95,14 @@ public class QRCodeScanActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Toast.makeText(QRCodeScanActivity.this, "stage 1 finished!", Toast.LENGTH_SHORT).show();
                 scannedResult = new QRCode(nameText.getText().toString(), sb.toString());
-                //dPlayer player = (Player) getIntent().getSerializableExtra("PLAYER");
-                //player.addQR(scannedResult);
+
                 Intent intent = new Intent(QRCodeScanActivity.this, photoTakingActivity.class);
-                //can it be simplified?
-                //intent.putExtra("Name", nameText.getText().toString());
-                //intent.putExtra("sb", sb.toString());
+                //can't simplified
+                intent.putExtra("Name", nameText.getText().toString());
+                intent.putExtra("sb", sb.toString());
                 //for testing
-                intent.putExtra("Name", "abcd");
-                intent.putExtra("sb", "sb");
+                //intent.putExtra("Name", "abcd");
+                //intent.putExtra("sb", "sb");
                 startActivity(intent);
 
 
@@ -143,18 +117,14 @@ public class QRCodeScanActivity extends AppCompatActivity {
 
     }
 
-    //received help from https://www.geeksforgeeks.org/how-to-read-qr-code-using-zxing-library-in-android/
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
         QRCodeScanActivity.super.onActivityResult(requestCode,resultCode,data);
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-
-
-
-        // if the intentResult is null then
-        // toast a message as "cancelled"
+        // if the intentResult is null then "cancelled"
         if (intentResult != null) {
             System.out.println(intentResult);
             if(data == null)
@@ -183,15 +153,10 @@ public class QRCodeScanActivity extends AppCompatActivity {
                     }
                     Toast.makeText(getBaseContext(),sb, Toast.LENGTH_SHORT).show();
                     scannedResult = new QRCode(sb.toString());
-                    stage ++;
+
                     showScoreText.setText("Points: " + scannedResult.getScore());
 
 
-
-
-
-                    //messageText.setText(intentResult.getContents());
-                    //messageFormat.setText(intentResult.getFormatName());
                 }
             }
 
