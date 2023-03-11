@@ -62,7 +62,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
         IntentIntegrator intentIntegrator = new IntentIntegrator(QRCodeScanActivity.this);
         //intentIntegrator.setPrompt("Scan a QR code");
         //intentIntegrator.setOrientationLocked(false);
-        intentIntegrator.initiateScan();
+        //intentIntegrator.initiateScan();
 
 
 
@@ -124,11 +124,11 @@ public class QRCodeScanActivity extends AppCompatActivity {
                 //player.addQR(scannedResult);
                 Intent intent = new Intent(QRCodeScanActivity.this, photoTakingActivity.class);
                 //can it be simplified?
-                intent.putExtra("Name", nameText.getText().toString());
-                intent.putExtra("sb", sb.toString());
+                //intent.putExtra("Name", nameText.getText().toString());
+                //intent.putExtra("sb", sb.toString());
                 //for testing
-                //intent.putExtra("Name", "abcd");
-                //intent.putExtra("sb", "sb");
+                intent.putExtra("Name", "abcd");
+                intent.putExtra("sb", "sb");
                 startActivity(intent);
 
 

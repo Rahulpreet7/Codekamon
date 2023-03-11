@@ -147,13 +147,21 @@ public class photoTakingActivity extends AppCompatActivity {
 
             String s = bitmapToString(imageBitmap);
             //photo_show.setImageBitmap(imageBitmap);
+
+
+            //how to change string back to bitmap, in order to show the image.
+            //byte[] imageBytes = Base64.decode(s, Base64.DEFAULT);
+            //Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            //photo_show.setImageBitmap(bitmap);
+
+
             //photo_show.setImageBitmap(passedResult.getPhotoSurrounding());
 
             passedResult.setPhotoAsBytes(s);
             //WIP
-            /*
-            System.out.println(s == null);
 
+            //System.out.println(s == null);
+/*
             YuvImage yuvimage = new YuvImage(s.getBytes(), ImageFormat.NV21, 600, 600, null);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             yuvimage.compressToJpeg(new Rect(0,0,20,20), 80, baos);
