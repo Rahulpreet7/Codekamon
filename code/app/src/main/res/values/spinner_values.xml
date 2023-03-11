@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sorty_options">
+        <item>Total Score</item>
+        <item>Highest Scoring QR code</item>
+    </string-array>
+</resources>
