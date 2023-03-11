@@ -1,7 +1,19 @@
 package com.example.codekamon;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,14 +30,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class QRCodeScanActivity extends AppCompatActivity {
     public static final String DEVICE_ID = "com.example.codekamon.DEVICE_ID";
-    MessageDigest md = MessageDigest.getInstance("SHA-256");
-    int stage = 0;
-    TextView showScoreText;
-    TextView caughtText;
-    TextView nameText;
-    Button stage_one_button;
-    static QRCode scannedResult;
-    StringBuilder sb = new StringBuilder();
+    private MessageDigest md = MessageDigest.getInstance("SHA-256");
+    private int stage = 0;
+    private TextView showScoreText;
+    private TextView caughtText;
+    private TextView nameText;
+    private Button stage_one_button;
+    private static QRCode scannedResult;
+    private StringBuilder sb = new StringBuilder();
 
 
 
@@ -48,9 +60,56 @@ public class QRCodeScanActivity extends AppCompatActivity {
         //if test, command this.
 
         IntentIntegrator intentIntegrator = new IntentIntegrator(QRCodeScanActivity.this);
-        intentIntegrator.setPrompt("Scan a QR code");
-        intentIntegrator.setOrientationLocked(false);
+        //intentIntegrator.setPrompt("Scan a QR code");
+        //intentIntegrator.setOrientationLocked(false);
         intentIntegrator.initiateScan();
+
+
+
+
+/*
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted, display a dialog or notification to prompt the user
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+
+
+
+            }
+            else {
+
+                intentIntegrator.initiateScan();
+            }
+
+        } else {
+
+            // Camera permission is already granted, proceed with taking photos
+            intentIntegrator.initiateScan();
+        }
+
+*/
+
+        //String[] PERMISSIONS = {android.Manifest.permission.CAMERA}
+/*
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 100);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is granted
+        } else {
+            // Permission is not granted
+            Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+
+ */
+
+
+
 
 
 
@@ -90,35 +149,53 @@ public class QRCodeScanActivity extends AppCompatActivity {
     {
         QRCodeScanActivity.super.onActivityResult(requestCode,resultCode,data);
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+
+
+
         // if the intentResult is null then
         // toast a message as "cancelled"
         if (intentResult != null) {
-            Bundle bundle = data.getExtras();
-            if (intentResult.getContents() == null) {
-                Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
+            System.out.println(intentResult);
+            if(data == null)
+            {
+                Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
+                startActivity(intent);
 
-            } else {
+            }else
+            {
+                Bundle bundle = data.getExtras();
 
-                //Toast.makeText(getBaseContext(),intentResult.getRawBytes().toString(), Toast.LENGTH_SHORT).show();
-                byte[] encrypted = md.digest(intentResult.getRawBytes());
+                if (intentResult.getContents() == null) {
+                    Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    //Toast.makeText(getBaseContext(),intentResult.getRawBytes().toString(), Toast.LENGTH_SHORT).show();
+                    byte[] encrypted = md.digest(intentResult.getRawBytes());
 
 
-                for(byte b : encrypted)
-                {
-                    sb.append(String.format("%02x", b));
+                    for(byte b : encrypted)
+                    {
+                        sb.append(String.format("%02x", b));
+                    }
+                    Toast.makeText(getBaseContext(),sb, Toast.LENGTH_SHORT).show();
+                    scannedResult = new QRCode(sb.toString());
+                    stage ++;
+                    showScoreText.setText("Points: " + scannedResult.getScore());
+
+
+
+
+
+                    //messageText.setText(intentResult.getContents());
+                    //messageFormat.setText(intentResult.getFormatName());
                 }
-                Toast.makeText(getBaseContext(),sb, Toast.LENGTH_SHORT).show();
-                scannedResult = new QRCode(sb.toString());
-                stage ++;
-                showScoreText.setText("Points: " + scannedResult.getScore());
-
-
-
-
-
-                //messageText.setText(intentResult.getContents());
-                //messageFormat.setText(intentResult.getFormatName());
             }
+
+
         }
     }
 }

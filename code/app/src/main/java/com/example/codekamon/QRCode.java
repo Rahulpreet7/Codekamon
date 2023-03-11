@@ -10,7 +10,7 @@ public class QRCode {
     private String name;
     private int score;
     private String content;
-    private Bitmap photoSurrounding;
+    //private Bitmap photoSurrounding;
     private String photoAsBytes = "";
 
     public QRCode(String content)
@@ -34,10 +34,10 @@ public class QRCode {
     {
         this.photoAsBytes = photoAsBytes;
     }
-    public void setPhotoSurrounding(Bitmap _bitmap)
-    {
-        this.photoSurrounding = _bitmap;
-    }
+    //public void setPhotoSurrounding(Bitmap _bitmap)
+    //{
+        //this.photoSurrounding = _bitmap;
+    //}
     public String getName(){return this.name;}
 
     public Bitmap getPhotoSurrounding() {
@@ -71,7 +71,7 @@ public class QRCode {
         return score;
     }
 
-    public int calcScore()
+    private int calcScore()
     {
 
         int return_score = 0;
