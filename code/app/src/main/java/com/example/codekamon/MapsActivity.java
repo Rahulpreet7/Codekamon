@@ -99,7 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         adapter = new DistanceListViewAdapter(this, qr_code_items);
-        ListView listViewNear = findViewById(R.id.listviewNear);
+        ListView listViewNear;
+        listViewNear = findViewById(R.id.listviewNear);
         listViewNear.setAdapter(adapter);
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
