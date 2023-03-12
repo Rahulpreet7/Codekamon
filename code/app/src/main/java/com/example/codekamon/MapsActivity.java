@@ -45,36 +45,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h1> This class contains the Google map, the location of nearby codes to the player(Red Markers)
- * and the position of the player(Blue Marker)
+ * This class contains the Google map, the location of nearby codes to the player(Red Markers)
+ * and the position of the player(Blue Marker)<br>
  *
- * @author Elisandro Cruz Martinez, Ryan Rom
+ * Author(s): Elisandro Cruz Martinez, Ryan Rom <br>
  *
- * Package References:
- * Karumi(2021) Dexter (Version 6.2.3) [Package] https://github.com/Karumi/Dexter
+ * Package References:<br>
+ * Karumi(2021) Dexter (Version 6.2.3) [Package] https://github.com/Karumi/Dexter <br>
+ *
  */
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     /**
-     * @param radius
-     *  Type:Float. Constant radius value, visibility of the other targets from the player.
-     * @param currentPosition
-     *  Type:Location. Stores the location of the current player of type LatLng
-     * @param collectionReference
-     *  Type:CollectionReference. Stores the collection that is obtained from firebase firestore database for "Codekamon" project.
-     * @param firebase
-     *  Type:FirebaseFirestore. Stores the reference to the remote database for the "Codekamon" project.
-     * @param gMap
-     *  Type:GoogleMap. Stores map when it is loaded up
-     * @param qr_code_markers
-     *  Type:ArrayList<MarkersOptions>. Stores the marker of targets/QR codes of from the database at that snapshot.
-     * @param qr_code_items
-     *  Type:ArrayList<DistancePlayerToTarget>. Stores the distance of player to the target and vice versa instance of the DistancePlayerToTarget class.
-     * @param adapter
-     *  Type:DistanceListViewAdapter. This is used to show the near by QR codes/targets in the database that are within the radius.
-     * @param showDatabaseUpdated
-     * Type:Boolean. This is used to notify the player if the database markers had change, so they know after 100 m and 3000 mili seconds the map will change.
+     * @param radius Constant radius value, visibility of the other targets from the player.
+     * @param currentPosition Stores the location of the current player of type LatLng
+     * @param collectionReference Stores the collection that is obtained from firebase firestore database for "Codekamon" project.
+     * @param firebase Stores the reference to the remote database for the "Codekamon" project.
+     * @param gMap Stores map when it is loaded up
+     * @param qr_code_markers Stores the marker of targets/QR codes of from the database at that snapshot.
+     * @param qr_code_items Stores the distance of player to the target and vice versa instance of the DistancePlayerToTarget class.
+     * @param adapter This is used to show the near by QR codes/targets in the database that are within the radius.
+     * @param showDatabaseUpdated This is used to notify the player if the database markers had change, so they know after 100 m and 3000 mili seconds the map will change.
      */
     private LatLng currentPosition;
     private static final int radius = 200;
@@ -174,8 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * The method "getLocationPermission" prompts the user with the option to allow/disallow the use of their current location.
      * If permission is granted, than the Map will show the current position of the user.
-     **/
-
+     */
     private void getLocationPermission() {
         Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
             @Override
@@ -208,13 +198,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * is critical since we would have markers that overlapped (e.g the player and the qr code markers). We would want to avoid this/
      * @param point1
      * @param point2
-     * @return
+     * @return returns true or false depending if they are the same marker.
      */
     private boolean isThisIsTheSameLocation(LatLng point1, LatLng point2){
         return (point1.latitude != point2.latitude) && (point1.longitude != point2.longitude);
     }
     /**
-     * The method "findPlauerMaker" adds a marker to the current location of the player.
+     * The method "findPlayerMaker" adds a marker to the current location of the player.
      */
     public void addPlayerMarker() {
         MarkerOptions marker = new MarkerOptions().

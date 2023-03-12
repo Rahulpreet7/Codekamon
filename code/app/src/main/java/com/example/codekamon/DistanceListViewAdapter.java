@@ -14,8 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h1>This class "DistanceListViewAdapter" is used to display a cell in the list of the codekamon and its details.
- * @author Elisandro Cruz Martinez
+ * This class "DistanceListViewAdapter" is used to display a cell in the list of the codekamon and its details
+ *
+ * Author: Elisandro Cruz Martinez
  *
  */
 public class DistanceListViewAdapter extends ArrayAdapter<DistancePlayerToTarget> {
