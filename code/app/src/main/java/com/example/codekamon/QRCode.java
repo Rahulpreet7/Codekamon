@@ -80,29 +80,50 @@ public class QRCode {
     }
 
 
+    /**
+     * Latitude getter
+     *
+     * @return latitude
+     */
     public double getLatitude()
     {
         return this.latitude;
     }
+    /**
+     * Latitude getter
+     *
+     * @return longitude
+     */
     public double getLongitude()
     {
         return this.longitude;
     }
 
+    /**
+     * content getter
+     *
+     * @return content
+     */
     public String getContent()
     {
         return content;
     }
 
+    /**
+     * score getter
+     *
+     * @return score
+     */
     public int getScore()
     {
         return score;
     }
 
+
     /**
      * calculate the score based on the hash value
      *
-     * @return the score calculated.
+     * @return return_score
      */
     private int calcScore()
     {
