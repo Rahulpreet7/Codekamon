@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -193,8 +194,11 @@ public class photoTakingActivity extends AppCompatActivity {
             no_button.setVisibility(View.INVISIBLE);
             yes_button.setText("Return");
 
-            PlayersDB playersDB = new PlayersDB();
-            playersDB.getPlayer(this, new OnCompleteListener<Player>() {
+            String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+
+            PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+            playersDB.getPlayer(deviceId, new OnCompleteListener<Player>() {
                 @Override
                 public void onComplete(Player item, boolean success) {
                     item.addQR(passedResult);

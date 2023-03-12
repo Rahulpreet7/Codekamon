@@ -81,8 +81,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        PlayersDB playersDB = new PlayersDB();
-        playersDB.getPlayer(this, new com.example.codekamon.OnCompleteListener<Player>() {
+        String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+        playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {
             @Override
             public void onComplete(Player item, boolean success) {
                 TextView username = findViewById(R.id.username_text);
