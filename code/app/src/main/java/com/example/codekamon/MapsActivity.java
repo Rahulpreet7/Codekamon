@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -77,6 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DistanceListViewAdapter adapter;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private Button bck;
 
     private boolean showDatabaseUpdated = false;
 
@@ -87,12 +89,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         firebase = FirebaseFirestore.getInstance();
         collectionReference = firebase.collection("Test_Map");
-
+        bck = findViewById(R.id.back);
 
         adapter = new DistanceListViewAdapter(this, qr_code_items);
         ListView listViewNear;
         listViewNear = findViewById(R.id.listviewNear);
         listViewNear.setAdapter(adapter);
+
+        bck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {finish();}
+        });
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
