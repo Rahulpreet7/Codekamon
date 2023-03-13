@@ -162,6 +162,13 @@ public class photoTakingActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * onAcitvity result is called when an activity is called and executed.
+     *
+     * @param requestCode identify who this result came from
+     * @param resultCode identify the child activity through its setResult()
+     * @param data intent returns to the caller.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         photoTakingActivity.super.onActivityResult(requestCode, resultCode, data);
@@ -186,7 +193,7 @@ public class photoTakingActivity extends AppCompatActivity {
             //WIP
 
             //System.out.println(s == null);
-/*
+            /*
             YuvImage yuvimage = new YuvImage(s.getBytes(), ImageFormat.NV21, 600, 600, null);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             yuvimage.compressToJpeg(new Rect(0,0,20,20), 80, baos);
