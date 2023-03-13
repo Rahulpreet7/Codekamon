@@ -36,7 +36,29 @@ android {
             useJUnitPlatform()
         }
     }
+}
 
+task javadoc(type: Javadoc) {
+    doFirst {
+        configurations.implementation
+                .filter { it.name.endsWith('.aar') }
+                .each { aar ->
+                    copy {
+                        from zipTree(aar)
+                        include "**/classes.jar"
+                        into "$buildDir/tmp/aarsToJars/${aar.name.replace('.aar', '')}/"
+                    }
+                }
+    }
+    configurations.implementation.setCanBeResolved(true)
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.implementation
+    classpath += fileTree(dir: "$buildDir/tmp/aarsToJars/")
+    destinationDir = file("${project.buildDir}/outputs/javadoc/")
+    failOnError false
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
 }
 
 dependencies {
@@ -54,6 +76,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
 
+    //JUnit test
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
     //For ui test
     androidTestImplementation "androidx.test:runner:1.2.0"
     androidTestImplementation "androidx.test:rules:1.2.0"

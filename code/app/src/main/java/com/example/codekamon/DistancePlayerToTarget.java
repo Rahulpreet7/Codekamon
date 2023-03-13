@@ -6,32 +6,27 @@ import org.gavaghan.geodesy.*;
 import java.text.DecimalFormat;
 
 /**
- * <h1>This class "DistancePlayerToTarget" contains details about the location and etc of the Codekamon
- * @author Elisandro Cruz Martinez
+ * <h1>This class "DistancePlayerToTarget" contains details about the distance between your current location (player's) and code (target's)
+ * and etc of the Codekamon</h1>
  *
- * Package Reference:
- * Karumi(2021) Dexter (Version 6.2.3) [Package] https://github.com/Karumi/Dexter
- * Mike Gavaghan(2021) Geodesy (Version 1.1.3) [Package] https://github.com/mgavaghan/geodesy
+ * Authors(s): Elisandro Cruz Martinez<br>
+ *
+ * Package Reference:\n
+ * Karumi(2021) Dexter (Version 6.2.3) [Package] https://github.com/Karumi/Dexter<br>
+ * Mike Gavaghan(2021) Geodesy (Version 1.1.3) [Package] https://github.com/mgavaghan/geodesy <br>
  *
  */
 
 public class DistancePlayerToTarget implements Comparable {
     /**
      * Attributes of the "DistancePlayerToTarget" class.
-     * @param df
-     * Type: DecimalFormat. This is used to round decimal values for the distance
-     * @param geoCalc
-     * Type: GeodeticCalculator. This is a behavior class that contains the actual implementations of Vincenty’s Formulae.
-     * @param ref
-     * Type: Ellipsoid. An immutable property class representing a model of Earth used for geodetic calculations
-     * @param distance
-     * Type: double. A distance between the current position of the player and the qr code currently within range in the map.
-     * @param currentPosition
-     * Type: GlobalPosition. Measurement of elevation, in meters, above or below the reference Ellipsoid given the long and lat of player's current position.
-     * @param targetPosition
-     * Type: GlobalPosition. Measurement of elevation, in meters, above or below the reference Ellipsoid given the long and lat of qr code's current position.
-     * @param name
-     * Type:String. This has the name of the qr code.
+     * @param df This is used to round decimal values for the distance
+     * @param geoCalc This is a behavior class that contains the actual implementations of Vincenty’s Formulae.
+     * @param ref An immutable property class representing a model of Earth used for geodetic calculations
+     * @param distance A distance between the current position of the player and the qr code currently within range in the map.
+     * @param currentPosition Measurement of elevation, in meters, above or below the reference Ellipsoid given the long and lat of player's current position.
+     * @param targetPosition Measurement of elevation, in meters, above or below the reference Ellipsoid given the long and lat of qr code's current position.
+     * @param name This has the name of the qr code.
      */
     private static final DecimalFormat df = new DecimalFormat("#.###");
     private static final GeodeticCalculator geoCalc = new GeodeticCalculator();
@@ -42,9 +37,9 @@ public class DistancePlayerToTarget implements Comparable {
     private String name;
     /**
      * Constructor initializes "DistancePlayerToTarget" class
-     * @param name
-     * @param currentLocation
-     * @param targetLocation
+     * @param name name of the codekamon
+     * @param currentLocation the long and lat of the player
+     * @param targetLocation the long and lat of the Codekamon
      */
     public DistancePlayerToTarget(String name, LatLng currentLocation, LatLng targetLocation){
         this.name = name;
@@ -54,7 +49,7 @@ public class DistancePlayerToTarget implements Comparable {
     }
     /**
      * This method "distanceBetweenPoints" calculates the the two points using the Vincenty’s Formula and returns a double value 3 decimal places.
-     * @return double
+     * @return calculate the distance between two points (e.g the player and the codekamon)
      */
     private double distanceBetweenPoints(){
         double distance;
@@ -63,10 +58,10 @@ public class DistancePlayerToTarget implements Comparable {
     }
     /**
      * This method "pointsAreWithinRadius" returns a boolean if the distance between two points are within a given range(i.e radius).
-     * @param curr
-     * @param tar
-     * @param radius
-     * @return
+     * @param curr current location of the player
+     * @param tar current position of the QR code
+     * @param radius the scope of visibility for the player
+     * @return Boolean whether the Codekamon is in the visibility/radius of the player
      */
     public static Boolean pointsAreWithinRadius(LatLng curr, LatLng tar, float radius){
         GlobalPosition current_point =  new GlobalPosition(curr.latitude, curr.longitude, 0.0);
@@ -76,26 +71,25 @@ public class DistancePlayerToTarget implements Comparable {
     }
     /**
      * This method "getName" gets the name of the codekamon
-     * @return this.name
+     * @return The name of the Codekamon
      */
     public String get_name(){return this.name;}
     /**
      * This method "getDistance" gets the distance of the player and the codekamon.
-     * @return this.distance
+     * @return distance of the player to the Codekamon
      */
     public double get_distance(){return this.distance;}
     /**
      * This method "getCoordinates" gets the coordinates location of the codekamon
-     * @return ArrayList
+     * @return the distance (i.e meters) of the Codekamon and Player.
      */
     public GlobalPosition getCodePosition(){
         return this.targetPosition;
     }
     /**
      * This method "compareTo" is used to sort the distances from the closets to furthers within the radius of visibility.
-     * @param o
-     *  Type: Object. This contains the object that is going to be compared.
-     * @return ArrayList
+     * @param o object representing the "DistancePlayerToTarget" we must check.
+     * @return The Position of Code
      */
     @Override
     public int compareTo(Object o) {
