@@ -49,6 +49,10 @@ public class PlayersDB {
 
     public PlayersDB(FirebaseFirestore firestore) {
         this.db = firestore;
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        db.setFirestoreSettings(settings);
         this.collectionReference = db.collection("Players");
 
     }
