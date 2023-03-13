@@ -134,7 +134,7 @@ public class PlayersDB {
         player.setNumScanned(numScanned);
         player.setPlayerCodes(qrCodes);
         player.setTotalScore(totalScore);
-//        player.setUserRank(playerRank);
+        player.setUserRank(playerRank);
         listener.onComplete(player, true);
     }
 
