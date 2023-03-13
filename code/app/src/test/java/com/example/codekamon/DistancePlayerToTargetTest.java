@@ -18,7 +18,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- @@ -28,78 +30,81 @@
+ * Test if "DistancePlayerToTarget" class' methods are working properly
  */
 
 public class DistancePlayerToTargetTest {
@@ -35,6 +35,9 @@ public class DistancePlayerToTargetTest {
         return new LatLng(53.5232, -113.5263);
     }
 
+    /**
+     * Check if parameters are done properly
+     */
     @Test
     void checkParameters(){
         LatLng curr = mock_current_test();
@@ -47,6 +50,10 @@ public class DistancePlayerToTargetTest {
         assertEquals(-113.5244, tar.longitude);
 
     }
+
+    /**
+     * Check if the distance between two points are exactly 144.841 meters
+     */
     @Test
     void testDistanceBetweenPoints(){
         //Expected: Distance is: 0.09 miles / 0.15 kilometers / 0.08 nautical miles
@@ -60,6 +67,10 @@ public class DistancePlayerToTargetTest {
         boolean approximatelyEqual = (Math.abs(144.841 - dis) < 5) ? true : false;
         assertTrue(approximatelyEqual);
     }
+
+    /**
+     * Test to see if you can get the coordinates of the code
+     */
     @Test
     void testIfCoordinatesOfQRcodeWorks(){
         /*
@@ -76,6 +87,10 @@ public class DistancePlayerToTargetTest {
         assertTrue(approxLat);
         assertTrue(approxLon);
     }
+
+    /**
+     * Test if the radius requirement for visibility works. Player can only see to a certain amount of distance in meters.
+     */
     @Test
     void testIfPointsAreWithinDistance(){
         //Expected: Distance is: 0.09 miles / 0.15 kilometers / 0.08 nautical miles
@@ -90,6 +105,10 @@ public class DistancePlayerToTargetTest {
         isItInRange = DistancePlayerToTarget.pointsAreWithinRadius(curr, tar,radius);
         assertFalse(isItInRange);
     }
+
+    /**
+     * Test if you can get the name of the code.
+     */
     @Test
     void testIfGetCurrentName(){
         //check if name is gotten properly

@@ -1,6 +1,6 @@
 package com.example.codekamon;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PlayerUnitTest {
     private QRCode mockQRCode() {
