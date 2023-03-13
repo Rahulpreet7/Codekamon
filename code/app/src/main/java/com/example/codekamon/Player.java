@@ -216,6 +216,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the highest score of the player.
+     * @param highestScore - the new highest score to be set.
      */
     public void setHighestScore(Integer highestScore) {
         this.highestScore = highestScore;
@@ -232,6 +233,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the lowest score of the player.
+     * @param lowestScore - the newest lowest score to be set.
      */
     public void setLowestScore(Integer lowestScore) {
         this.lowestScore = lowestScore;
@@ -248,6 +250,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the total score of the player.
+     * @param totalScore - the new total score needed to be set.
      */
     public void setTotalScore(Integer totalScore) {
         this.totalScore = totalScore;
@@ -264,6 +267,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the number of codes scanned by the player.
+     * @param numScanned number to be scanned.
      */
     public void setNumScanned(Integer numScanned) {
         this.numScanned = numScanned;

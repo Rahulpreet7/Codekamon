@@ -44,6 +44,7 @@ public class PlayersDB {
 
     /**
      * Creates the instance of PlayersDB.
+     * @param firestore this contains a argument that holds the database.
      */
 
     public PlayersDB(FirebaseFirestore firestore) {
@@ -60,6 +61,7 @@ public class PlayersDB {
      * Adds a player to the 'Players' collection in the database.
      *
      * @param player The player to be added to the database.
+     * @param listener
      */
     public void addPlayer(Player player, OnCompleteListener<Player> listener) {
         HashMap<String, Object> data = new HashMap<>();
