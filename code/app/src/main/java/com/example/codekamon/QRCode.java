@@ -56,37 +56,50 @@ public class QRCode {
     {
         this.name = name;
         this.content = content;
-        this.score = calcScore();
+        this.score = this.calcScore();
     }
+
+
+    /**
+     * Photo bitmap getter
+     *
+     * @return photoAsBytes
+     */
     public String getPhotoAsBytes()
     {
         return photoAsBytes;
     }
+
+    /**
+     * Photo bitmap setter
+     *
+     */
     public void setPhotoAsBytes(String photoAsBytes)
     {
         this.photoAsBytes = photoAsBytes;
     }
 
 
-
-    public String getName(){return this.name;}
-
-
-    public void setPhotoSurrounding(Bitmap _bitmap)
-    {
-        this.photoSurrounding = _bitmap;
-    }
-
+    /**
+     * QRCode Name setter
+     *
+     */
     public void setName(String name){this.name = name;}
+
+    /**
+     * QRCode Name getter
+     *
+     * @return name
+     */
     public String getName(){return this.name;}
 
+    /**
+     * QRCode Name setter
+     *
+     */
     public void setContent(String content) {this.content = content;}
 
-    public Bitmap getPhotoSurrounding() {
-        Bitmap returner = BitmapFactory.decodeByteArray(photoAsBytes.getBytes(), 0, photoAsBytes.getBytes().length);
-        return returner;
-        //return photoSurrounding;
-    }
+
 
 
     /**
@@ -142,15 +155,19 @@ public class QRCode {
     }
 
 
+
+
+    /**
+     * score setter
+     *
+     */
+    public void setScore(int score){this.score = score;}
+
     /**
      * calculate the score based on the hash value
      *
      * @return return_score
      */
-    private int calcScore()
-
-    public void setScore(int score){this.score = score;}
-
     public int calcScore()
 
     {
