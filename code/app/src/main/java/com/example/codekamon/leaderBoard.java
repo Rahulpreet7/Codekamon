@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -89,7 +90,7 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
                                 playerArrayList = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     //Player player = document.toObject(Player.class);
-                                    PlayersDB playersDB = new PlayersDB();
+                                    PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
                                     playersDB.getPlayer(document, new com.example.codekamon.OnCompleteListener<Player>() {
                                         @Override
                                         public void onComplete(Player item, boolean success) {
@@ -108,8 +109,10 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
 
                             rankingList.setAdapter(totalScoreRankArrayAdapter);
 
-                            PlayersDB playersDB = new PlayersDB();
-                            playersDB.getPlayer(leaderBoard.this, new com.example.codekamon.OnCompleteListener<Player>() {
+                            String deviceId = Settings.Secure.getString(leaderBoard.this.getContentResolver(),
+                                    Settings.Secure.ANDROID_ID);
+                            PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+                            playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {
                                 @Override
                                 public void onComplete(Player item, boolean success) {
                                     playerScore.setText("Score: " + item.getTotalScore().toString());
@@ -140,7 +143,7 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
                                 playerArrayList = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     //Player player = document.toObject(Player.class);
-                                    PlayersDB playersDB = new PlayersDB();
+                                    PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
                                     playersDB.getPlayer(document, new com.example.codekamon.OnCompleteListener<Player>() {
                                         @Override
                                         public void onComplete(Player item, boolean success) {
@@ -159,8 +162,10 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
 
                             rankingList.setAdapter(highestScoreRankArrayAdapter);
 
-                            PlayersDB playersDB = new PlayersDB();
-                            playersDB.getPlayer(leaderBoard.this, new com.example.codekamon.OnCompleteListener<Player>() {
+                            String deviceId = Settings.Secure.getString(leaderBoard.this.getContentResolver(),
+                                    Settings.Secure.ANDROID_ID);
+                            PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+                            playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {
                                 @Override
                                 public void onComplete(Player item, boolean success) {
 

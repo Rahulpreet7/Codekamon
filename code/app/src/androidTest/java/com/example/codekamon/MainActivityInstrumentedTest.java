@@ -3,11 +3,13 @@ package com.example.codekamon;
 import static org.junit.Assert.*;
 
 import android.app.Activity;
+import android.provider.Settings;
 import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -63,9 +65,11 @@ public class MainActivityInstrumentedTest {
     public void testCorrectUsername() throws InterruptedException {
         solo.waitForActivity("MainActivity");
         TextView username = (TextView) solo.getView(R.id.username_text);
-        PlayersDB playersDB = new PlayersDB();
+        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
         CountDownLatch latch = new CountDownLatch(1);
-        playersDB.getPlayer(solo.getCurrentActivity(), new OnCompleteListener<Player>() {
+        String androidId = Settings.Secure.getString(solo.getCurrentActivity().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        playersDB.getPlayer(androidId, new OnCompleteListener<Player>() {
             @Override
             public void onComplete(Player item, boolean success) {
                 assertTrue(success);
