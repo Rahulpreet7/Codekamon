@@ -38,7 +38,11 @@ public class QRCode {
     {
         this.photoSurrounding = _bitmap;
     }
+
+    public void setName(String name){this.name = name;}
     public String getName(){return this.name;}
+
+    public void setContent(String content) {this.content = content;}
 
     public Bitmap getPhotoSurrounding() {
         Bitmap returner = BitmapFactory.decodeByteArray(photoAsBytes.getBytes(), 0, photoAsBytes.getBytes().length);
@@ -70,6 +74,8 @@ public class QRCode {
     {
         return score;
     }
+
+    public void setScore(int score){this.score = score;}
 
     public int calcScore()
     {
