@@ -3,6 +3,10 @@ package com.example.codekamon;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+/**
+ * This class represents the QR code scanned and its
+ * relative information.
+ */
 public class QRCode {
 
     /**
