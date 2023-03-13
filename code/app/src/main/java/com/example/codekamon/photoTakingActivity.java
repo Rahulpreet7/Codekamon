@@ -33,25 +33,49 @@ import java.util.HashMap;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * This class handles post-scanning process.
+ */
 public class photoTakingActivity extends AppCompatActivity {
-
+    /**
+     * the button for yes responses.
+     */
     private Button yes_button;
+    /**
+     * the button for no responses.
+     */
     private Button no_button;
+    /**
+     * the text showing interactions.
+     */
     private TextView query_text;
+    //for test only
     private ImageView photo_show;
+    /**
+     * stores the current stage
+     */
     int stage = 0;
+    /**
+     * the current database
+     */
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    /**
+     * stores the value to upload to DB
+     */
     final CollectionReference collectionReference = db.collection("QRCodes");
-    final CollectionReference collectionReference2 = db.collection("Images");
+    //final CollectionReference collectionReference2 = db.collection("Images");
 
 
     QRCode passedResult;
+    /**
+     * onCreate is method is called when the activity is created and sets
+     * the views and activities when clicked.
+     *
+     * @param savedInstanceState The saved instance state of the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-
-
-
 
 
         stage = 0;
@@ -63,6 +87,7 @@ public class photoTakingActivity extends AppCompatActivity {
         no_button = findViewById(R.id.no_button);
         photo_show = findViewById(R.id.photo_show);
         query_text = findViewById(R.id.query_text);
+        getSupportActionBar().hide();
 
         yes_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,13 +172,21 @@ public class photoTakingActivity extends AppCompatActivity {
 
             String s = bitmapToString(imageBitmap);
             //photo_show.setImageBitmap(imageBitmap);
+
+
+            //how to change string back to bitmap, in order to show the image.
+            //byte[] imageBytes = Base64.decode(s, Base64.DEFAULT);
+            //Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            //photo_show.setImageBitmap(bitmap);
+
+
             //photo_show.setImageBitmap(passedResult.getPhotoSurrounding());
 
             passedResult.setPhotoAsBytes(s);
             //WIP
-            /*
-            System.out.println(s == null);
 
+            //System.out.println(s == null);
+/*
             YuvImage yuvimage = new YuvImage(s.getBytes(), ImageFormat.NV21, 600, 600, null);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             yuvimage.compressToJpeg(new Rect(0,0,20,20), 80, baos);
@@ -205,6 +238,12 @@ public class photoTakingActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * turn the bitmap of image to string, in order to upload to DB.
+     *
+     * @param imageBitmap: the image in bitmap.
+     * @return String holding bitmap information.
+     */
     protected String bitmapToString(Bitmap imageBitmap)
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -214,35 +253,7 @@ public class photoTakingActivity extends AppCompatActivity {
         return s;
 
     }
-/*
-    private void setPic(ImageView imageView) {
-        // Get the dimensions of the View
-        int targetW = imageView.getWidth();
-        int targetH = imageView.getHeight();
 
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        imageView.setImageBitmap(bitmap);
-    }
-
-
- */
 
 
 }
