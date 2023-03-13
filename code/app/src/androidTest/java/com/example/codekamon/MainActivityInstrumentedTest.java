@@ -1,6 +1,9 @@
 package com.example.codekamon;
 
+import static org.junit.Assert.*;
+
 import android.app.Activity;
+import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -11,6 +14,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Instrument test for the main screen.
@@ -38,23 +44,38 @@ public class MainActivityInstrumentedTest {
     }
 
     /**
-     * Checks whether clicking the map works leads to MapsActivity.
+     * Tests if clicking the leaderboard icon in main
+     * goes to leaderboard activity properly.
      */
     @Test
-    public void checkMapPressed(){
-        solo.clickOnView(solo.getView(R.id.map_icon));
-        solo.waitForActivity("MapsActivity");
-        solo.assertCurrentActivity("Wrong Activity", MapsActivity.class);
+    public void testMainToLeaderBoard(){
+        solo.waitForActivity("MainActivity");
+        solo.clickOnView(solo.getView(R.id.leaderboards_icon));
+        solo.waitForActivity("leaderBoard");
+        solo.assertCurrentActivity("Wrong Activity", leaderBoard.class);
     }
 
     /**
-     * Checks whether clicking scan icon leads to QRCodeScanActivity.
+     * Tests if the username displayed in main is the players'
+     * username.
      */
     @Test
-    public void checkAddCodePressed(){
-        solo.clickOnView(solo.getView(R.id.add_code_icon));
-        solo.waitForActivity("QRCodeScanActivity");
-        solo.assertCurrentActivity("Wrong Activity", QRCodeScanActivity.class);
+    public void testCorrectUsername() throws InterruptedException {
+        solo.waitForActivity("MainActivity");
+        TextView username = (TextView) solo.getView(R.id.username_text);
+        PlayersDB playersDB = new PlayersDB();
+        CountDownLatch latch = new CountDownLatch(1);
+        playersDB.getPlayer(solo.getCurrentActivity(), new OnCompleteListener<Player>() {
+            @Override
+            public void onComplete(Player item, boolean success) {
+                assertTrue(success);
+                assertTrue(item.getUserName().equals(username.getText().toString()));
+                latch.countDown();
+            }
+        });
+        if(!latch.await(30, TimeUnit.SECONDS)){
+            throw new InterruptedException();
+        }
     }
 
     /**

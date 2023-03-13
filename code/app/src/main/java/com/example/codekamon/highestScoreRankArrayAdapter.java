@@ -1,7 +1,6 @@
 package com.example.codekamon;
 
 import android.content.Context;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +13,26 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * This class is used to create a the ranking list of leader board based on total scores of different players.
+ * This class is used to create a the ranking list of leader board based on highest scores of different players.
  */
-public class totalScoreRankArrayAdapter extends ArrayAdapter<Player> {
+public class highestScoreRankArrayAdapter extends ArrayAdapter<Player> {
 
     private Context mContext;
     private ArrayList<Player> playerArrayList;
 
     /**
      * This is a constructor.
-     * @param context Context.
-     * @param list Array list of Players.
+     *
+     * @param context Context
+     * @param list Array list of Players
      */
-    public totalScoreRankArrayAdapter(@NonNull Context context, ArrayList<Player> list) {
+    public highestScoreRankArrayAdapter(@NonNull Context context, ArrayList<Player> list) {
         super(context, 0 , list);
         this.mContext = context;
         this.playerArrayList = list;
     }
 
     /**
-     *
      * Used to get the text view for the list view of ranking list.
      * @param position Position of the current player.
      * @param convertView View.
@@ -59,7 +58,7 @@ public class totalScoreRankArrayAdapter extends ArrayAdapter<Player> {
         currentPlayer.setUserRank(playerArrayList.indexOf(currentPlayer)+1);
 
         String userNameText =currentPlayer.getUserName();
-        String userScoreText = currentPlayer.getTotalScore().toString();
+        String userScoreText = currentPlayer.getHighestScore().toString();
 
         userRank.setText(userRankText);
         userName.setText(userNameText);
@@ -68,6 +67,3 @@ public class totalScoreRankArrayAdapter extends ArrayAdapter<Player> {
         return view;
     }
 }
-
-
-
