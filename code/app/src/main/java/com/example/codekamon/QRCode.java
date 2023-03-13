@@ -3,16 +3,42 @@ package com.example.codekamon;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+/**
+ * This class represents the QR code scanned and its
+ * relative information.
+ */
 public class QRCode {
 
+    /**
+     * Stores the latitude value.
+     */
     private double latitude;
+    /**
+     * Stores the longitude value.
+     */
     private double longitude;
+    /**
+     * Stores the QRcode name.
+     */
     private String name;
+    /**
+     * Stores the score based on hash value.
+     */
     private int score;
+    /**
+     * Stores the hash value of the code.
+     */
     private String content;
-    private Bitmap photoSurrounding;
+    /**
+     * Stores the image taken converted to string.
+     */
     private String photoAsBytes = "";
 
+    /**
+     * constructor
+     *
+     * @param content: hash value of QR code
+     */
     public QRCode(String content)
     {
         this.name = "default";
@@ -20,58 +46,130 @@ public class QRCode {
         this.score = calcScore();
     }
 
+    /**
+     * constructor
+     *
+     * @param name: name of QR code
+     * @param content: hash value of QR code
+     */
     public QRCode(String name, String content)
     {
         this.name = name;
         this.content = content;
-        this.score = calcScore();
+        this.score = this.calcScore();
     }
+
+
+    /**
+     * Photo bitmap getter
+     *
+     * @return photoAsBytes
+     */
     public String getPhotoAsBytes()
     {
         return photoAsBytes;
     }
+
+    /**
+     * Photo bitmap setter
+     *
+     */
     public void setPhotoAsBytes(String photoAsBytes)
     {
         this.photoAsBytes = photoAsBytes;
     }
-    public void setPhotoSurrounding(Bitmap _bitmap)
-    {
-        this.photoSurrounding = _bitmap;
-    }
+
+
+    /**
+     * QRCode Name setter
+     *
+     */
+    public void setName(String name){this.name = name;}
+
+    /**
+     * QRCode Name getter
+     *
+     * @return name
+     */
     public String getName(){return this.name;}
 
-    public Bitmap getPhotoSurrounding() {
-        Bitmap returner = BitmapFactory.decodeByteArray(photoAsBytes.getBytes(), 0, photoAsBytes.getBytes().length);
-        return returner;
-        //return photoSurrounding;
-    }
+    /**
+     * QRCode Name setter
+     *
+     */
+    public void setContent(String content) {this.content = content;}
 
+
+
+
+    /**
+     * set the location of QR code
+     *
+     * @param latitude: latitude of QR code scanned
+     * @param longitude: longitude of QR code scanned
+     */
     public void setLocation(double latitude, double longitude)
     {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
+
+    /**
+     * Latitude getter
+     *
+     * @return latitude
+     */
     public double getLatitude()
     {
         return this.latitude;
     }
+    /**
+     * Latitude getter
+     *
+     * @return longitude
+     */
     public double getLongitude()
     {
         return this.longitude;
     }
 
+    /**
+     * content getter
+     *
+     * @return content
+     */
     public String getContent()
     {
         return content;
     }
 
+    /**
+     * score getter
+     *
+     * @return score
+     */
     public int getScore()
     {
         return score;
     }
 
+
+
+
+    /**
+     * score setter
+     *
+     */
+    public void setScore(int score){this.score = score;}
+
+    /**
+     * calculate the score based on the hash value
+     *
+     * @return return_score
+     */
     public int calcScore()
+
     {
 
         int return_score = 0;

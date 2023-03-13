@@ -27,6 +27,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * This class is used to display the leader board for the game.
+ */
 public class leaderBoard extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private TextView playerRank;
@@ -37,10 +40,10 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
     private totalScoreRankArrayAdapter totalScoreRankArrayAdapter;
     private highestScoreRankArrayAdapter highestScoreRankArrayAdapter;
 
-
-
-
-
+    /**
+     * It creates the leader board activity.
+     * @param savedInstanceState Bundle.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +51,6 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
         playerRank = findViewById(R.id.playerRank);
         playerScore = findViewById(R.id.playerScore);
         rankingList = findViewById(R.id.rankingList);
-
 
         sortbyOption = findViewById(R.id.sortbyOption);
         sortbyOption.setOnItemSelectedListener(this);
@@ -62,7 +64,13 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
 
     }
 
-
+    /**
+     * It retrieves the object from a given position and then leads to the user profile activity.
+     * @param parent View.
+     * @param view View.
+     * @param position The integer value of the of the item selected from the list.
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -109,7 +117,6 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
                                 public void onComplete(Player item, boolean success) {
                                     playerScore.setText("Score: " + item.getTotalScore().toString());
                                     playerRank.setText("Rank: "+item.getUserRank().toString());
-
                                 }
                             });
 
@@ -121,8 +128,6 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
                                     startActivity(intent);
                                 }
                             });
-
-
                         }
                     });
 
@@ -164,33 +169,30 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
                                 @Override
                                 public void onComplete(Player item, boolean success) {
 
-
                                     playerScore.setText("Score: " + item.getHighestScore().toString());
                                     playerRank.setText("Rank: "+item.getUserRank().toString());
-
                                 }
                             });
 
                             rankingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                                     Intent intent = new Intent(leaderBoard.this, OtherUserProfile.class);
 
                                     intent.putExtra("PLAYER",playerArrayList.get(position));
                                     startActivity(intent);
                                 }
                             });
-
-
                         }
                     });
         }
-
     }
 
+    /**
+     * It is a callback method to be invoked when the selection disappears from this view.
+     * @param parent View.
+     */
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) {}
 }
-
