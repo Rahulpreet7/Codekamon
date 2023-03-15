@@ -79,6 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Button bck;
+    private Location curLocation;
     private boolean showDatabaseUpdated = false;
 
     @Override
@@ -137,12 +138,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(this, "Map loaded!", Toast.LENGTH_SHORT).show();
         gMap = googleMap;
 
-
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+
                     currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
                     gMap.clear();
@@ -185,7 +186,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     return;
                 }
 
-                locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,1000, 0, locationListener);
+                //locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,1000, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000, 10, locationListener);
             }
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {}
