@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/UserProfileHeader"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="30dp"
+        android:text="User Profile"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/OtherUserName"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="30dp"
+        android:text="Username: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserQRCodes" />
+
+    <TextView
+        android:id="@+id/OtherUserEmail"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:text="Email: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserName" />
+
+    <TextView
+        android:id="@+id/OtherUserScore"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:text="User score: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserEmail" />
+
+    <ImageView
+        android:id="@+id/QRCodeImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/UserProfileHeader"
+        app:srcCompat="@drawable/your_code" />
+
+    <TextView
+        android:id="@+id/OtherUserQRCodes"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:text="QR Codes"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/QRCodeImage" />
+
+    <TextView
+        android:id="@+id/OtherUserCodes"
+        android:layout_width="320dp"
+        android:layout_height="54dp"
+        android:text="Total scanned codes: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OtherUserScore" />
+</androidx.constraintlayout.widget.ConstraintLayout>

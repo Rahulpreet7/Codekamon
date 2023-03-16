@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "308130298327",
+    "project_id": "codekamon",
+    "storage_bucket": "codekamon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308130298327:android:6ebf4092a6d19aac0db392",
+        "android_client_info": {
+          "package_name": "com.example.codekamon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308130298327-dfh0nsi6hn47nk4p2o4hpc39fj1d7kd2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPSgqGmpjdn8yT9H4Rbx3pmy7BFJei0GY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308130298327-dfh0nsi6hn47nk4p2o4hpc39fj1d7kd2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
