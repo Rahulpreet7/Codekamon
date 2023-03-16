@@ -44,32 +44,35 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/playerScore"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FilterTextView"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/FilterTextView" />
 
     <TextView
         android:id="@+id/playerRank"
         android:layout_width="174dp"
         android:layout_height="53dp"
         android:layout_marginStart="28dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="2dp"
         android:layout_marginBottom="30dp"
         android:text="Your Rank: "
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/playerScore"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rankingList" />
+
 
     <TextView
         android:id="@+id/playerScore"
         android:layout_width="183dp"
         android:layout_height="52dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="30dp"
         android:text="Score"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/playerRank" />
+        app:layout_constraintStart_toEndOf="@+id/playerRank"
+        app:layout_constraintTop_toBottomOf="@+id/rankingList" />
 </androidx.constraintlayout.widget.ConstraintLayout>
