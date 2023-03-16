@@ -79,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Button bck;
-
+    private Location curLocation;
     private boolean showDatabaseUpdated = false;
 
     @Override
@@ -107,7 +107,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 qr_code_markers.clear();
                 if(showDatabaseUpdated)
                     Toast.makeText(MapsActivity.this, "Change: Updated Codes In List", Toast.LENGTH_SHORT).show();
-                showDatabaseUpdated = true;
                 assert queryDocumentSnapshots != null;
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     MarkerOptions item = new MarkerOptions()
@@ -140,33 +139,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gMap = googleMap;
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
-                gMap.clear();
-                qr_code_items.clear();
+                    currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
-                addPlayerMarker();
+                    gMap.clear();
+                    qr_code_items.clear();
 
-                Toast.makeText(MapsActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
+                    addPlayerMarker();
 
-                for (MarkerOptions marker : qr_code_markers) {
-                    if(isThisIsTheSameLocation(currentPosition, marker.getPosition())){
-                        if(DistancePlayerToTarget.pointsAreWithinRadius(currentPosition, marker.getPosition(), radius)){
-                            qr_code_items.add(
-                                    new DistancePlayerToTarget(marker.getTitle(), currentPosition, marker.getPosition())
-                            );
-                            gMap.addMarker(marker);
+                    move_camara(currentPosition);
+                    Toast.makeText(MapsActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
+
+                    for (MarkerOptions marker : qr_code_markers) {
+                        if (isThisIsTheSameLocation(currentPosition, marker.getPosition())) {
+                            if (DistancePlayerToTarget.pointsAreWithinRadius(currentPosition, marker.getPosition(), radius)) {
+                                qr_code_items.add(
+                                        new DistancePlayerToTarget(marker.getTitle(), currentPosition, marker.getPosition())
+                                );
+                                gMap.addMarker(marker);
+                            }
                         }
                     }
-                }
-                adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
             }
         };
 
         getLocationPermission();
+
     }
 
     /**
@@ -179,16 +182,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                 if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {return;}
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 100, locationListener);
-
-
-                // This is called when we first get the location. Never called again
-                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                currentPosition = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-                addPlayerMarker();
-                move_camara(currentPosition);
+                //locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,1000, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000, 10, locationListener);
             }
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {}
