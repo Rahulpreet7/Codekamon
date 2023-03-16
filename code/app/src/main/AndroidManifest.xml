@@ -75,7 +75,9 @@
             />
         <activity
             android:name=".OtherUserProfile"
-            android:parentActivityName=".leaderBoard"
+            />
+        <activity
+            android:name=".otherPlayersActivity"
             />
 
         <activity
