@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/maps_background_"
@@ -13,50 +14,71 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
 
         <Button
-            android:id="@+id/back"
-            android:layout_width="57dp"
-            android:layout_height="50dp"
-            android:background="#000000"
-            android:shadowColor="#FFFFFF"
+            android:id="@+id/reset_cam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="reset"
+            app:layout_constraintBottom_toTopOf="@+id/map"
+            app:layout_constraintEnd_toStartOf="@+id/Back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Back"
+            android:layout_width="86dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="5dp"
             android:text="Back"
-            android:textColorHint="#FFFFFF"
-            android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/map"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.954"
+            app:layout_constraintStart_toEndOf="@+id/reset_cam"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ListView
+            android:id="@+id/list_view_codes"
+            android:layout_width="408dp"
+            android:layout_height="225dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.454"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:rippleColor="#FFFFFF"
-            app:strokeColor="#FFFFFF" />
+            app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+            android:background="#FFFFFF"
+            app:queryHint="Search Code.."
+            app:iconifiedByDefault="false"
+            app:layout_constraintBottom_toTopOf="@+id/list_view_codes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/map" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
-            android:layout_height="463dp"
+            android:layout_height="0dp"
             android:outlineProvider="none"
-            app:layout_constraintBottom_toTopOf="@+id/listviewNear"
+            app:layout_constraintBottom_toTopOf="@+id/searchView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/back"
+            app:layout_constraintTop_toBottomOf="@+id/Back"
             tools:layout="@layout/support_simple_spinner_dropdown_item" />
-
-        <ListView
-            android:id="@+id/listviewNear"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="1dp"
-            android:background="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/map" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
