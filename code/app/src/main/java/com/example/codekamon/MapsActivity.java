@@ -160,8 +160,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Object obj = adapterView.getAdapter().getItem(i);
+                String name = (switchListViewDistance) ?((SpaceBetweenPoints) obj).getName() : ((GeoCodeLocation) obj).getName();
                 Intent intent = new Intent(MapsActivity.this, QRCodeActivity.class);
-                intent.putExtra("QRCode name", distancePoints.get(i).getName());
+                intent.putExtra("QRCode name",name);
                 startActivity(intent);
                 return true;
             }
