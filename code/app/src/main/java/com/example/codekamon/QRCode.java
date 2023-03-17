@@ -35,6 +35,11 @@ public class QRCode {
     private String photoAsBytes = "";
 
     /**
+     * Constructor with empty arguments.
+     */
+    public QRCode(){}
+
+    /**
      * constructor
      *
      * @param content: hash value of QR code
