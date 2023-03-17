@@ -4,6 +4,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -68,6 +69,7 @@ public class QRCodesDB {
         code.setName((String) document.get("name"));
         code.setPhotoAsBytes((String) document.get("photoAsBytes"));
         code.setScore(Math.toIntExact((Long) document.get("score")));
+        code.setComments((ArrayList<HashMap<String, String>>) snapshot.get("comments"));
         listener.onComplete(code, true);
     }
 
