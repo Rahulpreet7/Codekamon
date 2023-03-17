@@ -8,20 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import androidx.annotation.NonNull;
 
-import com.example.codekamon.DistancePlayerToTarget;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.gavaghan.geodesy.GlobalPosition;
 import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 /**
- * Test if "DistancePlayerToTarget" class' methods are working properly
+ * Test if "SpaceBetweenPoints" class' methods are working properly
  */
 
-public class DistancePlayerToTargetTest {
+public class SpaceBetweenPointsTest {
     private String test_name = "null";
 
     @NonNull
@@ -62,7 +60,7 @@ public class DistancePlayerToTargetTest {
 
         LatLng curr = mock_current_test();
         LatLng tar = mock_target_test();
-        DistancePlayerToTarget points = new DistancePlayerToTarget(this.test_name,curr, tar);
+        SpaceBetweenPoints points = new SpaceBetweenPoints(this.test_name,curr, tar);
         double dis = points.get_distance();
         boolean approximatelyEqual = (Math.abs(144.841 - dis) < 5) ? true : false;
         assertTrue(approximatelyEqual);
@@ -80,7 +78,7 @@ public class DistancePlayerToTargetTest {
         DecimalFormat df = new DecimalFormat("#.####");
         LatLng curr = mock_current_test();
         LatLng tar = mock_target_test();
-        DistancePlayerToTarget points = new DistancePlayerToTarget(this.test_name,curr, tar);
+        SpaceBetweenPoints points = new SpaceBetweenPoints(this.test_name,curr, tar);
         GlobalPosition qr_codePosition = points.getCodePosition();
         Boolean approxLat = (Math.abs(qr_codePosition.getLatitude() - 53.5225) < 0.001) ? true : false;
         Boolean approxLon = (Math.abs(qr_codePosition.getLongitude() - -113.5244) < 0.001) ? true : false;
@@ -99,10 +97,10 @@ public class DistancePlayerToTargetTest {
         LatLng curr = mock_current_test();
         LatLng tar = mock_target_test();
         float radius = (float) 150.2;
-        boolean isItInRange = DistancePlayerToTarget.pointsAreWithinRadius(curr, tar, radius);
+        boolean isItInRange = SpaceBetweenPoints.pointsAreWithinRadius(curr, tar, radius);
         assertTrue(isItInRange);
         radius = (float) 140.2;
-        isItInRange = DistancePlayerToTarget.pointsAreWithinRadius(curr, tar,radius);
+        isItInRange = SpaceBetweenPoints.pointsAreWithinRadius(curr, tar,radius);
         assertFalse(isItInRange);
     }
 
@@ -114,7 +112,7 @@ public class DistancePlayerToTargetTest {
         //check if name is gotten properly
         LatLng curr = mock_current_test();
         LatLng tar = mock_target_test();
-        DistancePlayerToTarget points = new DistancePlayerToTarget(this.test_name,curr, tar);
+        SpaceBetweenPoints points = new SpaceBetweenPoints(this.test_name,curr, tar);
         assertEquals("null", points.get_name());
     }
 }
