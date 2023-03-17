@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -125,6 +126,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 move_camara(
                         new LatLng(getCodePosition.getLatitude(), getCodePosition.getLongitude())
                 );
+                Toast.makeText(MapsActivity.this, "Long click to see qr code details", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        listViewNear.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MapsActivity.this, QRCodeActivity.class);
+                intent.putExtra("QRCode name", qr_code_items.get(i).get_name());
+                startActivity(intent);
+                return true;
             }
         });
 
