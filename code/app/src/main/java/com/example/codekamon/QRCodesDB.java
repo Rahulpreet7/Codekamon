@@ -67,7 +67,7 @@ public class QRCodesDB {
         code.setContent((String) document.get("content"));
         code.setName((String) document.get("name"));
         code.setPhotoAsBytes((String) document.get("photoAsBytes"));
-        code.setScore((Integer) document.get("score"));
+        code.setScore(Math.toIntExact((Long) document.get("score")));
         listener.onComplete(code, true);
     }
 
