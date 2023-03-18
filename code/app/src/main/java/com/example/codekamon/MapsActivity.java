@@ -100,6 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //searchView.clearFocus();
         // Set Up Adapter
+        firebase = FirebaseFirestore.getInstance();
         collectionReference = firebase.collection("QRCodes");
         distancePointsAdapter = new DistanceListViewAdapter(this, distancePoints);
 
