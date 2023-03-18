@@ -78,7 +78,7 @@ public class CommentsActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(View view) {
                                             Comment comment = new Comment(player.getUserName(), commentEditText.getText().toString());
-                                            code.addComment(commentEditText.getText().toString(), player.getUserName());
+                                            code.addComment(comment);
                                             commentEditText.setText("");
                                             codesDB.updateQRCode(code, new OnCompleteListener<QRCode>() {
                                                 @Override

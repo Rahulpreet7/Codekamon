@@ -65,9 +65,8 @@ public class QRCodesDB {
      */
     public void getQRCode(DocumentSnapshot snapshot, OnCompleteListener<QRCode> listener){
         HashMap<String, Object> document = (HashMap<String, Object>) snapshot.get("QRCode content: ");
-        QRCode code = new QRCode();
+        QRCode code = new QRCode((String) document.get("content"));
         code.setLocation((Double) document.get("latitude"), (Double) document.get("longitude"));
-        code.setContent((String) document.get("content"));
         code.setName((String) document.get("name"));
         code.setPhotoAsBytes((String) document.get("photoAsBytes"));
         code.setScore(Math.toIntExact((Long) document.get("score")));
