@@ -258,7 +258,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addCodesNearPlayer(){
         distancePointsAdapter.clear();
         redcodes.clear();
-        Toast.makeText(MapsActivity.this, "Location Changed!", Toast.LENGTH_SHORT).show();
         for (MarkerOptions marker : generalcodes) {
             if (isThisIsTheSameLocation(currentPosition, marker.getPosition())) {
                 if(SpaceBetweenPoints.pointsAreWithinRadius(currentPosition, marker.getPosition(),radius)) {
