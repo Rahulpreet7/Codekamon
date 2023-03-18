@@ -119,6 +119,22 @@ public class PlayersDB {
     }
 
     /**
+     * Gets the player from the database.
+     * @param context The context of the application
+     * @param listener The listener to handle the result
+     */
+    public void getPlayer(Context context, OnCompleteListener<Player> listener){
+        String deviceId = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        getPlayer(deviceId, new OnCompleteListener<Player>() {
+            @Override
+            public void onComplete(Player item, boolean success) {
+                listener.onComplete(item, success);
+            }
+        });
+    }
+
+    /**
      * Gets a player from the database.
      *
      * @param snapshot The snapshot of the player to get

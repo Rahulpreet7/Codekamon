@@ -57,8 +57,10 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onComplete(QRCode code, boolean success) {
                 if (success == true){
-                    noCommentsShow.setVisibility(View.INVISIBLE);
                     ArrayList<HashMap<String,String>> comments = code.getComments();
+                    if (comments.size() > 0){
+                        noCommentsShow.setVisibility(View.INVISIBLE);
+                    }
                     for(HashMap<String,String> comment : comments){
                         Comment aComment = new Comment(comment.get("playerName"), comment.get("comment"));
                         commentsToShow.add(aComment);
@@ -85,6 +87,7 @@ public class CommentsActivity extends AppCompatActivity {
                                                 public void onComplete(QRCode item, boolean success) {
                                                     commentsToShow.add(0, comment);
                                                     commentAdapter.notifyDataSetChanged();
+                                                    noCommentsShow.setVisibility(View.INVISIBLE);
                                                     commentsListView.setSelection(0);
                                                     return;
                                                 }
