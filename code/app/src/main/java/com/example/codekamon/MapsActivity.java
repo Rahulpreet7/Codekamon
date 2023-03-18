@@ -115,8 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {finish();}
         });
-
-        QRCodesDB codesDB = new QRCodesDB(FirebaseFirestore.getInstance());
         resetCamara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {zoom_plyr();}
