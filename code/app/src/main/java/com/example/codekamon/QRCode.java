@@ -1,8 +1,5 @@
 package com.example.codekamon;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -77,15 +74,16 @@ public class QRCode {
      */
     public void addComment(String comment, String name){
         HashMap<String,String> map = new HashMap<>();
-        map.put(name, comment);
-        comments.add(map);
+        map.put("playerName", name);
+        map.put("comment", comment);
+        comments.add(0, map);
     }
 
     public void setComments(ArrayList<HashMap<String,String>> comments){
         this.comments = comments;
     }
 
-    public ArrayList<HashMap<String,String>> getComments(){
+    public ArrayList<HashMap<String, String>> getComments(){
         return comments;
     }
 

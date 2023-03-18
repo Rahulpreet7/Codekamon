@@ -89,7 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         firebase = FirebaseFirestore.getInstance();
-        collectionReference = firebase.collection("Test_Map");
+        collectionReference = firebase.collection("QRCodes");
         bck = findViewById(R.id.back);
 
         adapter = new DistanceListViewAdapter(this, qr_code_items);
@@ -102,6 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {finish();}
         });
 
+        QRCodesDB codesDB = new QRCodesDB(FirebaseFirestore.getInstance());
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
@@ -110,10 +111,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Toast.makeText(MapsActivity.this, "Change: Updated Codes In List", Toast.LENGTH_SHORT).show();
                 assert queryDocumentSnapshots != null;
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    MarkerOptions item = new MarkerOptions()
-                            .position(new LatLng((Double) doc.getData().get("lati"), (Double) doc.getData().get("long")))
-                            .title((String) doc.getData().get("name"));
-                    qr_code_markers.add(item);
+                    codesDB.getQRCode(doc, new OnCompleteListener<QRCode>() {
+                        @Override
+                        public void onComplete(QRCode code, boolean success) {
+                            MarkerOptions item = new MarkerOptions()
+                                    .position(new LatLng((Double) code.getLatitude(), (Double) code.getLongitude()))
+                                    .title((String) code.getName());
+                            qr_code_markers.add(item);
+                        }
+                    });
                 }
                 adapter.notifyDataSetChanged();
             }
