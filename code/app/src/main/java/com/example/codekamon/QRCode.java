@@ -34,7 +34,7 @@ public class QRCode {
      */
     private String photoAsBytes = "";
 
-    private ArrayList<HashMap<String,String>> comments;
+    private ArrayList<HashMap<String,String>> comments = new ArrayList<>();
 
 
     /**
@@ -47,7 +47,6 @@ public class QRCode {
         this.name = "default";
         this.content = content;
         this.score = calcScore();
-        this.comments = new ArrayList<>();
     }
 
     /**
@@ -61,7 +60,6 @@ public class QRCode {
         this.name = name;
         this.content = content;
         this.score = this.calcScore();
-        this.comments = new ArrayList<>();
     }
 
     /**
