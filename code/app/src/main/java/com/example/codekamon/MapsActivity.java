@@ -100,14 +100,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //searchView.clearFocus();
         // Set Up Adapter
+        firebase = FirebaseFirestore.getInstance();
+        collectionReference = firebase.collection("QRCodes");
         distancePointsAdapter = new DistanceListViewAdapter(this, distancePoints);
 
         listView = findViewById(R.id.list_view_codes);
         listView.setAdapter(distancePointsAdapter);
 
         // Set FireBase
-        firebase = FirebaseFirestore.getInstance();
-        collectionReference = firebase.collection("Test_Map");
+        //firebase = FirebaseFirestore.getInstance();
+        QRCodesDB codesDB = new QRCodesDB(FirebaseFirestore.getInstance());
 
         //Set Firebase Updating, Back Button, Search Text Functionality, and marker details click ability.
         bck.setOnClickListener(new View.OnClickListener() {
@@ -138,10 +140,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 generalcodes.clear();
                 assert queryDocumentSnapshots != null;
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    MarkerOptions item = new MarkerOptions()
-                            .position(new LatLng((Double) doc.getData().get("lati"), (Double) doc.getData().get("long")))
-                            .title((String) doc.getData().get("name"));
-                    generalcodes.add(item);
+                    codesDB.getQRCode(doc, new OnCompleteListener<QRCode>() {
+                        @Override
+                        public void onComplete(QRCode code, boolean success) {
+                            MarkerOptions item = new MarkerOptions()
+                                    .position(new LatLng((Double) code.getLatitude(), (Double) code.getLongitude()))
+                                    .title((String) code.getName());
+                            generalcodes.add(item);
+                        }
+                    });
                 }
                 distancePointsAdapter.notifyDataSetChanged();
             }
@@ -178,23 +185,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(this, "Map loaded!", Toast.LENGTH_SHORT).show();
         gMap = googleMap;
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                // TO DO:
-                // Grab the data and open a new activity to view the QR Code in that specific position
-                // Use These to Query From The Database
-                String name = marker.getTitle();
-                double latitude = marker.getPosition().latitude, longitude = marker.getPosition().longitude;
-
-
-                Log.d("CEW", name + "Location:" + latitude + "," + longitude);
-                /// OPEN NEW FRAGMENT OR ACTIVITY.
-                // Do something
-                // RETURNED FROM FRAGMENT
-                return false;
-            }
-        });
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {

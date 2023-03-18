@@ -1,7 +1,7 @@
 package com.example.codekamon;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class represents the QR code scanned and its
@@ -34,6 +34,8 @@ public class QRCode {
      */
     private String photoAsBytes = "";
 
+    private ArrayList<HashMap<String,String>> comments;
+
     /**
      * Constructor with empty arguments.
      */
@@ -62,6 +64,27 @@ public class QRCode {
         this.name = name;
         this.content = content;
         this.score = this.calcScore();
+    }
+
+    /**
+     * Adds a comment to the qr code.
+     *
+     * @param comment The comment to the qr code.
+     * @param name The name of the user who made made the comment.
+     */
+    public void addComment(String comment, String name){
+        HashMap<String,String> map = new HashMap<>();
+        map.put("playerName", name);
+        map.put("comment", comment);
+        comments.add(0, map);
+    }
+
+    public void setComments(ArrayList<HashMap<String,String>> comments){
+        this.comments = comments;
+    }
+
+    public ArrayList<HashMap<String, String>> getComments(){
+        return comments;
     }
 
 
