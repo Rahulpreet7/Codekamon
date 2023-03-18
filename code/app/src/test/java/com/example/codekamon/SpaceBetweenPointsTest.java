@@ -61,7 +61,7 @@ public class SpaceBetweenPointsTest {
         LatLng curr = mock_current_test();
         LatLng tar = mock_target_test();
         SpaceBetweenPoints points = new SpaceBetweenPoints(this.test_name,curr, tar);
-        double dis = points.get_distance();
+        double dis = points.getDistance();
         boolean approximatelyEqual = (Math.abs(144.841 - dis) < 5) ? true : false;
         assertTrue(approximatelyEqual);
     }
@@ -79,7 +79,7 @@ public class SpaceBetweenPointsTest {
         LatLng curr = mock_current_test();
         LatLng tar = mock_target_test();
         SpaceBetweenPoints points = new SpaceBetweenPoints(this.test_name,curr, tar);
-        GlobalPosition qr_codePosition = points.getCodePosition();
+        GlobalPosition qr_codePosition = points.getLocation();
         Boolean approxLat = (Math.abs(qr_codePosition.getLatitude() - 53.5225) < 0.001) ? true : false;
         Boolean approxLon = (Math.abs(qr_codePosition.getLongitude() - -113.5244) < 0.001) ? true : false;
         assertTrue(approxLat);
@@ -113,6 +113,6 @@ public class SpaceBetweenPointsTest {
         LatLng curr = mock_current_test();
         LatLng tar = mock_target_test();
         SpaceBetweenPoints points = new SpaceBetweenPoints(this.test_name,curr, tar);
-        assertEquals("null", points.get_name());
+        assertEquals("null", points.getName());
     }
 }
