@@ -115,24 +115,6 @@ public class QRCodesDB {
     /**
      * Deletes the qr code in the database.
      *
-     * @param code The qr code to be deleted.
-     * @param listener The listener to call when the task is done.
-     */
-    public void deleteQRCode(QRCode code, OnCompleteListener<QRCode> listener){
-        collectionReference
-                .document(code.getName())
-                .delete()
-                .addOnSuccessListener(unused -> {
-                    listener.onComplete(code, true);
-                })
-                .addOnFailureListener(e -> {
-                    listener.onComplete(null, false);
-                });
-    }
-
-    /**
-     * Deletes the qr code in the database.
-     *
      * @param name The name of the qr code to be deleted.
      * @param listener The listener to call when the task is done.
      */
@@ -155,5 +137,13 @@ public class QRCodesDB {
      */
     public FirebaseFirestore getDb() {
         return db;
+    }
+
+    /**
+     * Gets the collection reference of the instance.
+     * @return
+     */
+    public CollectionReference getCollectionReference() {
+        return collectionReference;
     }
 }

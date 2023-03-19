@@ -36,7 +36,6 @@ public class QRCode {
 
     private ArrayList<HashMap<String,String>> comments = new ArrayList<>();
 
-
     /**
      * constructor
      *

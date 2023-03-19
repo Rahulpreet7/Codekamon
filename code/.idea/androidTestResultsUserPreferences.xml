@@ -99,6 +99,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="278522195">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="320133808198" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                  <entry key="ZTE&#10; Z6252CA" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="744336700">
           <value>
             <AndroidTestResultsTableState>
@@ -108,6 +122,20 @@
                   <entry key="R58M76C28WJ" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung&#10; SM-A505W" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1078555364">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="320133808198" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                  <entry key="ZTE&#10; Z6252CA" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
