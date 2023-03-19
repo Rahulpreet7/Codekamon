@@ -78,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private CollectionReference collectionReference;
     private FirebaseFirestore firebase;
     private GoogleMap gMap;
-    private ArrayList<SpaceBetweenPoints> distancePoints= new ArrayList<>();
+    private ArrayList<SpaceBetweenPoints> distancePoints = new ArrayList<>();
     private ArrayList<MarkerOptions> generalcodes = new ArrayList<>();
     private ArrayList<MarkerOptions> redcodes = new ArrayList<>();
     private ListView listView;
@@ -89,6 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button bck;
     private Button resetCamara;
     private SearchView search;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,11 +115,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Set Firebase Updating, Back Button, Search Text Functionality, and marker details click ability.
         bck.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {finish();}
+            public void onClick(View v) {
+                finish();
+            }
         });
         resetCamara.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {zoom_plyr();}
+            public void onClick(View v) {
+                zoom_plyr();
+            }
         });
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -126,10 +131,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 searchedTextCode(query);
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.isEmpty()){
-                   searchedTextReset_();
+                if (newText.isEmpty()) {
+                    searchedTextReset_();
                 }
                 return true;
             }
@@ -159,7 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Object obj = parent.getAdapter().getItem(position);
                 GlobalPosition pos = (getListViewStatus()) ? ((SpaceBetweenPoints) obj).getLocation() :
                         ((GeoCodeLocation) obj).getLocation();
-                LatLng latLng = new LatLng(pos.getLatitude(),pos.getLongitude());
+                LatLng latLng = new LatLng(pos.getLatitude(), pos.getLongitude());
                 move_camara(latLng);
                 Toast.makeText(MapsActivity.this, "Long click to see qr code details", Toast.LENGTH_SHORT).show();
             }
@@ -168,9 +174,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Object obj = adapterView.getAdapter().getItem(i);
-                String name = (switchListViewDistance) ?((SpaceBetweenPoints) obj).getName() : ((GeoCodeLocation) obj).getName();
+                String name = (switchListViewDistance) ? ((SpaceBetweenPoints) obj).getName() : ((GeoCodeLocation) obj).getName();
                 Intent intent = new Intent(MapsActivity.this, QRCodeActivity.class);
-                intent.putExtra("QRCode name",name);
+                intent.putExtra("QRCode name", name);
                 startActivity(intent);
                 return true;
             }
@@ -197,6 +203,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
         getLocationPermission();
     }
+
     /**
      * The method "getLocationPermission" prompts the user with the option to allow/disallow the use of their current location.
      * If permission is granted, than the Map will show the current position of the user.
@@ -212,27 +219,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 //locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER,1000, 0, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000, 10, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
             }
+
             @Override
-            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {}
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+            }
+
             @Override
             public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
                 permissionToken.continuePermissionRequest();
             }
         }).check();
     }
+
     /**
      * The method "isThisIsTheSameLocation" is used to determine whether the user's current
      * position (i.e Blue Marker) matches one of the markers that symbolises the QR code(i.e Red Marker) . This difference
      * is critical since we would have markers that overlapped (e.g the player and the qr code markers). We would want to avoid this/
+     *
      * @param point1
      * @param point2
      * @return returns true or false depending if they are the same marker.
      */
-    private boolean isThisIsTheSameLocation(LatLng point1, LatLng point2){
+    private boolean isThisIsTheSameLocation(LatLng point1, LatLng point2) {
         return (point1.latitude != point2.latitude) && (point1.longitude != point2.longitude);
     }
+
     /**
      * The method "findPlayerMaker" adds a marker to the current location of the player.
      */
@@ -243,24 +256,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         gMap.addMarker(marker);
     }
-    public void zoom_plyr(){
-        if(currentPosition != null)
+
+    public void zoom_plyr() {
+        if (currentPosition != null)
             move_camara(currentPosition);
     }
+
     /**
      * The method "move" zooms in at a marker or player location based on a zoom of 16 and a LatLng of that area being zoomed in.
+     *
      * @param latlng
      */
     private void move_camara(LatLng latlng) {
         gMap.animateCamera(CameraUpdateFactory.newLatLng(latlng));
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
     }
-    private void addCodesNearPlayer(){
+
+    private void addCodesNearPlayer() {
         distancePointsAdapter.clear();
         redcodes.clear();
         for (MarkerOptions marker : generalcodes) {
             if (isThisIsTheSameLocation(currentPosition, marker.getPosition())) {
-                if(SpaceBetweenPoints.pointsAreWithinRadius(currentPosition, marker.getPosition(),radius)) {
+                if (SpaceBetweenPoints.pointsAreWithinRadius(currentPosition, marker.getPosition(), radius)) {
                     distancePointsAdapter.add(new SpaceBetweenPoints(marker.getTitle(), currentPosition, marker.getPosition()));
                     redcodes.add(marker);
                     gMap.addMarker(marker);
@@ -269,39 +286,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         distancePointsAdapter.notifyDataSetChanged();
     }
-    private boolean getListViewStatus(){return this.switchListViewDistance;}
-    private void searchedTextCode(String newText){
+
+    private boolean getListViewStatus() {
+        return this.switchListViewDistance;
+    }
+
+    private void searchedTextCode(String newText) {
         gMap.clear();
         addplyr();
 
         ArrayList<GeoCodeLocation> gL = new ArrayList<>();
         ArrayList<MarkerOptions> greencodes = new ArrayList<>();
 
-        for(MarkerOptions m : generalcodes){
-            if(m.getTitle().toLowerCase().contains(newText.toLowerCase())){
-                GeoCodeLocation sampleCode = new GeoCodeLocation(m.getTitle(),m.getPosition().latitude,m.getPosition().longitude);
+        for (MarkerOptions m : generalcodes) {
+            if (m.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                GeoCodeLocation sampleCode = new GeoCodeLocation(m.getTitle(), m.getPosition().latitude, m.getPosition().longitude);
                 m.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 greencodes.add(m);
                 gL.add(sampleCode);
             }
         }
 
-        for(MarkerOptions gc: greencodes){
+        for (MarkerOptions gc : greencodes) {
             gMap.addMarker(gc);
         }
-        for(MarkerOptions gc: greencodes){
+        for (MarkerOptions gc : greencodes) {
             gc.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         }
 
-        GeoCodeViewAdapter qrCodeSearchedAdapter = new GeoCodeViewAdapter(this,gL);
+        GeoCodeViewAdapter qrCodeSearchedAdapter = new GeoCodeViewAdapter(this, gL);
         this.switchListViewDistance = false;
         listView.setAdapter(qrCodeSearchedAdapter);
     }
-    private void searchedTextReset_(){
+
+    private void searchedTextReset_() {
         gMap.clear();
         addplyr();
 
-        for(MarkerOptions rc : redcodes){
+        for (MarkerOptions rc : redcodes) {
             gMap.addMarker(rc);
         }
         listView.setAdapter(distancePointsAdapter);
