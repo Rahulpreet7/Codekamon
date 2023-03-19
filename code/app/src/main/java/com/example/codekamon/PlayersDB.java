@@ -57,6 +57,11 @@ public class PlayersDB {
 
     }
 
+    public PlayersDB(FirebaseFirestore firestore, boolean simple){
+        this.db = firestore;
+        this.collectionReference = db.collection("Players");
+    }
+
     public FirebaseFirestore getDb() {
         return db;
     }

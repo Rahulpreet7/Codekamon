@@ -45,7 +45,7 @@ public class CommentsActivity extends AppCompatActivity {
         String name = intent.getStringExtra("QRCode name");
 
 
-        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance(), true);
 
         String deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -85,13 +85,13 @@ public class CommentsActivity extends AppCompatActivity {
                                             codesDB.updateQRCode(code, new OnCompleteListener<QRCode>() {
                                                 @Override
                                                 public void onComplete(QRCode item, boolean success) {
-                                                    commentsToShow.add(0, comment);
-                                                    commentAdapter.notifyDataSetChanged();
-                                                    noCommentsShow.setVisibility(View.INVISIBLE);
-                                                    commentsListView.setSelection(0);
                                                     return;
                                                 }
                                             });
+                                            commentsToShow.add(0, comment);
+                                            commentAdapter.notifyDataSetChanged();
+                                            noCommentsShow.setVisibility(View.INVISIBLE);
+                                            commentsListView.setSelection(0);
                                         }
                                     });
                                 }
