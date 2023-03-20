@@ -65,9 +65,8 @@ public class QRCodesDB {
      */
     public void getQRCode(DocumentSnapshot snapshot, OnCompleteListener<QRCode> listener){
         HashMap<String, Object> document = (HashMap<String, Object>) snapshot.get("QRCode content: ");
-        QRCode code = new QRCode();
+        QRCode code = new QRCode((String) document.get("content"));
         code.setLocation((Double) document.get("latitude"), (Double) document.get("longitude"));
-        code.setContent((String) document.get("content"));
         code.setName((String) document.get("name"));
         code.setPhotoAsBytes((String) document.get("photoAsBytes"));
         code.setScore(Math.toIntExact((Long) document.get("score")));
@@ -116,24 +115,6 @@ public class QRCodesDB {
     /**
      * Deletes the qr code in the database.
      *
-     * @param code The qr code to be deleted.
-     * @param listener The listener to call when the task is done.
-     */
-    public void deleteQRCode(QRCode code, OnCompleteListener<QRCode> listener){
-        collectionReference
-                .document(code.getName())
-                .delete()
-                .addOnSuccessListener(unused -> {
-                    listener.onComplete(code, true);
-                })
-                .addOnFailureListener(e -> {
-                    listener.onComplete(null, false);
-                });
-    }
-
-    /**
-     * Deletes the qr code in the database.
-     *
      * @param name The name of the qr code to be deleted.
      * @param listener The listener to call when the task is done.
      */
@@ -156,5 +137,13 @@ public class QRCodesDB {
      */
     public FirebaseFirestore getDb() {
         return db;
+    }
+
+    /**
+     * Gets the collection reference of the instance.
+     * @return
+     */
+    public CollectionReference getCollectionReference() {
+        return collectionReference;
     }
 }

@@ -326,4 +326,14 @@ public class Player implements Serializable {
 
     }
 
+    /**
+     * Sets the ranking of the player.
+     *
+     * @param userRank The ranking of the player
+     */
+    public void setUserRankSimple(Integer userRank){
+        this.userRank = userRank;
+    }
+
+
 }

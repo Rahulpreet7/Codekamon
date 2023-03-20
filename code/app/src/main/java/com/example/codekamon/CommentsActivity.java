@@ -45,7 +45,7 @@ public class CommentsActivity extends AppCompatActivity {
         String name = intent.getStringExtra("QRCode name");
 
 
-        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance(), true);
 
         String deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -57,8 +57,10 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onComplete(QRCode code, boolean success) {
                 if (success == true){
-                    noCommentsShow.setVisibility(View.INVISIBLE);
                     ArrayList<HashMap<String,String>> comments = code.getComments();
+                    if (comments.size() > 0){
+                        noCommentsShow.setVisibility(View.INVISIBLE);
+                    }
                     for(HashMap<String,String> comment : comments){
                         Comment aComment = new Comment(comment.get("playerName"), comment.get("comment"));
                         commentsToShow.add(aComment);
@@ -78,17 +80,18 @@ public class CommentsActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(View view) {
                                             Comment comment = new Comment(player.getUserName(), commentEditText.getText().toString());
-                                            code.addComment(commentEditText.getText().toString(), player.getUserName());
+                                            code.addComment(comment);
                                             commentEditText.setText("");
                                             codesDB.updateQRCode(code, new OnCompleteListener<QRCode>() {
                                                 @Override
                                                 public void onComplete(QRCode item, boolean success) {
-                                                    commentsToShow.add(0, comment);
-                                                    commentAdapter.notifyDataSetChanged();
-                                                    commentsListView.setSelection(0);
                                                     return;
                                                 }
                                             });
+                                            commentsToShow.add(0, comment);
+                                            commentAdapter.notifyDataSetChanged();
+                                            noCommentsShow.setVisibility(View.INVISIBLE);
+                                            commentsListView.setSelection(0);
                                         }
                                     });
                                 }

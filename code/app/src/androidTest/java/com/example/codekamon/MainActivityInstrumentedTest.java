@@ -10,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.remote.FirebaseClientGrpcMetadataProvider;
 import com.robotium.solo.Solo;
 
 import org.junit.After;

@@ -34,12 +34,7 @@ public class QRCode {
      */
     private String photoAsBytes = "";
 
-    private ArrayList<HashMap<String,String>> comments;
-
-    /**
-     * Constructor with empty arguments.
-     */
-    public QRCode(){}
+    private ArrayList<HashMap<String,String>> comments = new ArrayList<>();
 
     /**
      * constructor
@@ -70,12 +65,11 @@ public class QRCode {
      * Adds a comment to the qr code.
      *
      * @param comment The comment to the qr code.
-     * @param name The name of the user who made made the comment.
      */
-    public void addComment(String comment, String name){
+    public void addComment(Comment comment){
         HashMap<String,String> map = new HashMap<>();
-        map.put("playerName", name);
-        map.put("comment", comment);
+        map.put("playerName", comment.getPlayerName());
+        map.put("comment", comment.getComment());
         comments.add(0, map);
     }
 
