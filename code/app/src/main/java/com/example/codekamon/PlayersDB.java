@@ -57,6 +57,11 @@ public class PlayersDB {
 
     }
 
+    public PlayersDB(FirebaseFirestore firestore, boolean simple){
+        this.db = firestore;
+        this.collectionReference = db.collection("Players");
+    }
+
     public FirebaseFirestore getDb() {
         return db;
     }
@@ -112,10 +117,24 @@ public class PlayersDB {
                     }
                 })
                 .addOnFailureListener(failure -> {
-                    if (!failure.getMessage().equals("Player found")){
-                        listener.onComplete(null, false);
-                    }
+                    listener.onComplete(null, false);
                 });
+    }
+
+    /**
+     * Gets the player from the database.
+     * @param context The context of the application
+     * @param listener The listener to handle the result
+     */
+    public void getPlayer(Context context, OnCompleteListener<Player> listener){
+        String deviceId = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        getPlayer(deviceId, new OnCompleteListener<Player>() {
+            @Override
+            public void onComplete(Player item, boolean success) {
+                listener.onComplete(item, success);
+            }
+        });
     }
 
     /**
@@ -140,8 +159,20 @@ public class PlayersDB {
         player.setNumScanned(numScanned);
         player.setPlayerCodes(qrCodes);
         player.setTotalScore(totalScore);
-        player.setUserRank(playerRank);
+        player.setUserRankSimple(playerRank);
         listener.onComplete(player, true);
+    }
+
+    public void deletePlayer(String id, OnCompleteListener<Player> listener){
+        collectionReference
+                .document(id)
+                .delete()
+                .addOnSuccessListener(unused -> {
+                    listener.onComplete(null, true);
+                })
+                .addOnFailureListener(e -> {
+                    listener.onComplete(null, false);
+                });
     }
 
 

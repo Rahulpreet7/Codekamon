@@ -81,12 +81,16 @@ public class SignUpActivity extends AppCompatActivity  {
                                         playersDB.addPlayer(player, new com.example.codekamon.OnCompleteListener<Player>() {
                                             @Override
                                             public void onComplete(Player item, boolean success) {
-                                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                                                intent.putExtra("PLAYER",player);
-                                                startActivity(intent);
-                                                finish();
+//                                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+//                                                intent.putExtra("PLAYER",player);
+//                                                startActivity(intent);
+//                                                finish();
                                             }
                                         });
+                                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                        intent.putExtra("PLAYER",player);
+                                        startActivity(intent);
+                                        finish();
                                     }
                                 }
                             });

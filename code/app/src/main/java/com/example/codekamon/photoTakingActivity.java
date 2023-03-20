@@ -160,6 +160,7 @@ public class photoTakingActivity extends AppCompatActivity {
                     Intent intent = new Intent(photoTakingActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                     startActivity(intent);
+                    finish();
 
                 }
             }
