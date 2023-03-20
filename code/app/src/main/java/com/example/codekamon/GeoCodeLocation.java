@@ -1,17 +1,23 @@
 package com.example.codekamon;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.gavaghan.geodesy.Ellipsoid;
-import org.gavaghan.geodesy.GeodeticCalculator;
 import org.gavaghan.geodesy.GlobalPosition;
 
-import java.text.DecimalFormat;
-
+/**
+ * This contains the information of the Codekamon. Its name and location found. <br>
+ *
+ * Author(s): Elisandro Cruz Martinez <br>
+ *
+ * Package References:<br>
+ * Mike Gavaghan(2021) Geodesy (Version 1.1.3) [Package] https://github.com/mgavaghan/geodesy <br>
+ */
 public class GeoCodeLocation {
-    private String name;
-    private GlobalPosition location;
+    private String name; // Contains the name of the Codekamon
+    private GlobalPosition location; // Contains the Geo location of the Codekamon
+    /**
+     * This class constructor intiailizes the fields with the following:
+     * @param name the name of the codekamon.
+     * @param latitude the latitude of which they are located.
+     * @param longitude the longitude of which they are located.
+     */
     public GeoCodeLocation(String name, double latitude, double longitude){
         this.name = name;
         this.location = new GlobalPosition(latitude,longitude,0.0);
