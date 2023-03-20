@@ -135,15 +135,15 @@ public class QRCodesDB {
      *
      * @return The instance to the database passed to this class.
      */
-    public FirebaseFirestore getDb() {
+    public FirebaseFirestore getFirebaseFirestore(){
         return db;
     }
 
     /**
-     * Gets the collection reference of the instance.
+     * Get the collection of QRCodes
      * @return
      */
-    public CollectionReference getCollectionReference() {
-        return collectionReference;
+    public CollectionReference getCollectionReference(){
+        return this.collectionReference;
     }
 }

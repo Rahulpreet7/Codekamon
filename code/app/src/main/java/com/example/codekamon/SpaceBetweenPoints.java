@@ -11,23 +11,24 @@ import java.text.DecimalFormat;
  *
  * Authors(s): Elisandro Cruz Martinez<br>
  *
- * Package Reference:\n
- * Karumi(2021) Dexter (Version 6.2.3) [Package] https://github.com/Karumi/Dexter<br>
+ * Package Reference:<br>
  * Mike Gavaghan(2021) Geodesy (Version 1.1.3) [Package] https://github.com/mgavaghan/geodesy <br>
- *
  */
 
 public class SpaceBetweenPoints extends GeoCodeLocation implements GeoDistanceCalculator {
-    private double distance;
-
+    private double distance; // contains the distance of the two points: current and target.
+    /**
+     * this constructor does the following:
+     * @param name contains the name of the codekamon.
+     * @param current contains the current location of the "Player".
+     * @param target contains the current location of the "Codekamon".
+     */
     public SpaceBetweenPoints(String name, LatLng current, LatLng target) {
         super(name, target.latitude, target.longitude);
         this.distance = distanceBetweenPoints(new GlobalPosition(current.latitude, current.longitude, 0.0));
     }
-
     /**
      * This method "distanceBetweenPoints" calculates the the two points using the Vincenty’s Formula and returns a double value 3 decimal places.
-     *
      * @return calculate the distance between two points (e.g the player and the codekamon)
      */
     private double distanceBetweenPoints(GlobalPosition currentLocation) {
@@ -37,7 +38,6 @@ public class SpaceBetweenPoints extends GeoCodeLocation implements GeoDistanceCa
     }
     /**
      * This method "pointsAreWithinRadius" returns a boolean if the distance between two points are within a given range(i.e radius).
-     *
      * @param curr   current location of the player
      * @param tar    current position of the QR code
      * @param radius the scope of visibility for the player
