@@ -255,7 +255,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * The method "addplyr" adds a blue marker to were the current player is located
      */
-    public void addplyr() {
+    private void addplyr() {
         // adds a marker to the position of the player in the map
         if(currentPosition != null) {
             MarkerOptions marker = new MarkerOptions().
@@ -268,7 +268,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * The method "zoom_plyr" zooms into the location the player is current in.
      */
-    public void zoom_plyr() {
+    private void zoom_plyr() {
         if (currentPosition != null)
             move_camara(currentPosition);
     }
