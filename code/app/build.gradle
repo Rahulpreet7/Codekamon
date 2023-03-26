@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation 'com.google.zxing:core:3.3.3'
 
     //For ui test
     androidTestImplementation "androidx.test:runner:1.2.0"

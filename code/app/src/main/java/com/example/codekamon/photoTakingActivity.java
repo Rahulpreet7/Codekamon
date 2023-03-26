@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -83,6 +84,8 @@ public class photoTakingActivity extends AppCompatActivity {
         setContentView(R.layout.photo_taking);
         Intent intent = getIntent();
         passedResult = new QRCode(intent.getStringExtra("Name"), intent.getStringExtra("sb"));
+        passedResult.setVisualImage(intent.getStringExtra("visual"));
+        //passedResult.setVisualImage("---");
         yes_button = findViewById(R.id.yes_button);
         no_button = findViewById(R.id.no_button);
         photo_show = findViewById(R.id.photo_show);
@@ -100,6 +103,8 @@ public class photoTakingActivity extends AppCompatActivity {
                 else if(stage == 1)
                 {
                     Toast.makeText(photoTakingActivity.this, "recording location...", Toast.LENGTH_SHORT).show();
+                    FusedLocationProviderClient FLclient = new FusedLocationProviderClient(photoTakingActivity.this);
+                    //FLclient.getLastLocation();
                     //fixme: record location
                     double lati = 0;
                     double longi = 0;
