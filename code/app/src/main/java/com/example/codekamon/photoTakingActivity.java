@@ -91,6 +91,8 @@ public class photoTakingActivity extends AppCompatActivity {
         setContentView(R.layout.photo_taking);
         Intent intent = getIntent();
         passedResult = new QRCode(intent.getStringExtra("Name"), intent.getStringExtra("sb"));
+        passedResult.setVisualImage(intent.getStringExtra("visual"));
+        //passedResult.setVisualImage("---");
         yes_button = findViewById(R.id.yes_button);
         no_button = findViewById(R.id.no_button);
         photo_show = findViewById(R.id.photo_show);

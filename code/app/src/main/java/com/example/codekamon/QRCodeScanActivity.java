@@ -24,6 +24,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.math.BigInteger;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -45,6 +46,11 @@ public class QRCodeScanActivity extends AppCompatActivity {
      * the text frame for input name.
      */
     private TextView nameText;
+
+    /**
+     * the text showing visual;
+     */
+    private TextView visualText;
     /**
      * the button for proceed.
      */
@@ -57,6 +63,16 @@ public class QRCodeScanActivity extends AppCompatActivity {
      * stores the built up raw bytes.
      */
     private StringBuilder sb = new StringBuilder();
+
+    /**
+     * stores a factory to build name and visuals by QR code seed.
+     */
+    private QRCodeSeedFactory seedfactory;
+
+    /**
+     * stores the visual Image generated.
+     */
+    private String generatedImage = "";
 
 
     public QRCodeScanActivity() throws NoSuchAlgorithmException {
@@ -75,6 +91,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
         showScoreText = findViewById(R.id.show_score_text);
         stage_one_button = findViewById(R.id.stage_one_button);
         nameText = findViewById(R.id.naming_textframe);
+        visualText = findViewById(R.id.visual);
         Toast.makeText(QRCodeScanActivity.this, "Clicked 'Your Codes!'", Toast.LENGTH_SHORT).show();
 
 
@@ -100,6 +117,9 @@ public class QRCodeScanActivity extends AppCompatActivity {
                 //can't simplified
                 intent.putExtra("Name", nameText.getText().toString());
                 intent.putExtra("sb", sb.toString());
+                intent.putExtra("visual", generatedImage);
+
+
                 //for testing
                 //intent.putExtra("Name", "abcd");
                 //intent.putExtra("sb", "sb");
@@ -128,37 +148,63 @@ public class QRCodeScanActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
+        Toast.makeText(getBaseContext(), "Scanned", Toast.LENGTH_SHORT).show();
         QRCodeScanActivity.super.onActivityResult(requestCode,resultCode,data);
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
 
         // if the intentResult is null then "cancelled"
         if (intentResult != null) {
             System.out.println(intentResult);
             if(data == null)
             {
+                Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
-                startActivity(intent);
+                //startActivity(intent);
 
             }else
             {
                 Bundle bundle = data.getExtras();
 
                 if (intentResult.getContents() == null) {
-                    Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
-                    startActivity(intent);
                     Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
+
+                    //startActivity(intent);
+
 
                 } else {
+                    Toast.makeText(getBaseContext(), "Scan Succeed", Toast.LENGTH_SHORT).show();
 
-                    //Toast.makeText(getBaseContext(),intentResult.getRawBytes().toString(), Toast.LENGTH_SHORT).show();
-                    byte[] encrypted = md.digest(intentResult.getRawBytes());
+
+                    //System.out.println(intentResult.getRawBytes());
+                    //System.out.println("------------------print start---------------------");
+
+                    //another set of rule
+                    //byte[] encrypted = md.digest(intentResult.getRawBytes());
+                    //int seed = (int)encrypted[0];
+                    String scanResult = bundle.getString("SCAN_RESULT");
+                    byte[] encrypted = scanResult.getBytes();
+
+
+                    int seed = (int)encrypted[0];
+                    String s = Integer.toBinaryString(seed);
+                    seedfactory = new QRCodeSeedFactory(s);
+                    nameText.setText(seedfactory.generateName());
+                    generatedImage = seedfactory.generateImage();
+                    //generatedImage = "---";
+                    visualText.setText(generatedImage);
+
 
 
                     for(byte b : encrypted)
                     {
                         sb.append(String.format("%02x", b));
                     }
-                    Toast.makeText(getBaseContext(),sb, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getBaseContext(),sb, Toast.LENGTH_SHORT).show();
+
+                    //System.out.println("------------------" + scanResult +"---------------------");
+                    //System.out.println("------------------" + sb.toString() +"---------------------");
                     scannedResult = new QRCode(sb.toString());
 
                     showScoreText.setText("Points: " + scannedResult.getScore());

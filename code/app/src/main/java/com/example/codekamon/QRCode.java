@@ -1,11 +1,14 @@
 package com.example.codekamon;
 
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * This class represents the QR code scanned and its
- * relative information.
+ * This class represents the QR code scanned and its relative information.
  */
 public class QRCode {
 
@@ -33,6 +36,11 @@ public class QRCode {
      * Stores the image taken converted to string.
      */
     private String photoAsBytes = "";
+    /**
+     * Stores the image drawn by characters
+     */
+    private String visualImage = "";
+
 
     private ArrayList<HashMap<String,String>> comments = new ArrayList<>();
 
@@ -47,6 +55,8 @@ public class QRCode {
         this.content = content;
         this.score = calcScore();
     }
+
+
 
     /**
      * constructor
@@ -81,11 +91,52 @@ public class QRCode {
         return comments;
     }
 
+    /**
+     * get the bitmap back from any String stands for photoAsBytes
+     *
+     * @param s: photoAsBytes
+     * @return bitmap
+     */
+    public Bitmap getImageAsBitmap(String s)
+    {
+        byte[] imageBytes = Base64.decode(s, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        return bitmap;
+    }
 
     /**
-     * Photo bitmap getter
+     * get the bitmap back from photoAsBytes
      *
-     * @return photoAsBytes
+     * @return bitmap
+     */
+    public Bitmap getImageAsBitmap()
+    {
+        String s = photoAsBytes;
+        byte[] imageBytes = Base64.decode(s, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        return bitmap;
+    }
+
+
+
+
+    /**
+     * Visual Image getter
+     *
+     * @return visualImage
+     */
+    public String getVisualImage(){return visualImage;}
+    /**
+     * Visual Image setter
+     *
+     * @param  visualImage
+     */
+    public void setVisualImage(String visualImage){this.visualImage = visualImage;}
+
+    /**
+     * photoAsBytes getter
+     *
+     * @return photoAsbytes
      */
     public String getPhotoAsBytes()
     {
@@ -93,9 +144,9 @@ public class QRCode {
     }
 
     /**
-     * Photo bitmap setter
-     * @param photoAsBytes set the photo bytes.
+     * photoAsBytes setter
      *
+     * @param photoAsBytes
      */
     public void setPhotoAsBytes(String photoAsBytes)
     {
