@@ -4,7 +4,9 @@ import org.gavaghan.geodesy.GeodeticCalculator;
 import java.text.DecimalFormat;
 /**
  *
- * A interface containing some static final constant fields.
+ * A interface "GeoDistanceCalculator" contains some static final constant fields.
+ * Which would be used as measurements to calculate distances between current player and
+ * the codekamon.
  *
  * Author(s): Elisandro Cruz Martinez, Ryan Rom <br>
  *
