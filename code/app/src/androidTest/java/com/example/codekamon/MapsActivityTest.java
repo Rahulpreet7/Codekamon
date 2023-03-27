@@ -14,6 +14,9 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -84,6 +87,11 @@ public class MapsActivityTest {
         TimeUnit.SECONDS.sleep(2);
     }
 
+    @BeforeClass
+    public static void terminateBeforeTests() throws InterruptedException{
+        FirebaseFirestore.getInstance().terminate();
+        TimeUnit.SECONDS.sleep(2);
+    }
     /**
      * this test "TestBackButton" checks if the buttons in MapsActivity go back to previous activity
      * @throws InterruptedException

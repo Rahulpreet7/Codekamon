@@ -135,7 +135,7 @@ public class QRCodesDB {
      *
      * @return The instance to the database passed to this class.
      */
-    public FirebaseFirestore getFirebaseFirestore(){
+    public FirebaseFirestore getDb(){
         return db;
     }
 
