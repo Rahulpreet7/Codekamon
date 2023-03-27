@@ -208,7 +208,7 @@ public class Player implements Serializable {
     /**
      * Gets the highest score of the player.
      *
-     * @return The highest score of the player
+     * @return highestScore
      */
     public Integer getHighestScore() {
         return highestScore;
@@ -216,8 +216,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the highest score of the player.
-     *
-     * @return The highest score of the player
+     * @param highestScore - the new highest score to be set.
      */
     public void setHighestScore(Integer highestScore) {
         this.highestScore = highestScore;
@@ -226,7 +225,7 @@ public class Player implements Serializable {
     /**
      * Gets the lowest score of the player.
      *
-     * @return The lowest score of the player
+     * @return lowestScore
      */
     public Integer getLowestScore() {
         return lowestScore;
@@ -234,8 +233,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the lowest score of the player.
-     *
-     * @return The lowest score of the player
+     * @param lowestScore - the newest lowest score to be set.
      */
     public void setLowestScore(Integer lowestScore) {
         this.lowestScore = lowestScore;
@@ -244,7 +242,7 @@ public class Player implements Serializable {
     /**
      * Gets the total score of the player.
      *
-     * @return The total score of the player
+     * @return totalScore
      */
     public Integer getTotalScore() {
         return totalScore;
@@ -252,8 +250,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the total score of the player.
-     *
-     * @return The total score of the player
+     * @param totalScore - the new total score needed to be set.
      */
     public void setTotalScore(Integer totalScore) {
         this.totalScore = totalScore;
@@ -262,7 +259,7 @@ public class Player implements Serializable {
     /**
      * Gets the number of codes scanned by the player.
      *
-     * @return The number of codes scanned by the player.
+     * @return numScanned
      */
     public Integer getNumScanned() {
         return numScanned;
@@ -270,8 +267,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the number of codes scanned by the player.
-     *
-     * @return The number of codes scanned by the player.
+     * @param numScanned number to be scanned.
      */
     public void setNumScanned(Integer numScanned) {
         this.numScanned = numScanned;
@@ -279,8 +275,7 @@ public class Player implements Serializable {
 
     /**
      * Gets the android id of the player
-     *
-     * @return The android id of the player in String format
+     * @return androidId
      */
     public String getAndroidId() {
         return androidId;
@@ -288,8 +283,6 @@ public class Player implements Serializable {
 
     /**
      * Sets the android id of the player
-     *
-     * @return The android id of the player in String format
      */
     public void setAndroidId(String androidId){
         this.androidId = androidId;
@@ -298,7 +291,7 @@ public class Player implements Serializable {
     /**
      * Gets the QR codes scanned by the player
      *
-     * @return The QR codes scanned by the player
+     * @return playerCodes
      */
     public HashMap<String, String> getPlayerCodes() {
         return playerCodes;
@@ -332,5 +325,15 @@ public class Player implements Serializable {
         updateRanking();
 
     }
+
+    /**
+     * Sets the ranking of the player.
+     *
+     * @param userRank The ranking of the player
+     */
+    public void setUserRankSimple(Integer userRank){
+        this.userRank = userRank;
+    }
+
 
 }

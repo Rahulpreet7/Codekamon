@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/no_comments_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No comments to show"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout2" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/comments_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Comments"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:id="@+id/add_comment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/add_comment_edittext"
+                android:layout_width="225dp"
+                android:layout_height="58dp"
+                android:backgroundTint="#000000"
+                android:ems="10"
+                android:hint="Add a comment"
+                android:inputType="textPersonName"
+                android:textColorHighlight="#000000"
+                android:textColorLink="#000000"
+                android:textCursorDrawable="@null" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/add_comment_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:backgroundTint="#000000"
+                android:text="Add"
+                android:textColor="#FBFBFB"
+                tools:ignore="TextContrastCheck" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/comments_list"
+            android:layout_width="327dp"
+            android:layout_height="469dp"
+            android:backgroundTint="#000000">
+
+        </ListView>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

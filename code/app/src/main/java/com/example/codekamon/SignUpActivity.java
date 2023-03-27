@@ -43,13 +43,13 @@ public class SignUpActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
 
-        String androidId = Settings.Secure.getString(this.getContentResolver(),
+        String deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
-        PlayersDB playersDB = new PlayersDB();
+        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
         CollectionReference playersRef = playersDB.getCollectionReference();
 
-        playersDB.getPlayer(this, new com.example.codekamon.OnCompleteListener<Player>() {
+        playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {
             @Override
             public void onComplete(Player item, boolean success) {
                 if (success == true){
@@ -69,7 +69,7 @@ public class SignUpActivity extends AppCompatActivity  {
                         public void onClick(View view) {
                             EditText username = findViewById(R.id.pick_username_edit_text);
                             EditText email = findViewById(R.id.email_edit_text);
-                            Player player = new Player(username.getText().toString(),email.getText().toString(), androidId);
+                            Player player = new Player(username.getText().toString(),email.getText().toString(), deviceId);
 
                             playersRef.whereEqualTo("Username", username.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -78,7 +78,15 @@ public class SignUpActivity extends AppCompatActivity  {
                                         Toast.makeText(SignUpActivity.this, "Username is taken", Toast.LENGTH_SHORT).show();
                                     }
                                     else {
-                                        playersDB.addPlayer(player);
+                                        playersDB.addPlayer(player, new com.example.codekamon.OnCompleteListener<Player>() {
+                                            @Override
+                                            public void onComplete(Player item, boolean success) {
+//                                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+//                                                intent.putExtra("PLAYER",player);
+//                                                startActivity(intent);
+//                                                finish();
+                                            }
+                                        });
                                         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                         intent.putExtra("PLAYER",player);
                                         startActivity(intent);

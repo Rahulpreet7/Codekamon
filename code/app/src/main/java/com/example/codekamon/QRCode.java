@@ -1,8 +1,11 @@
 package com.example.codekamon;
 
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class represents the QR code scanned and its relative information.
@@ -39,6 +42,8 @@ public class QRCode {
     private String visualImage = "";
 
 
+    private ArrayList<HashMap<String,String>> comments = new ArrayList<>();
+
     /**
      * constructor
      *
@@ -63,7 +68,27 @@ public class QRCode {
     {
         this.name = name;
         this.content = content;
-        this.score = calcScore();
+        this.score = this.calcScore();
+    }
+
+    /**
+     * Adds a comment to the qr code.
+     *
+     * @param comment The comment to the qr code.
+     */
+    public void addComment(Comment comment){
+        HashMap<String,String> map = new HashMap<>();
+        map.put("playerName", comment.getPlayerName());
+        map.put("comment", comment.getComment());
+        comments.add(0, map);
+    }
+
+    public void setComments(ArrayList<HashMap<String,String>> comments){
+        this.comments = comments;
+    }
+
+    public ArrayList<HashMap<String, String>> getComments(){
+        return comments;
     }
 
     /**
@@ -130,13 +155,22 @@ public class QRCode {
 
 
     /**
-     * name getter
+     * QRCode Name setter
+     * @param name
+     */
+    public void setName(String name){this.name = name;}
+
+    /**
+     * QRCode Name getter
      *
      * @return name
      */
     public String getName(){return this.name;}
-
-
+    /**
+     * QRCode Name setter
+     * @param content
+     */
+    public void setContent(String content) {this.content = content;}
     /**
      * set the location of QR code
      *
@@ -148,8 +182,6 @@ public class QRCode {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-
-
     /**
      * Latitude getter
      *
@@ -188,16 +220,18 @@ public class QRCode {
     {
         return score;
     }
-
-
+    /**
+     * score setter
+     * @param score
+     */
+    public void setScore(int score){this.score = score;}
     /**
      * calculate the score based on the hash value
      *
      * @return return_score
      */
-    private int calcScore()
+    public int calcScore()
     {
-
         int return_score = 0;
         int repeat = 0;
         if (content.length()==1){
@@ -251,8 +285,6 @@ public class QRCode {
             }
         }
         return return_score;
-
-
 
     }
 }

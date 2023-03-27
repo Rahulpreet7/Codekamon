@@ -1,13 +1,19 @@
 package com.example.codekamon;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +25,7 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -68,6 +75,7 @@ public class photoTakingActivity extends AppCompatActivity {
 
 
     QRCode passedResult;
+
     /**
      * onCreate is method is called when the activity is created and sets
      * the views and activities when clicked.
@@ -75,8 +83,7 @@ public class photoTakingActivity extends AppCompatActivity {
      * @param savedInstanceState The saved instance state of the activity
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
 
         stage = 0;
@@ -95,22 +102,35 @@ public class photoTakingActivity extends AppCompatActivity {
         yes_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(stage == 0) {
+                if (stage == 0) {
                     Toast.makeText(photoTakingActivity.this, "going to take photos...", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, 1);
-                }
-                else if(stage == 1)
-                {
+                } else if (stage == 1) {
                     Toast.makeText(photoTakingActivity.this, "recording location...", Toast.LENGTH_SHORT).show();
-                    FusedLocationProviderClient FLclient = new FusedLocationProviderClient(photoTakingActivity.this);
-                    //FLclient.getLastLocation();
-                    //fixme: record location
-                    double lati = 0;
-                    double longi = 0;
-                    passedResult.setLocation(lati, longi);
-                    stage ++;
-                    onStageChange();
+
+                    FusedLocationProviderClient fusedLocationProviderClient = new FusedLocationProviderClient(photoTakingActivity.this);
+                    if (ActivityCompat.checkSelfPermission(photoTakingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(photoTakingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@androidx.annotation.NonNull Task<Location> task) {
+                            double lati = task.getResult().getLatitude();
+                            double longi = task.getResult().getLongitude();
+                            passedResult.setLocation(lati, longi);
+                            stage ++;
+                            onStageChange();
+                        }
+                    });
 
                 }
                 else if(stage == 2)
@@ -142,6 +162,7 @@ public class photoTakingActivity extends AppCompatActivity {
                     Intent intent = new Intent(photoTakingActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                     startActivity(intent);
+                    finish();
 
                 }
             }
@@ -167,6 +188,13 @@ public class photoTakingActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * onAcitvity result is called when an activity is called and executed.
+     *
+     * @param requestCode identify who this result came from
+     * @param resultCode identify the child activity through its setResult()
+     * @param data intent returns to the caller.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         photoTakingActivity.super.onActivityResult(requestCode, resultCode, data);
@@ -191,7 +219,7 @@ public class photoTakingActivity extends AppCompatActivity {
             //WIP
 
             //System.out.println(s == null);
-/*
+            /*
             YuvImage yuvimage = new YuvImage(s.getBytes(), ImageFormat.NV21, 600, 600, null);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             yuvimage.compressToJpeg(new Rect(0,0,20,20), 80, baos);
@@ -231,8 +259,11 @@ public class photoTakingActivity extends AppCompatActivity {
             no_button.setVisibility(View.INVISIBLE);
             yes_button.setText("Return");
 
-            PlayersDB playersDB = new PlayersDB();
-            playersDB.getPlayer(this, new OnCompleteListener<Player>() {
+            String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+
+            PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+            playersDB.getPlayer(deviceId, new OnCompleteListener<Player>() {
                 @Override
                 public void onComplete(Player item, boolean success) {
                     item.addQR(passedResult);

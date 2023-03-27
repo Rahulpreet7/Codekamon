@@ -138,6 +138,13 @@ public class QRCodeScanActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * onAcitvity result is called when an activity is called and executed.
+     *
+     * @param requestCode identify who this result came from
+     * @param resultCode identify the child activity through its setResult()
+     * @param data intent returns to the caller.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {

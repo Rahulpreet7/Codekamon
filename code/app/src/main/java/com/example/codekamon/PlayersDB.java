@@ -4,6 +4,10 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,15 +41,14 @@ public class PlayersDB {
     private CollectionReference collectionReference;
 
 
-    private ArrayList<Player> playerArrayList = new ArrayList<>();
-
 
     /**
      * Creates the instance of PlayersDB.
+     * @param firestore this contains a argument that holds the database.
      */
 
-    public PlayersDB() {
-        this.db = FirebaseFirestore.getInstance();
+    public PlayersDB(FirebaseFirestore firestore) {
+        this.db = firestore;
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false)
                 .build();
@@ -54,12 +57,22 @@ public class PlayersDB {
 
     }
 
+    public PlayersDB(FirebaseFirestore firestore, boolean simple){
+        this.db = firestore;
+        this.collectionReference = db.collection("Players");
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
+    }
+
     /**
      * Adds a player to the 'Players' collection in the database.
      *
      * @param player The player to be added to the database.
+     * @param listener
      */
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player, OnCompleteListener<Player> listener) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("Android Id", player.getAndroidId());
         data.put("Username", player.getUserName());
@@ -70,33 +83,58 @@ public class PlayersDB {
         data.put("Total Score", player.getTotalScore());
         data.put("ScannedCodes", player.getPlayerCodes());
         data.put("Player Ranking", player.getUserRank());
-        collectionReference.document(player.getAndroidId()).set(data);
+        collectionReference
+                .document(player.getAndroidId())
+                .set(data)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        listener.onComplete(player, true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        listener.onComplete(null, false);
+                    }
+                });
     }
 
     /**
      * Gets the player from the database.
      *
-     * @param context  The context of the application
+     * @param deviceId The device id of the player
      * @param listener The listener to handle the result
      */
-    public void getPlayer(Context context, OnCompleteListener<Player> listener) {
-        String deviceId = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+    public void getPlayer(String deviceId, OnCompleteListener<Player> listener) {
 
         collectionReference.document(deviceId).get()
                 .addOnSuccessListener(snapshot -> {
                     if (snapshot.exists()) {
-                        Log.i(TAG, "Player found .");
                         this.getPlayer(snapshot, listener);
                     } else {
-                        Log.i(TAG, "Failed to get Player from database.");
                         listener.onComplete(null, false);
                     }
                 })
                 .addOnFailureListener(failure -> {
-                    Log.i(TAG, "Failed to get Player from database.");
                     listener.onComplete(null, false);
                 });
+    }
+
+    /**
+     * Gets the player from the database.
+     * @param context The context of the application
+     * @param listener The listener to handle the result
+     */
+    public void getPlayer(Context context, OnCompleteListener<Player> listener){
+        String deviceId = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        getPlayer(deviceId, new OnCompleteListener<Player>() {
+            @Override
+            public void onComplete(Player item, boolean success) {
+                listener.onComplete(item, success);
+            }
+        });
     }
 
     /**
@@ -121,8 +159,20 @@ public class PlayersDB {
         player.setNumScanned(numScanned);
         player.setPlayerCodes(qrCodes);
         player.setTotalScore(totalScore);
-        player.setUserRank(playerRank);
+        player.setUserRankSimple(playerRank);
         listener.onComplete(player, true);
+    }
+
+    public void deletePlayer(String id, OnCompleteListener<Player> listener){
+        collectionReference
+                .document(id)
+                .delete()
+                .addOnSuccessListener(unused -> {
+                    listener.onComplete(null, true);
+                })
+                .addOnFailureListener(e -> {
+                    listener.onComplete(null, false);
+                });
     }
 
 

@@ -41,7 +41,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_maps" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
@@ -69,13 +69,17 @@
         </activity>
         <activity android:name=".QRCodeScanActivity"/>
         <activity android:name=".photoTakingActivity"/>
+        <activity android:name=".QRCodeActivity"/>
+        <activity android:name=".CommentsActivity"/>
         <activity
             android:name=".leaderBoard"
             android:parentActivityName=".MainActivity"
             />
         <activity
             android:name=".OtherUserProfile"
-            android:parentActivityName=".leaderBoard"
+            />
+        <activity
+            android:name=".otherPlayersActivity"
             />
 
         <activity
