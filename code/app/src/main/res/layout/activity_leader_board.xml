@@ -5,74 +5,139 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/leadboardTextView"
-        android:layout_width="315dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="30dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
         android:text="Leaderboard"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/sortbyOption"
+        android:textColor="#000000"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/menuBarLeader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/sortbyOption"
-        android:layout_width="150dp"
-        android:layout_height="27dp"
-        android:layout_marginEnd="30dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menuBarLeader"
+        android:layout_width="385dp"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/rankingsListMenu"
+        app:layout_constraintEnd_toEndOf="@+id/leadboardTextView"
+        app:layout_constraintStart_toStartOf="@+id/leadboardTextView"
+        app:layout_constraintTop_toBottomOf="@+id/leadboardTextView">
+
+        <Spinner
+            android:id="@+id/sortbyOption"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/FilterTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/FilterTextView"
+            app:layout_constraintTop_toTopOf="@+id/FilterTextView" />
+
+        <Button
+            android:id="@+id/backButtonLeader"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#00BCD4"
+            android:shadowColor="#000000"
+            android:text="back"
+            android:textColorLink="#F60000"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/FilterTextView"
+            app:layout_constraintEnd_toStartOf="@+id/FilterTextView"
+            app:layout_constraintHorizontal_bias="0.01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/FilterTextView"
+            app:layout_constraintVertical_bias="0.0"
+            app:rippleColor="#F3F3F3"
+            app:strokeColor="#000000" />
+
+        <TextView
+            android:id="@+id/FilterTextView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Filter By:"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sortbyOption"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/backButtonLeader"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rankingsListMenu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/rankingScoringLeader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/FilterTextView"
-        app:layout_constraintTop_toBottomOf="@+id/leadboardTextView" />
-
-    <TextView
-        android:id="@+id/FilterTextView"
-        android:layout_width="160dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="30dp"
-        android:text="Filter By:"
-        app:layout_constraintEnd_toStartOf="@+id/sortbyOption"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leadboardTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/menuBarLeader">
 
-    <ListView
-        android:id="@+id/rankingList"
-        android:layout_width="375dp"
-        android:layout_height="522dp"
+        <ListView
+            android:id="@+id/rankingList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rankingScoringLeader"
+        android:layout_width="0dp"
+        android:layout_height="103dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FilterTextView" />
-
-    <TextView
-        android:id="@+id/playerRank"
-        android:layout_width="174dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="30dp"
-        android:text="Your Rank: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/playerScore"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rankingList" />
-
-
-    <TextView
-        android:id="@+id/playerScore"
-        android:layout_width="183dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="30dp"
-        android:text="Score"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/playerRank"
-        app:layout_constraintTop_toBottomOf="@+id/rankingList" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rankingsListMenu">
+
+        <TextView
+            android:id="@+id/playerRank"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="2dp"
+            android:text="Your Rank: "
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/playerScore"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/playerScore"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="2dp"
+            android:text="Score"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/playerRank"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

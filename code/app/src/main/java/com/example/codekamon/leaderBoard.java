@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
     private ArrayList<Player> playerArrayList = new ArrayList<>();
     private totalScoreRankArrayAdapter totalScoreRankArrayAdapter;
     private highestScoreRankArrayAdapter highestScoreRankArrayAdapter;
+    private Button backButton;
 
     /**
      * It creates the leader board activity.
@@ -51,9 +53,14 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
         playerRank = findViewById(R.id.playerRank);
         playerScore = findViewById(R.id.playerScore);
         rankingList = findViewById(R.id.rankingList);
+        backButton = findViewById(R.id.backButtonLeader);
 
         sortbyOption = findViewById(R.id.sortbyOption);
         sortbyOption.setOnItemSelectedListener(this);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {finish();}
+        });
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sorty_options, android.R.layout.simple_spinner_item);
