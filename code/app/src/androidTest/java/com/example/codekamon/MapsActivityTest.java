@@ -76,7 +76,6 @@ public class MapsActivityTest {
         });
         TimeUnit.SECONDS.sleep(2);
     }
-
     /**
      * This private method "eraseFireBaseMocked" is used to destroy the firebase in order to do the next test.
      * @throws InterruptedException
