@@ -23,12 +23,36 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class handles the logic of the comments page of a QR code.
+ */
 public class CommentsActivity extends AppCompatActivity {
+
+    /**
+     * Holds the comments in the comments page.
+     */
     private ArrayList<Comment> commentsToShow;
+
+    /**
+     * Holds the ListView that the comments are going to be displayed on.
+     */
     private ListView commentsListView;
+
+    /**
+     * Holds the adapter for arraylist of comments into arrayadapter of comments.
+     */
     private CommentArrayAdapter commentAdapter;
+
+    /**
+     * Holds the layout for adding a comment.
+     */
     private LinearLayout addCommentLayout;
 
+    /**
+     * Gets run when the activity is created.
+     *
+     * @param savedInstanceState The saved instance state of the activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

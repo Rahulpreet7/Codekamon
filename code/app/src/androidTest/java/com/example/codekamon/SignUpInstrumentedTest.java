@@ -23,12 +23,32 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class tests the user interface of the sign up page.
+ */
 public class SignUpInstrumentedTest {
+
+    /**
+     * Holds the robot that tests the app.
+     */
     private Solo solo;
+
+    /**
+     * Holds the instance of the database.
+     */
     static FirebaseFirestore firestore;
+
+    /**
+     * Holds the rule for the tests.
+     */
     @Rule
     public ActivityTestRule<SignUpActivity> rule = new ActivityTestRule<>(SignUpActivity.class, true, true);
 
+    /**
+     * Terminates the firestore instance before the tests are run.
+     *
+     * @throws InterruptedException
+     */
     @BeforeClass
     public static void setUp() throws InterruptedException {
         FirebaseFirestore.getInstance().terminate();
@@ -37,6 +57,11 @@ public class SignUpInstrumentedTest {
         firestore.useEmulator("127.0.0.1",8080);
     }
 
+    /**
+     * Sets the robot before every test.
+     *
+     * @throws InterruptedException
+     */
     @Before
     public void before() throws InterruptedException{
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());

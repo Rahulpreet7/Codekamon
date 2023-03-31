@@ -12,12 +12,27 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * This class is an adapter class that makes an ArrayList of Comments
+ * behave like an ArrayAdapter of Comments.
+ */
 public class CommentArrayAdapter extends ArrayAdapter<Comment> {
 
+    /**
+     * Creates a CommentArrayAdapter
+     * @param context The context of the application
+     * @param comments The arraylist of comments
+     */
     public CommentArrayAdapter(Context context, ArrayList<Comment> comments){
         super(context, 0, comments);
     }
 
+    /**
+     * Gets the view of a certain item in the comments list.
+     *
+     * @param position The position of the item
+     * @return The view of the item
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
