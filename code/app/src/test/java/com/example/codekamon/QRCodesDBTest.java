@@ -22,7 +22,14 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Tests the database connectivity for QRCodes collection.
+ */
 public class QRCodesDBTest {
+
+    /**
+     * Tests the constructor.
+     */
     @Test
     public void testConstructor(){
         FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
@@ -33,6 +40,9 @@ public class QRCodesDBTest {
         assertTrue(codesDB.getCollectionReference().equals(mockCollectionReference));
     }
 
+    /**
+     * Tests getQRCode() when the QRCode exists.
+     */
     @Test
     public void testGetExistingQRCode(){
         HashMap<String,Object> map = new HashMap<>();
@@ -73,6 +83,9 @@ public class QRCodesDBTest {
         });
     }
 
+    /**
+     * Tests getQRCode() function when the qrcode does not exist.
+     */
     @Test
     public void testGetNonExistentQRCode(){
         FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
@@ -103,6 +116,9 @@ public class QRCodesDBTest {
         });
     }
 
+    /**
+     * Tests getQRCode() when firestore fails.
+     */
     @Test
     public void testGetQRCodeFailed(){
         FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
@@ -137,6 +153,9 @@ public class QRCodesDBTest {
         });
     }
 
+    /**
+     * Tests addQRCode for existing and non existing QRCodes.
+     */
     @Test
     public void testAddQRCode(){
         QRCode code = new QRCode("dummyContent");
@@ -171,6 +190,9 @@ public class QRCodesDBTest {
         });
     }
 
+    /**
+     * Tests the update of a QRCode in the datase when the code exists.
+     */
     @Test
     public void testUpdateExistingQRCode(){
         QRCode code = new QRCode("dummyContent");

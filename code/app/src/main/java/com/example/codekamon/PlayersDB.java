@@ -57,11 +57,21 @@ public class PlayersDB {
 
     }
 
+    /**
+     * Creates the instance of PlayersDB that doesn't set persitence.
+     *
+     * @param firestore The instance of the database.
+     * @param simple This can be true or false it doesn't matter.
+     */
     public PlayersDB(FirebaseFirestore firestore, boolean simple){
         this.db = firestore;
         this.collectionReference = db.collection("Players");
     }
 
+    /**
+     * Gets the instance of the firestore.
+     * @return
+     */
     public FirebaseFirestore getDb() {
         return db;
     }
@@ -163,6 +173,11 @@ public class PlayersDB {
         listener.onComplete(player, true);
     }
 
+    /**
+     * Deletes a player in the database.
+     * @param id The id of the player to be deleted.
+     * @param listener The listener to handle the result
+     */
     public void deletePlayer(String id, OnCompleteListener<Player> listener){
         collectionReference
                 .document(id)

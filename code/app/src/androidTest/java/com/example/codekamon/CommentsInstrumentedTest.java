@@ -24,10 +24,33 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * This class test the comments page.
+ */
 public class CommentsInstrumentedTest {
+
+    /**
+     * Holds the robot that tests the app.
+     */
     private Solo solo;
 
+    /**
+     * Terminates the firebase instance before the test.
+     * @throws InterruptedException
+     */
+    @BeforeClass
+    public static void terminateBeforeTests() throws InterruptedException{
+        FirebaseFirestore.getInstance().terminate();
+        TimeUnit.SECONDS.sleep(2);
+    }
+
+    /**
+     * Tests commenting when the player is able to comment.
+     *
+     * @throws InterruptedException Exception thrown when sleep is interrupted.
+     */
     @Test
     public void testCommenting() throws InterruptedException {
         //Set up
@@ -74,6 +97,7 @@ public class CommentsInstrumentedTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
 
 
+        //Test
         solo.waitForActivity("CommentsActivity");
         solo.assertCurrentActivity("Wrong Activity", CommentsActivity.class);
         solo.enterText((EditText) solo.getView(R.id.add_comment_edittext), "This is a test comment.");
@@ -82,11 +106,17 @@ public class CommentsInstrumentedTest {
         assertTrue(solo.searchText("dummyName2"));
         assertTrue(solo.searchText("This is a test comment."));
 
+        //Teardown
         solo.finishOpenedActivities();
         firestore.terminate();
         Thread.sleep(2000);
     }
 
+    /**
+     * Tests what happens when the use should be unable to comment.
+     *
+     * @throws InterruptedException Exception thrown when sleep is interrupted.
+     */
     @Test
     public void testUnableToComment() throws InterruptedException {
         //Set up

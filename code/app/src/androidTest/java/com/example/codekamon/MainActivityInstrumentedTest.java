@@ -22,7 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Instrument test for the main screen.
+ * This class tests the main page.
  */
 public class MainActivityInstrumentedTest {
 

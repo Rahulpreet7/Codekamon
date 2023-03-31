@@ -20,7 +20,14 @@ import org.mockito.stubbing.Answer;
 
 import java.util.HashMap;
 
+/**
+ * Tests the database connectivity for Players collection.
+ */
 public class PlayersDBTest {
+
+    /**
+     * Tests the constructor.
+     */
     @Test
     public void testConstructor(){
         FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
@@ -32,6 +39,9 @@ public class PlayersDBTest {
         assertTrue(playersDB.getCollectionReference().equals(mockCollectionReference));
     }
 
+    /**
+     * Tests the getPlayer() function when the players exists.
+     */
     @Test
     public void testGetExistingPlayer(){
         FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
@@ -67,6 +77,9 @@ public class PlayersDBTest {
     }
 
 
+    /**
+     * Tests the getPlayer) function when the player is not existent.
+     */
     @Test
     public void testGetNonExistentPlayer(){
         FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
