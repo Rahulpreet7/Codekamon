@@ -28,7 +28,6 @@ public class Comment {
 
     /**
      * Gets the comment.
-     *
      * @return The comment.
      */
     public String getComment() {
@@ -37,7 +36,7 @@ public class Comment {
 
     /**
      * Sets the comment.
-     * @param comment
+     * @param comment has the comment that the player wants to set.
      */
     public void setComment(String comment){
         this.comment = comment;
@@ -45,7 +44,7 @@ public class Comment {
 
     /**
      * Gets the name of the player who made the comment.
-     * @return
+     * @return the player's name.
      */
     public String getPlayerName(){
         return playerName;
@@ -53,7 +52,7 @@ public class Comment {
 
     /**
      * Sets the name of the player who made the comment.
-     * @param playerName
+     * @param playerName the name of the player to be set.
      */
     public void setPlayerName(String playerName){
         this.playerName = playerName;
