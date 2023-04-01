@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
+        android:fontFamily="sans-serif-black"
         android:text="image_placeholder"
         android:textAlignment="center"
         android:textSize="24sp"
@@ -33,8 +34,10 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_score_text" />
+        app:layout_constraintTop_toBottomOf="@+id/show_score_text"
+        app:layout_constraintVertical_bias="0.797" />
 
     <TextView
         android:id="@+id/show_name_text"
@@ -59,8 +62,10 @@
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_name_text" />
+        app:layout_constraintTop_toBottomOf="@+id/show_name_text"
+        app:layout_constraintVertical_bias="0.687" />
 
     <EditText
         android:id="@+id/naming_textframe"
