@@ -55,7 +55,6 @@ public class SignUpActivity extends AppCompatActivity  {
                 if (success == true){
                     Log.d(TAG, "Player found.");
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                    intent.putExtra("deviceIdPlayer",deviceId);
                     startActivity(intent);
                     finish();
                 }
@@ -90,7 +89,6 @@ public class SignUpActivity extends AppCompatActivity  {
                                         });
                                         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                         intent.putExtra("PLAYER",player);
-                                        intent.putExtra("deviceIdPlayer",deviceId);
                                         startActivity(intent);
                                         finish();
                                     }
