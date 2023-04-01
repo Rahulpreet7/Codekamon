@@ -102,13 +102,10 @@ public class QRCodeSeedFactory {
             {
                 sb.append(lowNames[i]);
             }
-            else if (seed.charAt(i) == '1')
-            {
-                sb.append(highNames[i]);
-            }
+
             else
             {
-
+                sb.append(highNames[i]);
             }
         }
         String generatedName = sb.toString();

@@ -216,13 +216,19 @@ public class QRCodeScanActivity extends AppCompatActivity {
                     //System.out.println(intentResult.getRawBytes());
                     //System.out.println("------------------print start---------------------");
 
-
-
                     //another set of rule
-                    //byte[] encrypted = md.digest(intentResult.getRawBytes());
-                    //int seed = (int)encrypted[0];
-                    String scanResult = bundle.getString("SCAN_RESULT");
-                    byte[] encrypted = scanResult.getBytes();
+                    byte[] encrypted;
+                    if(intentResult.getRawBytes() != null)
+                    {
+                        encrypted = md.digest(intentResult.getRawBytes());
+                    } else
+                    {
+                        //int seed = (int)encrypted[0];
+                        String scanResult = bundle.getString("SCAN_RESULT");
+                        encrypted = scanResult.getBytes();
+                    }
+
+
                     String s = "";
                     for(int i = 0; i <= 5; i ++)
                     {
