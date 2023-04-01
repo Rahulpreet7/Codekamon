@@ -91,31 +91,7 @@ public class QRCode {
         return comments;
     }
 
-    /**
-     * get the bitmap back from any String stands for photoAsBytes
-     *
-     * @param s: photoAsBytes
-     * @return bitmap
-     */
-    public Bitmap getImageAsBitmap(String s)
-    {
-        byte[] imageBytes = Base64.decode(s, Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        return bitmap;
-    }
 
-    /**
-     * get the bitmap back from photoAsBytes
-     *
-     * @return bitmap
-     */
-    public Bitmap getImageAsBitmap()
-    {
-        String s = photoAsBytes;
-        byte[] imageBytes = Base64.decode(s, Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        return bitmap;
-    }
 
 
 
