@@ -20,7 +20,8 @@ public class CommentArrayAdapter extends ArrayAdapter<Comment> {
 
     /**
      * Creates a CommentArrayAdapter
-     * @param context The context of the application
+     * @param context contains a set of properties in the form of NamedValue objects. These characteristics provide information about the client,
+     *               the environment, or the conditions of a request and are often cumbersome to send as arguments.
      * @param comments The arraylist of comments
      */
     public CommentArrayAdapter(Context context, ArrayList<Comment> comments){

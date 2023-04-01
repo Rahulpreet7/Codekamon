@@ -73,10 +73,10 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
 
     /**
      * It retrieves the object from a given position and then leads to the user profile activity.
-     * @param parent View.
-     * @param view View.
+     * @param parent The AdapterView where the selection happened
+     * @param view The view within the AdapterView that was clicked
      * @param position The integer value of the of the item selected from the list.
-     * @param id
+     * @param id The row id of the item that is selected
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -22,7 +22,8 @@ public class DistanceListViewAdapter extends ArrayAdapter<SpaceBetweenPoints> {
 
     /**
      * The class constructor "DistanceListViewAdapter" calls upon and passes it parameneters for "SpceBetweenPoints" ArrayAdapter.
-     * @param context
+     * @param context - a set of properties in the form of NamedValue objects. These characteristics provide information about
+     *                the client, the environment, or the conditions of a request and are often cumbersome to send as arguments.
      * @param arrayList - An array list of type "SpaceBetweenPoints" that would need to get wraped and converted to a "VIew".
      */
     public DistanceListViewAdapter(Context context, ArrayList<SpaceBetweenPoints> arrayList) {
