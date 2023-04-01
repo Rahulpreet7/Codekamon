@@ -293,7 +293,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
                                             System.out.println("------- triggered -----------");
 
                                             otherScannedCount ++;
-                                            showScoreText.setText("Points: " + scannedResult.getScore() + "\n" + otherScannedCount +  " players had scanned it.");
+                                            showScoreText.setText("Points: " + scannedResult.getScore() + "\n" + otherScannedCount +  " player(s) had scanned it.");
 
                                             break;
                                         }
