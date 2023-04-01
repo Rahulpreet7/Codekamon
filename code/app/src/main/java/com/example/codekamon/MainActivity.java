@@ -1,9 +1,15 @@
 package com.example.codekamon;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -30,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
      * @param savedInstanceState The saved instance state of the activity
      */
 
+    // GetContent creates an ActivityResultLauncher<String> to let you pass
+    // in the mime type you want to let the user select
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

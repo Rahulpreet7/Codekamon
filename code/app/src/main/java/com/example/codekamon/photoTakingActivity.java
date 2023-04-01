@@ -3,6 +3,8 @@ package com.example.codekamon;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +13,8 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -23,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +35,12 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,6 +56,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * This class handles post-scanning process.
  */
 public class photoTakingActivity extends AppCompatActivity {
+    /**
+     *  used to get the current location of the player taking photo
+     */
+    private LocationManager locationManager; // Used to get the current location of the player
+    /**
+     *  use to check whether the player has moved from current location
+     */
+    private LocationListener locationListener; // Use to check whether the user has moved a certain amount of distance (meters) in some amount of time (miliseconds).
+    /**
+     *  the current location of player
+     */
+    private LatLng currentLocation = null;
     /**
      * the button for yes responses.
      */
@@ -88,10 +111,21 @@ public class photoTakingActivity extends AppCompatActivity {
 
         stage = 0;
         super.onCreate(savedInstanceState);
+
+        // ---Location Permission Request-----
+        // get location permission from user
+        getLocationPermission();
+        // get current location every 0 mili seconds and for every 0 m
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        // update location when listener catches it. This is synchronous while you are getting code
+        locationListener = location -> currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        //------------------------------------
+
         setContentView(R.layout.photo_taking);
         Intent intent = getIntent();
         passedResult = new QRCode(intent.getStringExtra("Name"), intent.getStringExtra("sb"));
         passedResult.setVisualImage(intent.getStringExtra("visual"));
+
         //passedResult.setVisualImage("---");
         yes_button = findViewById(R.id.yes_button);
         no_button = findViewById(R.id.no_button);
@@ -108,34 +142,14 @@ public class photoTakingActivity extends AppCompatActivity {
                     startActivityForResult(intent, 1);
                 } else if (stage == 1) {
                     Toast.makeText(photoTakingActivity.this, "recording location...", Toast.LENGTH_SHORT).show();
-
-                    FusedLocationProviderClient fusedLocationProviderClient = new FusedLocationProviderClient(photoTakingActivity.this);
-                    if (ActivityCompat.checkSelfPermission(photoTakingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                            ActivityCompat.checkSelfPermission(photoTakingActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@androidx.annotation.NonNull Task<Location> task) {
-                            double lati = task.getResult().getLatitude();
-                            double longi = task.getResult().getLongitude();
-                            passedResult.setLocation(lati, longi);
-                            stage ++;
-                            onStageChange();
-                        }
-                    });
-
+                    double lati = (currentLocation != null) ? currentLocation.latitude : 0.0;
+                    double longi = (currentLocation != null) ? currentLocation.longitude: 0.0;
+                    passedResult.setLocation(lati, longi);
+                    stage++;
+                    onStageChange();
                 }
                 else if(stage == 2)
                 {
-
                     //upload to db
                     HashMap<String, QRCode> data = new HashMap<>();
                     data.put("QRCode content: ", passedResult);
@@ -178,15 +192,12 @@ public class photoTakingActivity extends AppCompatActivity {
                 {
                     Toast.makeText(photoTakingActivity.this, "skip recording location...", Toast.LENGTH_SHORT).show();
                     //setContentView(R.layout.show_score);
-
                 }
-
                 stage ++;
                 onStageChange();
             }
         });
     }
-
 
     /**
      * onAcitvity result is called when an activity is called and executed.
@@ -247,8 +258,7 @@ public class photoTakingActivity extends AppCompatActivity {
         }
     }
 
-    protected void onStageChange()
-    {
+    protected void onStageChange() {
         if(stage == 1)
         {
             query_text.setText("Record the geolocation of the code?");
@@ -280,8 +290,7 @@ public class photoTakingActivity extends AppCompatActivity {
      * @param imageBitmap: the image in bitmap.
      * @return String holding bitmap information.
      */
-    protected String bitmapToString(Bitmap imageBitmap)
-    {
+    protected String bitmapToString(Bitmap imageBitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
@@ -289,7 +298,26 @@ public class photoTakingActivity extends AppCompatActivity {
         return s;
 
     }
-
-
-
+    /**
+     * "getLocationPermission" requests the user to allow the use of their location
+     */
+    private void getLocationPermission() {
+        // get location permission
+        Dexter.withActivity(this).withPermission(android.Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                // check if permission has truly been granted
+                if (ActivityCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, locationListener);
+            }
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {}
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {permissionToken.continuePermissionRequest();}
+        }).check();
+    }
 }
