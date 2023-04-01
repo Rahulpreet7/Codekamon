@@ -113,12 +113,12 @@ public class photoTakingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // ---Location Permission Request-----
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         // get location permission from user
         getLocationPermission();
         // get current location every 0 mili seconds and for every 0 m
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         // update location when listener catches it. This is synchronous while you are getting code
-        locationListener = location -> currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
         //------------------------------------
 
         setContentView(R.layout.photo_taking);
@@ -312,7 +312,18 @@ public class photoTakingActivity extends AppCompatActivity {
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, new LocationListener(){
+                    // @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                        // TODO locationListenerGPS onStatusChanged
+
+                    }
+
+                    // @Override
+                    public void onLocationChanged(Location location) {
+                        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    }
+                });
             }
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {}
