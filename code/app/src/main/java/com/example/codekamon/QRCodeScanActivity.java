@@ -194,7 +194,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
             {
                 Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
-                //startActivity(intent);
+                startActivity(intent);
 
             }else
             {
@@ -204,7 +204,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Scan Cancelled", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(QRCodeScanActivity.this, MainActivity.class);
 
-                    //startActivity(intent);
+                    startActivity(intent);
 
 
                 } else {
@@ -288,6 +288,8 @@ public class QRCodeScanActivity extends AppCompatActivity {
 
                                             otherScannedCount ++;
                                             showScoreText.setText("Points: " + scannedResult.getScore() + "\n" + otherScannedCount +  " players had scanned it.");
+
+                                            break;
                                         }
                                     }
 
