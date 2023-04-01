@@ -107,7 +107,7 @@ public class photoTakingActivity extends AppCompatActivity {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, 1);
                 } else if (stage == 1) {
-                    Toast.makeText(photoTakingActivity.this, "recording location...", Toast.LENGTH_SHORT).show();
+
 
                     FusedLocationProviderClient fusedLocationProviderClient = new FusedLocationProviderClient(photoTakingActivity.this);
                     if (ActivityCompat.checkSelfPermission(photoTakingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -121,6 +121,7 @@ public class photoTakingActivity extends AppCompatActivity {
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
+                    Toast.makeText(photoTakingActivity.this, "recording location...", Toast.LENGTH_SHORT).show();
                     fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Location>() {
                         @Override
                         public void onComplete(@androidx.annotation.NonNull Task<Location> task) {
