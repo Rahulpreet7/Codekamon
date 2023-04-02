@@ -137,6 +137,8 @@ public class Player implements Serializable {
                 .update("Lowest Score", lowestScore);
         myAccountRef
                 .update("Player Ranking", userRank);
+        myAccountRef
+                .update("ScannedCodes", playerCodes);
 
     } //
 
@@ -162,10 +164,13 @@ public class Player implements Serializable {
         if(!playerCodes.containsKey(name)){
             return false;
         }
-        // TODO: change highest/lowest score if this is that code
+        else {
+            playerCodes.remove(code.getName());
+        }
         totalScore -= code.getScore();
         playerCodes.remove(name);
         numScanned--;
+        updateDatabase();
         return true;
     }
 

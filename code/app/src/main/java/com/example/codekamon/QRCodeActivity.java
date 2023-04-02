@@ -3,6 +3,7 @@ package com.example.codekamon;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
  * Handles the logic of the page.
  */
 public class QRCodeActivity extends AppCompatActivity {
+
+    /**
+     * Gets run when the activity is created
+     * @param savedInstanceState The saved instance state of the activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +28,14 @@ public class QRCodeActivity extends AppCompatActivity {
 
         TextView comments = findViewById(R.id.comments_text);
         TextView codename = findViewById(R.id.qr_code_name_text);
+        Button back = findViewById(R.id.backButton3);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("QRCode name");

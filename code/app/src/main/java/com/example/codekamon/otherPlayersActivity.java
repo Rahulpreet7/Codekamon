@@ -26,12 +26,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This class display the find player by username activity
+ */
 public class otherPlayersActivity extends AppCompatActivity {
 
     private Button confirmButton;
     private Button backButton;
     private EditText findPlayer;
 
+    /**
+     * Gets created when the activity is called.
+     * @param savedInstanceState a reference to a Bundle object that is passed into the onCreate method, preserves and restores an activity’s UI state in a timely fashion.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

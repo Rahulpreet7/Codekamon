@@ -80,7 +80,11 @@
             />
         <activity
             android:name=".otherPlayersActivity"
+            android:parentActivityName=".MainActivity"
             />
+        <activity android:name=".PlayerCodesDisplay">
+
+        </activity>
 
         <activity
             android:name=".MainActivity"
