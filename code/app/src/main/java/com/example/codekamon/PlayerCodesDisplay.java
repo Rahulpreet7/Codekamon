@@ -94,7 +94,7 @@ public class PlayerCodesDisplay extends AppCompatActivity {
         userCodes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(PlayerCodesDisplay.this, CommentsActivity.class);
+                Intent intent = new Intent(PlayerCodesDisplay.this, QRCodeActivity.class);
                 intent.putExtra("QRCode name",userCodesList.get(position).getName());
                 startActivity(intent);
             }
