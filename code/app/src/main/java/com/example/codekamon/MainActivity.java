@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+        String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         ImageView map = findViewById(R.id.map_icon);
         map.setOnClickListener(new View.OnClickListener() {
@@ -74,10 +76,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         ImageView yourCodes = findViewById(R.id.your_codes_icon);
         yourCodes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+                playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {
+                    @Override
+                    public void onComplete(Player item, boolean success) {
+                        Intent intent = new Intent(MainActivity.this, PlayerCodesDisplay.class);
+                        intent.putExtra("PLAYER", item);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
@@ -91,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String deviceId = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+
 
         PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
         playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {

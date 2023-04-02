@@ -61,6 +61,8 @@
                 android:text="Add"
                 android:textColor="#FBFBFB"
                 tools:ignore="TextContrastCheck" />
+
+
         </LinearLayout>
 
         <ListView
@@ -70,6 +72,22 @@
             android:backgroundTint="#000000">
 
         </ListView>
+
+
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/BackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="275dp"
+        android:layout_marginBottom="31dp"
+        android:text="Back"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
