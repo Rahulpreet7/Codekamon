@@ -43,7 +43,7 @@ public class DistanceListViewAdapter extends ArrayAdapter<SpaceBetweenPoints> {
      *        always of the right type (see {@link #getViewTypeCount()} and
      *        {@link #getItemViewType(int)}).
      * @param parent The parent that this view will eventually be attached to
-     * @return
+     * @return a View object containing all of the new information that has to be set to view.
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

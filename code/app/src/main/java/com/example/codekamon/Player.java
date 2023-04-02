@@ -285,9 +285,9 @@ public class Player implements Serializable {
     public String getAndroidId() {
         return androidId;
     }
-
     /**
      * Sets the android id of the player
+     * @param androidId the string identification of the device the user is currently using the app from.
      */
     public void setAndroidId(String androidId){
         this.androidId = androidId;

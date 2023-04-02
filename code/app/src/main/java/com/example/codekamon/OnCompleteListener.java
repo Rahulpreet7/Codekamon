@@ -5,7 +5,8 @@ package com.example.codekamon;
  *
  * Citations :
  * https://github.com/CMPUT301F22T02/well-fed/blob/main/app/src/main/java/com/xffffff/wellfed/common/OnCompleteListener.java
- * @param <T>
+ * @param <T> a listener defualt skeleton that takes some object "T" (this is used to access listeners for
+ *           specific information retrieval from the Database
  */
 public interface OnCompleteListener <T>{
     /**
