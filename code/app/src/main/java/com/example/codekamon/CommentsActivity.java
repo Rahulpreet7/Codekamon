@@ -64,6 +64,7 @@ public class CommentsActivity extends AppCompatActivity {
         addCommentLayout = findViewById(R.id.add_comment_layout);
         Button addButton = findViewById(R.id.add_comment_button);
         EditText commentEditText = findViewById(R.id.add_comment_edittext);
+        Button backButton = findViewById(R.id.BackButton);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("QRCode name");
@@ -75,6 +76,13 @@ public class CommentsActivity extends AppCompatActivity {
                 Settings.Secure.ANDROID_ID);
 
         TextView noCommentsShow = findViewById(R.id.no_comments_text);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         QRCodesDB codesDB = new QRCodesDB(FirebaseFirestore.getInstance());
         codesDB.getQRCode(name, new OnCompleteListener<QRCode>() {
