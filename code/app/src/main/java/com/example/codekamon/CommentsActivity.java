@@ -63,7 +63,7 @@ public class CommentsActivity extends AppCompatActivity {
         addCommentLayout = findViewById(R.id.add_comment_layout);
         Button addButton = findViewById(R.id.add_comment_button);
         EditText commentEditText = findViewById(R.id.add_comment_edittext);
-        Button backButton = findViewById(R.id.BackButton);
+        View backButton = findViewById(R.id.BackButton);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("QRCode name");

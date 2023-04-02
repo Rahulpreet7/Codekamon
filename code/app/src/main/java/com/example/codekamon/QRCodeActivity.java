@@ -28,7 +28,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
         TextView comments = findViewById(R.id.comments_text);
         TextView codename = findViewById(R.id.qr_code_name_text);
-        Button back = findViewById(R.id.backButton3);
+        View back = findViewById(R.id.backButton3);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
