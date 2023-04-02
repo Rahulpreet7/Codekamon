@@ -21,7 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+/**
+ * This class is used to display the QR codes of a player.
+ */
 public class PlayerCodesDisplay extends AppCompatActivity {
 
     private ListView userCodes;
@@ -30,6 +32,10 @@ public class PlayerCodesDisplay extends AppCompatActivity {
     private PlayerCodesAdapter playerCodesAdapter;
 
 
+    /**
+     * Used to display the QR codes of a player.
+     * @param savedInstanceState a reference to a Bundle object that is passed into the onCreate method, preserves and restores an activity’s UI state in a timely fashion.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +87,7 @@ public class PlayerCodesDisplay extends AppCompatActivity {
                         }
                     });
         try {
-            Thread.sleep(100);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

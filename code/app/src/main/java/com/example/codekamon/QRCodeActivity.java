@@ -15,6 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
  * Handles the logic of the page.
  */
 public class QRCodeActivity extends AppCompatActivity {
+
+    /**
+     * Gets run when the activity is created
+     * @param savedInstanceState The saved instance state of the activity
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -50,7 +50,6 @@ public class CommentsActivity extends AppCompatActivity {
 
     /**
      * Gets run when the activity is created.
-     *
      * @param savedInstanceState The saved instance state of the activity
      */
     @Override

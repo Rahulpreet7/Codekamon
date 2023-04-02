@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * This class is used to display the player's profile.
+ */
 public class OtherUserProfile extends AppCompatActivity {
 
     private TextView OtherUserName;
@@ -23,6 +26,9 @@ public class OtherUserProfile extends AppCompatActivity {
     private ImageView Qrcodes;
 
 
+    /**
+     * Gets created when the activity is called.
+     * @param savedInstanceState a reference to a Bundle object that is passed into the onCreate method, preserves and restores an activity’s UI state in a timely fashion.     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
