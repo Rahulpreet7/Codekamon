@@ -105,7 +105,7 @@ public class QRCode {
     /**
      * Visual Image setter
      *
-     * @param  visualImage
+     * @param  visualImage set the visiual image of type string for the code
      */
     public void setVisualImage(String visualImage){this.visualImage = visualImage;}
 
@@ -122,7 +122,7 @@ public class QRCode {
     /**
      * photoAsBytes setter
      *
-     * @param photoAsBytes
+     * @param photoAsBytes set the bytes that represent the photo as a string representation.
      */
     public void setPhotoAsBytes(String photoAsBytes)
     {
@@ -132,7 +132,7 @@ public class QRCode {
 
     /**
      * QRCode Name setter
-     * @param name
+     * @param name set the name for the Qr Code
      */
     public void setName(String name){this.name = name;}
 
@@ -144,7 +144,7 @@ public class QRCode {
     public String getName(){return this.name;}
     /**
      * QRCode Name setter
-     * @param content
+     * @param content string of numbers and characters
      */
     public void setContent(String content) {this.content = content;}
     /**
@@ -198,7 +198,7 @@ public class QRCode {
     }
     /**
      * score setter
-     * @param score
+     * @param score the new score that is going to be set
      */
     public void setScore(int score){this.score = score;}
     /**

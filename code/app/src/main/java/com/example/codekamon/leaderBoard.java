@@ -76,7 +76,7 @@ public class leaderBoard extends AppCompatActivity implements AdapterView.OnItem
      * @param parent View.
      * @param view View.
      * @param position The integer value of the of the item selected from the list.
-     * @param id
+     * @param id a long integer value
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

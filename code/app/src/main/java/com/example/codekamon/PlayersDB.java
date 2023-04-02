@@ -70,7 +70,7 @@ public class PlayersDB {
 
     /**
      * Gets the instance of the firestore.
-     * @return
+     * @return get the FirebaseFirestore database
      */
     public FirebaseFirestore getDb() {
         return db;
@@ -80,7 +80,7 @@ public class PlayersDB {
      * Adds a player to the 'Players' collection in the database.
      *
      * @param player The player to be added to the database.
-     * @param listener
+     * @param listener a onCompleteListener for a player, to than either update or add a new player.
      */
     public void addPlayer(Player player, OnCompleteListener<Player> listener) {
         HashMap<String, Object> data = new HashMap<>();

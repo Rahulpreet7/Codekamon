@@ -141,7 +141,7 @@ public class QRCodesDB {
 
     /**
      * Get the collection of QRCodes
-     * @return
+     * @return the collection reference to the QRCodes Collection in the Firebase.
      */
     public CollectionReference getCollectionReference(){
         return this.collectionReference;
