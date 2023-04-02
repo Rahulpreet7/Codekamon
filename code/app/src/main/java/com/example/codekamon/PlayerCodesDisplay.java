@@ -1,6 +1,5 @@
 package com.example.codekamon;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -95,10 +95,44 @@ public class PlayerCodesDisplay extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(PlayerCodesDisplay.this, CommentsActivity.class);
-                intent.putExtra("QRCode",userCodesList.get(position).getName());
+                intent.putExtra("QRCode name",userCodesList.get(position).getName());
                 startActivity(intent);
             }
         });
+
+        if ( player.getAndroidId().equals(deviceId)){
+
+            userCodes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View v,
+                                               final int position, long arg3) {
+                    androidx.appcompat.app.AlertDialog alertDialog = new AlertDialog.Builder(PlayerCodesDisplay.this)
+                            .setTitle("Delete Code?")
+                            .setMessage("Are you sure you want to delete this Code?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                            {
+
+
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    player.deleteQR(userCodesList.get(position));
+                                    userCodesList.remove(position);
+                                    playerCodesAdapter.notifyDataSetChanged();
+
+                                }
+                            })
+
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            })
+                            .show();
+                    return true;
+                }
+            });
+        }
 
 
 

@@ -53,7 +53,7 @@ public class CommentsActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("QRCode");
+        String name = intent.getStringExtra("QRCode name");
 
 
         PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance(), true);
