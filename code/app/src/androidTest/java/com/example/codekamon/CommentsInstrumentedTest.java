@@ -168,7 +168,7 @@ public class CommentsInstrumentedTest {
 
         Thread.sleep(2000);
         LinearLayout linearLayout = (LinearLayout) solo.getView(R.id.add_comment_layout);
-        assertTrue(linearLayout.getVisibility() == View.INVISIBLE);
+        assertTrue(linearLayout.getVisibility() == View.GONE);
 
         //Teardown
         solo.finishOpenedActivities();
