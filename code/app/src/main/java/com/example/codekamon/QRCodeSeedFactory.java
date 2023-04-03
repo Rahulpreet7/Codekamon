@@ -45,10 +45,10 @@ public class QRCodeSeedFactory {
         String[] output= new String[9];
         output[0] ="_____\r\n";
         output[1] ="/         \\\r\n";
-        output[2] ="  |__   __|\r\n";
-        output[3] =" \\| _   _ |/\r\n";
+        output[2] ="|__     __|\r\n";
+        output[3] ="\\| _       _ |/\r\n";
         output[4] =" @|  | |  |@\r\n";
-        output[5] =" /|  ,`  ` , |\\\r\n";
+        output[5] ="/|  ,`  ` , |\\\r\n";
         output[6] ="|           |\r\n";
         output[7] ="| `---` |\r\n";
         output[8] ="\\_____/";
@@ -60,23 +60,23 @@ public class QRCodeSeedFactory {
             output[2] ="|           |\r\n";
         }
         if(content.charAt(2) == '1'){
-            output[0] ="_______\r\n";
-            output[1] ="|       |\r\n";
-            output[7] ="|       |\r\n";
-            output[8] ="|_______|";
+            output[0] ="___________\r\n";
+            output[1] ="|           |\r\n";
+            output[7] ="|           |\r\n";
+            output[8] ="|___________|";
 
         }
         if(content.charAt(3) == '1'){
             output[4] ="@|            |@\r\n";
         }
         if(content.charAt(4) == '1'){
-            output[6] ="|  ___  |\r\n";
-            output[7] ="| /   \\ |\r\n";
+            output[6] ="|  ____  |\r\n";
+            output[7] ="| /     \\ |\r\n";
         }
         if(content.charAt(5) == '1'){
-            output[3] ="  |  _  _ | \r\n";
-            output[4] ="  |   ||  | \r\n";
-            output[5] ="  |  ,``, | \r\n";
+            output[3] ="|  _   _  |\r\n";
+            output[4] ="|    | |    |\r\n";
+            output[5] ="|  ,`  ` , |\r\n";
         }
 
 
