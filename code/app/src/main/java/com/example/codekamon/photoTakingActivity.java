@@ -159,9 +159,6 @@ public class photoTakingActivity extends AppCompatActivity {
                         public void onComplete(QRCode item, boolean success) {
                             if (success){
                                 passedResult.setComments(item.getComments());
-                                if (passedResult.getPhotoAsBytes() == ""){
-                                    passedResult.setPhotoAsBytes(item.getPhotoAsBytes());
-                                }
                             }
                             collectionReference
                                     .document(passedResult.getName())
