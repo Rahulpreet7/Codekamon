@@ -49,9 +49,19 @@ public class PlayerCodesDisplay extends AppCompatActivity {
 
         userCodes = findViewById(R.id.userCodes);
         Button backButton = findViewById(R.id.backButton2);
+        Button playerStats = findViewById(R.id.playerStats);
 
         Intent intent = getIntent();
         Player player = (Player) intent.getSerializableExtra("PLAYER");
+
+        playerStats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(PlayerCodesDisplay.this, OtherUserProfile.class);
+                intent1.putExtra("PLAYER",player);
+                startActivity(intent1);
+            }
+        });
 
 
         backButton.setOnClickListener(new View.OnClickListener() {
