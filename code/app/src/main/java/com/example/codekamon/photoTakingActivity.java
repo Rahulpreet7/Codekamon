@@ -153,30 +153,47 @@ public class photoTakingActivity extends AppCompatActivity {
                     //upload to db
                     HashMap<String, QRCode> data = new HashMap<>();
                     data.put("QRCode content: ", passedResult);
-                    collectionReference
-                            .document(passedResult.getName())
-                            .set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(photoTakingActivity.this, "store success!", Toast.LENGTH_SHORT).show();
-                                    // These are a method which gets executed when the task is succeeded
-                                    //Log.d(TAG, "Data has been added successfully!");
+                    QRCodesDB codesDB = new QRCodesDB(FirebaseFirestore.getInstance());
+                    codesDB.getQRCode(passedResult.getName(), new OnCompleteListener<QRCode>() {
+                        @Override
+                        public void onComplete(QRCode item, boolean success) {
+                            if (success){
+                                passedResult.setComments(item.getComments());
+                                if (passedResult.getPhotoAsBytes() == ""){
+                                    passedResult.setPhotoAsBytes(item.getPhotoAsBytes());
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(photoTakingActivity.this, "store failed!", Toast.LENGTH_SHORT).show();
-                                    // These are a method which gets executed if there’s any problem
-                                    //Log.d(TAG, "Data could not be added!" + e.toString());
-                                }
-                            });
-                    //back to main
-                    Intent intent = new Intent(photoTakingActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-                    startActivity(intent);
-                    finish();
+                            }
+                            collectionReference
+                                    .document(passedResult.getName())
+                                    .set(data)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(photoTakingActivity.this, "store success!", Toast.LENGTH_SHORT).show();
+                                            // These are a method which gets executed when the task is succeeded
+                                            //Log.d(TAG, "Data has been added successfully!");
+                                            //back to main
+                                            Intent intent = new Intent(photoTakingActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(photoTakingActivity.this, "store failed!", Toast.LENGTH_SHORT).show();
+                                            // These are a method which gets executed if there’s any problem
+                                            //Log.d(TAG, "Data could not be added!" + e.toString());
+                                            //back to main
+                                            Intent intent = new Intent(photoTakingActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    });
+                        }
+                    });
 
                 }
             }
