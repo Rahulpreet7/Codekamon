@@ -40,7 +40,7 @@ public class PlayerCodesDisplay extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_all_qrcodes);
-
+        Integer score = 0;
         String deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
@@ -125,6 +125,12 @@ public class PlayerCodesDisplay extends AppCompatActivity {
                                     player.deleteQR(userCodesList.get(position));
                                     userCodesList.remove(position);
                                     if (!userCodesList.isEmpty()) {
+                                        Integer total_score = 0 ;
+                                        for (int j = 0; j < userCodesList.size(); j++){
+                                             total_score += userCodesList.get(j).getScore();
+                                        }
+                                        player.setTotalScore(total_score);
+                                        player.setNumScanned(userCodesList.size()-1);
                                         player.setHighestScore(userCodesList.get(0).getScore());
                                         player.setLowestScore(userCodesList.get(userCodesList.size() -1).getScore());
                                         player.updateDatabase();
@@ -132,6 +138,7 @@ public class PlayerCodesDisplay extends AppCompatActivity {
                                     else {
                                         player.setHighestScore(0);
                                         player.setLowestScore(-1);
+                                        player.setTotalScore(0);
                                         player.updateDatabase();
                                     }
                                     playerCodesAdapter.notifyDataSetChanged();
