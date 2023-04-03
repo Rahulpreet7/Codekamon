@@ -161,15 +161,16 @@ public class Player implements Serializable {
      */
     public Boolean deleteQR(QRCode code){
         String name = code.getName();
+        totalScore -= code.getScore();
+        numScanned--;
+
         if(!playerCodes.containsKey(name)){
             return false;
         }
         else {
             playerCodes.remove(code.getName());
         }
-        totalScore -= code.getScore();
-        playerCodes.remove(name);
-        numScanned--;
+
         updateDatabase();
         return true;
     }
