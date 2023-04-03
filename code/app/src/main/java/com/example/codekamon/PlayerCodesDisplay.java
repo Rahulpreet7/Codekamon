@@ -124,7 +124,18 @@ public class PlayerCodesDisplay extends AppCompatActivity {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     player.deleteQR(userCodesList.get(position));
                                     userCodesList.remove(position);
+                                    if (!userCodesList.isEmpty()) {
+                                        player.setHighestScore(userCodesList.get(0).getScore());
+                                        player.setLowestScore(userCodesList.get(userCodesList.size() -1).getScore());
+                                        player.updateDatabase();
+                                    }
+                                    else {
+                                        player.setHighestScore(0);
+                                        player.setLowestScore(-1);
+                                        player.updateDatabase();
+                                    }
                                     playerCodesAdapter.notifyDataSetChanged();
+
 
                                 }
                             })
