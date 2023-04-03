@@ -55,15 +55,7 @@ public class CommentsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comments);
         getSupportActionBar().hide();
-
-        commentsToShow = new ArrayList<Comment>();
-        commentsListView = findViewById(R.id.comments_list);
-        addCommentLayout = findViewById(R.id.add_comment_layout);
-        Button addButton = findViewById(R.id.add_comment_button);
-        EditText commentEditText = findViewById(R.id.add_comment_edittext);
-        View backButton = findViewById(R.id.BackButton);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("QRCode name");
@@ -74,37 +66,36 @@ public class CommentsActivity extends AppCompatActivity {
         String deviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
-        TextView noCommentsShow = findViewById(R.id.no_comments_text);
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         QRCodesDB codesDB = new QRCodesDB(FirebaseFirestore.getInstance());
         codesDB.getQRCode(name, new OnCompleteListener<QRCode>() {
             @Override
             public void onComplete(QRCode code, boolean success) {
                 if (success == true){
                     ArrayList<HashMap<String,String>> comments = code.getComments();
-                    if (comments.size() > 0){
-                        noCommentsShow.setVisibility(View.INVISIBLE);
-                    }
-                    for(HashMap<String,String> comment : comments){
-                        Comment aComment = new Comment(comment.get("playerName"), comment.get("comment"));
-                        commentsToShow.add(aComment);
-                    }
-                    commentAdapter = new CommentArrayAdapter(CommentsActivity.this, commentsToShow);
-                    commentsListView.setAdapter(commentAdapter);
                     playersDB.getPlayer(deviceId, new OnCompleteListener<Player>() {
                         @Override
                         public void onComplete(Player player, boolean success) {
+                            setContentView(R.layout.activity_comments);
+
+                            commentsToShow = new ArrayList<Comment>();
+                            commentsListView = findViewById(R.id.comments_list);
+                            addCommentLayout = findViewById(R.id.add_comment_layout);
+                            Button addButton = findViewById(R.id.add_comment_button);
+                            EditText commentEditText = findViewById(R.id.add_comment_edittext);
+                            View backButton = findViewById(R.id.BackButton);
+                            TextView noCommentsShow = findViewById(R.id.no_comments_text);
+
+                            backButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    finish();
+                                }
+                            });
+
                             if (success == true) {
                                 HashMap<String,String> map = player.getPlayerCodes();
                                 if (!map.containsKey(name)){
-                                    addCommentLayout.setVisibility(View.INVISIBLE);
+                                    addCommentLayout.setVisibility(View.GONE);
                                 }
                                 else {
                                     addButton.setOnClickListener(new View.OnClickListener() {
@@ -127,12 +118,20 @@ public class CommentsActivity extends AppCompatActivity {
                                     });
                                 }
                             }
+
+                            if (comments.size() > 0){
+                                noCommentsShow.setVisibility(View.INVISIBLE);
+                            }
+                            for(HashMap<String,String> comment : comments){
+                                Comment aComment = new Comment(comment.get("playerName"), comment.get("comment"));
+                                commentsToShow.add(aComment);
+                            }
+                            commentAdapter = new CommentArrayAdapter(CommentsActivity.this, commentsToShow);
+                            commentsListView.setAdapter(commentAdapter);
                         }
                     });
                 }
             }
         });
-
-
     }
 }

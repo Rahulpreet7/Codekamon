@@ -71,6 +71,7 @@ public class QRCodesDB {
         code.setPhotoAsBytes((String) document.get("photoAsBytes"));
         code.setScore(Math.toIntExact((Long) document.get("score")));
         code.setComments((ArrayList<HashMap<String, String>>) document.get("comments"));
+        code.setVisualImage((String) document.get("visualImage"));
         listener.onComplete(code, true);
     }
 
