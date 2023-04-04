@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".QRCodeScanActivity">
 
+    <TextView
+        android:id="@+id/visual"
+        android:layout_width="276dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:fontFamily="sans-serif-black"
+        android:text="image_placeholder"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/show_name_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.092" />
+
     <Button
         android:id="@+id/stage_one_button"
         android:layout_width="wrap_content"
@@ -17,21 +33,26 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_score_text" />
+        app:layout_constraintTop_toBottomOf="@+id/show_score_text"
+        app:layout_constraintVertical_bias="0.797" />
 
     <TextView
         android:id="@+id/show_name_text"
         android:layout_width="276dp"
         android:layout_height="57dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="300dp"
         android:text="You caught a: \n (enter codekamon name)"
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.653" />
 
     <TextView
         android:id="@+id/show_score_text"
@@ -39,11 +60,14 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="200dp"
         android:text="TextView"
-        android:textSize="34sp"
+        android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_name_text" />
+        app:layout_constraintTop_toBottomOf="@+id/show_name_text"
+        app:layout_constraintVertical_bias="0.687" />
 
     <EditText
         android:id="@+id/naming_textframe"

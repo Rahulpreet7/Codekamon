@@ -1,9 +1,15 @@
 package com.example.codekamon;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -16,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.rpc.Code;
 
 /**
  * This class handles the logic of the main screen.
@@ -29,12 +36,16 @@ public class MainActivity extends AppCompatActivity {
      * @param savedInstanceState The saved instance state of the activity
      */
 
+    // GetContent creates an ActivityResultLauncher<String> to let you pass
+    // in the mime type you want to let the user select
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+        String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         ImageView map = findViewById(R.id.map_icon);
         map.setOnClickListener(new View.OnClickListener() {
@@ -65,11 +76,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         ImageView yourCodes = findViewById(R.id.your_codes_icon);
         yourCodes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Clicked 'Your Codes'", Toast.LENGTH_SHORT).show();
+
+                PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+                playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {
+                    @Override
+                    public void onComplete(Player item, boolean success) {
+                        Intent intent = new Intent(MainActivity.this, PlayerCodesDisplay.class);
+                        intent.putExtra("PLAYER", item);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
@@ -83,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String deviceId = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+
 
         PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
         playersDB.getPlayer(deviceId, new com.example.codekamon.OnCompleteListener<Player>() {

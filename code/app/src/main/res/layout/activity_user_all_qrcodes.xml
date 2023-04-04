@@ -6,18 +6,21 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/QRcodesheader"
         android:layout_width="320dp"
         android:layout_height="54dp"
         android:layout_marginTop="30dp"
-        android:text="QR Codes"
+        android:layout_marginBottom="2dp"
+        android:text="QR Codes( From highest scoring to lowest)"
         android:textAlignment="center"
         android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/backButton2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
+        android:id="@+id/userCodes"
         android:layout_width="387dp"
         android:layout_height="526dp"
         android:layout_marginStart="10dp"
@@ -26,8 +29,31 @@
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
-        app:layout_constraintVertical_bias="0.329" />
+        app:layout_constraintTop_toBottomOf="@+id/QRcodesheader"
+        app:layout_constraintVertical_bias="0.36" />
+
+    <Button
+        android:id="@+id/backButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:text="Back"
+        app:layout_constraintBottom_toTopOf="@+id/userCodes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/QRcodesheader" />
+
+    <Button
+        android:id="@+id/playerStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="7dp"
+        android:text="MY STATS"
+        app:layout_constraintBottom_toTopOf="@+id/userCodes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/QRcodesheader" />
 </androidx.constraintlayout.widget.ConstraintLayout>

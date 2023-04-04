@@ -10,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.remote.FirebaseClientGrpcMetadataProvider;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -21,7 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Instrument test for the main screen.
+ * This class tests the main page.
  */
 public class MainActivityInstrumentedTest {
 

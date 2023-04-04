@@ -26,12 +26,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This class display the find player by username activity
+ */
 public class otherPlayersActivity extends AppCompatActivity {
 
     private Button confirmButton;
     private Button backButton;
     private EditText findPlayer;
 
+    /**
+     * Gets created when the activity is called.
+     * @param savedInstanceState a reference to a Bundle object that is passed into the onCreate method, preserves and restores an activity’s UI state in a timely fashion.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,26 +62,37 @@ public class otherPlayersActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        //Player player = document.toObject(Player.class);
-                                        PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
-                                        playersDB.getPlayer(document, new com.example.codekamon.OnCompleteListener<Player>() {
-                                            @Override
-                                            public void onComplete(Player item, boolean success) {
-                                                Intent intent = new Intent(otherPlayersActivity.this, OtherUserProfile.class);
-                                                intent.putExtra("PLAYER", item);
-                                                startActivity(intent);
-                                            }
-                                        });
+                                        if (document.exists()) {
+                                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                            Toast.makeText(getApplicationContext(), "Player found", Toast.LENGTH_SHORT).show();
+
+                                            //Player player = document.toObject(Player.class);
+                                            PlayersDB playersDB = new PlayersDB(FirebaseFirestore.getInstance());
+                                            playersDB.getPlayer(document, new com.example.codekamon.OnCompleteListener<Player>() {
+                                                @Override
+                                                public void onComplete(Player item, boolean success) {
+                                                    Intent intent = new Intent(otherPlayersActivity.this, OtherUserProfile.class);
+                                                    intent.putExtra("PLAYER", item);
+                                                    startActivity(intent);
+                                                }
+                                            });
+                                        } else {
+                                            Log.d(TAG, "No such document");
+                                            Toast.makeText(getApplicationContext(), "No Player with this username'", Toast.LENGTH_SHORT).show();
+
+                                        }
+
 
                                     }
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());
-                                    Toast.makeText(otherPlayersActivity.this, "No Player with this username'", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "No Player with this username'", Toast.LENGTH_SHORT).show();
 
                                 }
 
                             }
                         });
+
 
 
             }

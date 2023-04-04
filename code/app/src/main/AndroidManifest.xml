@@ -69,6 +69,8 @@
         </activity>
         <activity android:name=".QRCodeScanActivity"/>
         <activity android:name=".photoTakingActivity"/>
+        <activity android:name=".QRCodeActivity"/>
+        <activity android:name=".CommentsActivity"/>
         <activity
             android:name=".leaderBoard"
             android:parentActivityName=".MainActivity"
@@ -78,7 +80,11 @@
             />
         <activity
             android:name=".otherPlayersActivity"
+            android:parentActivityName=".MainActivity"
             />
+        <activity android:name=".PlayerCodesDisplay">
+
+        </activity>
 
         <activity
             android:name=".MainActivity"

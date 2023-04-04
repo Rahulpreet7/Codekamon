@@ -137,6 +137,8 @@ public class Player implements Serializable {
                 .update("Lowest Score", lowestScore);
         myAccountRef
                 .update("Player Ranking", userRank);
+        myAccountRef
+                .update("ScannedCodes", playerCodes);
 
     } //
 
@@ -159,13 +161,17 @@ public class Player implements Serializable {
      */
     public Boolean deleteQR(QRCode code){
         String name = code.getName();
+        totalScore -= code.getScore();
+        numScanned--;
+
         if(!playerCodes.containsKey(name)){
             return false;
         }
-        // TODO: change highest/lowest score if this is that code
-        totalScore -= code.getScore();
-        playerCodes.remove(name);
-        numScanned--;
+        else {
+            playerCodes.remove(code.getName());
+        }
+
+        updateDatabase();
         return true;
     }
 
@@ -280,9 +286,9 @@ public class Player implements Serializable {
     public String getAndroidId() {
         return androidId;
     }
-
     /**
      * Sets the android id of the player
+     * @param androidId the string identification of the device the user is currently using the app from.
      */
     public void setAndroidId(String androidId){
         this.androidId = androidId;
@@ -325,5 +331,15 @@ public class Player implements Serializable {
         updateRanking();
 
     }
+
+    /**
+     * Sets the ranking of the player.
+     *
+     * @param userRank The ranking of the player
+     */
+    public void setUserRankSimple(Integer userRank){
+        this.userRank = userRank;
+    }
+
 
 }

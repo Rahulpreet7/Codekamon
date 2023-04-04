@@ -1,11 +1,14 @@
 package com.example.codekamon;
 
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
- * This class represents the QR code scanned and its
- * relative information.
+ * This class represents the QR code scanned and its relative information.
  */
 public class QRCode {
 
@@ -33,6 +36,13 @@ public class QRCode {
      * Stores the image taken converted to string.
      */
     private String photoAsBytes = "";
+    /**
+     * Stores the image drawn by characters
+     */
+    private String visualImage = "";
+
+
+    private ArrayList<HashMap<String,String>> comments = new ArrayList<>();
 
     /**
      * constructor
@@ -45,6 +55,8 @@ public class QRCode {
         this.content = content;
         this.score = calcScore();
     }
+
+
 
     /**
      * constructor
@@ -59,11 +71,48 @@ public class QRCode {
         this.score = this.calcScore();
     }
 
+    /**
+     * Adds a comment to the qr code.
+     *
+     * @param comment The comment to the qr code.
+     */
+    public void addComment(Comment comment){
+        HashMap<String,String> map = new HashMap<>();
+        map.put("playerName", comment.getPlayerName());
+        map.put("comment", comment.getComment());
+        comments.add(0, map);
+    }
+
+    public void setComments(ArrayList<HashMap<String,String>> comments){
+        this.comments = comments;
+    }
+
+    public ArrayList<HashMap<String, String>> getComments(){
+        return comments;
+    }
+
+
+
+
+
 
     /**
-     * Photo bitmap getter
+     * Visual Image getter
      *
-     * @return photoAsBytes
+     * @return visualImage
+     */
+    public String getVisualImage(){return visualImage;}
+    /**
+     * Visual Image setter
+     *
+     * @param  visualImage set the visiual image of type string for the code
+     */
+    public void setVisualImage(String visualImage){this.visualImage = visualImage;}
+
+    /**
+     * photoAsBytes getter
+     *
+     * @return photoAsbytes
      */
     public String getPhotoAsBytes()
     {
@@ -71,9 +120,9 @@ public class QRCode {
     }
 
     /**
-     * Photo bitmap setter
-     * @param photoAsBytes set the photo bytes.
+     * photoAsBytes setter
      *
+     * @param photoAsBytes set the bytes that represent the photo as a string representation.
      */
     public void setPhotoAsBytes(String photoAsBytes)
     {
@@ -83,7 +132,7 @@ public class QRCode {
 
     /**
      * QRCode Name setter
-     * @param name
+     * @param name set the name for the Qr Code
      */
     public void setName(String name){this.name = name;}
 
@@ -95,7 +144,7 @@ public class QRCode {
     public String getName(){return this.name;}
     /**
      * QRCode Name setter
-     * @param content
+     * @param content string of numbers and characters
      */
     public void setContent(String content) {this.content = content;}
     /**
@@ -149,7 +198,7 @@ public class QRCode {
     }
     /**
      * score setter
-     * @param score
+     * @param score the new score that is going to be set
      */
     public void setScore(int score){this.score = score;}
     /**

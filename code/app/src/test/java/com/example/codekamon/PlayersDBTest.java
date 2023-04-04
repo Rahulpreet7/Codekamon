@@ -1,118 +1,150 @@
 package com.example.codekamon;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.util.HashMap;
-import java.util.List;
 
+/**
+ * Tests the database connectivity for Players collection.
+ */
 public class PlayersDBTest {
 
     /**
-     * Tests the PlayersDB constructor.
+     * Tests the constructor.
      */
     @Test
-    public void testPlayersDBConstructor(){
-        HashMap<String, HashMap<String, HashMap<String, Object> >> collections = generateFakeCollections();
-        FirebaseFirestore mockFirestore = new MockFireStore(collections).getInstance();
-        PlayersDB playersDB = new PlayersDB(mockFirestore);
+    public void testConstructor(){
+        FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
+        CollectionReference mockCollectionReference = mock(CollectionReference.class);
 
-        assertTrue(playersDB.getCollectionReference().getId().equals("Players"));
+        when(mockFirestore.collection("Players")).thenReturn(mockCollectionReference);
+        PlayersDB playersDB = new PlayersDB(mockFirestore);
         assertTrue(playersDB.getDb().equals(mockFirestore));
+        assertTrue(playersDB.getCollectionReference().equals(mockCollectionReference));
     }
 
     /**
-     * Tests the get player function.
+     * Tests the getPlayer() function when the players exists.
      */
     @Test
-    public void testGetPlayer(){
+    public void testGetExistingPlayer(){
+        FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
+        CollectionReference mockCollectionReference = mock(CollectionReference.class);
+        DocumentReference mockDocumentReference = mock(DocumentReference.class);
+        Task<DocumentSnapshot> mockTask = mock(Task.class);
+        DocumentSnapshot mockSnapshot = mock(DocumentSnapshot.class);
+        Object snapShot = mock(Object.class);
 
-        FirebaseFirestore mockFirestore = new MockFireStore(generateFakeCollections()).getInstance();
+        when(mockFirestore.collection("Players")).thenReturn(mockCollectionReference);
+        when(mockCollectionReference.document(anyString())).thenReturn(mockDocumentReference);
+        when(mockDocumentReference.get()).thenReturn(mockTask);
+        when(mockSnapshot.exists()).thenReturn(true);
+        when(mockSnapshot.get(anyString())).thenReturn(snapShot);
+        when(snapShot.toString()).thenReturn("23");
+        when(mockSnapshot.get("ScannedCodes")).thenReturn(mock(HashMap.class));
+        when(mockTask.addOnSuccessListener(any(OnSuccessListener.class))).thenAnswer(new Answer<Task>() {
+            @Override
+            public Task answer(InvocationOnMock invocation) throws Throwable {
+                ((OnSuccessListener) invocation.getArgument(0)).onSuccess(mockSnapshot);
+                return mockTask;
+            }
+        });
 
-        //Tests with player not in the database
         PlayersDB playersDB = new PlayersDB(mockFirestore);
-        String mockId = "baby2Id";
-        playersDB.getPlayer(mockId, new OnCompleteListener<Player>() {
+        playersDB.getPlayer("dummyName", new OnCompleteListener<Player>() {
             @Override
             public void onComplete(Player item, boolean success) {
-                assertTrue(success == false);
+                assertTrue(success);
+                assertTrue(item.getUserName().equals("23"));
+            }
+        });
+    }
+
+
+    /**
+     * Tests the getPlayer) function when the player is not existent.
+     */
+    @Test
+    public void testGetNonExistentPlayer(){
+        FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
+        CollectionReference mockCollectionReference = mock(CollectionReference.class);
+        DocumentReference mockDocumentReference = mock(DocumentReference.class);
+        Task<DocumentSnapshot> mockTask = mock(Task.class);
+        DocumentSnapshot mockSnapshot = mock(DocumentSnapshot.class);
+        Object snapShot = mock(Object.class);
+
+        when(mockFirestore.collection("Players")).thenReturn(mockCollectionReference);
+        when(mockCollectionReference.document(anyString())).thenReturn(mockDocumentReference);
+        when(mockDocumentReference.get()).thenReturn(mockTask);
+        when(mockSnapshot.exists()).thenReturn(false);
+        when(mockTask.addOnSuccessListener(any(OnSuccessListener.class))).thenAnswer(new Answer<Task>() {
+            @Override
+            public Task answer(InvocationOnMock invocation) throws Throwable {
+                ((OnSuccessListener) invocation.getArgument(0)).onSuccess(mockSnapshot);
+                return mockTask;
             }
         });
 
-        //Tests with player in database
-        String mockId2 = "babyId";
-        playersDB.getPlayer(mockId2, new OnCompleteListener<Player>() {
+        PlayersDB playersDB = new PlayersDB(mockFirestore);
+        playersDB.getPlayer("dummyNameNotExist", new OnCompleteListener<Player>() {
             @Override
             public void onComplete(Player item, boolean success) {
-                assertTrue(success == true);
-                assertTrue(item.getUserName() == "baby");
+                assertFalse(success);
+                assertNull(item);
             }
         });
-
-        String mockId3 = "birdId";
-        playersDB.getPlayer(mockId3, new OnCompleteListener<Player>() {
-            @Override
-            public void onComplete(Player item, boolean success) {
-                assertTrue(success == true);
-                assertTrue(item.getUserName() == "bird");
-            }
-        });
-
-
     }
 
     /**
-     * Generates fake data set.
-     *
-     * @return A dataset containing fields inside documents, documents inside collections,
-     * and collections inside database.
+     * Tests adding non existent and existing player.
      */
+    @Test
+    public void testAddPlayer(){
 
-    private HashMap<String, HashMap<String, HashMap<String, Object> >> generateFakeCollections(){
-        HashMap<String, Object> field1 = new HashMap<>();
-        HashMap<String, HashMap<String, Object> > documents = new HashMap<>();
-        HashMap<String, HashMap<String, HashMap<String, Object> >> collections= new HashMap<>();
+        Player player = new Player();
+        player.setUserName("dummyName");
+        player.setAndroidId("asd");
 
-        field1.put("Username", "baby");
-        field1.put("Email", "gamer@baby.com");
-        field1.put("Android Id", "babyId");
-        field1.put("Highest Score", "21");
-        field1.put("Lowest Score", "18");
-        field1.put("Number Of Codes Scanned", "4");
-        field1.put("Total Score", "76");
-        field1.put("Player Ranking", "6");
-        field1.put("ScannedCodes", new HashMap<String,String>());
+        FirebaseFirestore mockFirestore = mock(FirebaseFirestore.class);
+        CollectionReference mockCollectionReference = mock(CollectionReference.class);
+        DocumentReference mockDocumentReference = mock(DocumentReference.class);
+        Task<Void> mockTask = mock(Task.class);
+        DocumentSnapshot mockSnapshot = mock(DocumentSnapshot.class);
+        Object snapShot = mock(Object.class);
 
-        HashMap<String, Object> field2 = new HashMap<>();
+        when(mockFirestore.collection("Players")).thenReturn(mockCollectionReference);
+        when(mockCollectionReference.document(anyString())).thenReturn(mockDocumentReference);
+        when(mockDocumentReference.set(any(HashMap.class))).thenReturn(mockTask);
+        when(mockTask.addOnSuccessListener(any(OnSuccessListener.class))).thenAnswer(new Answer<Task>() {
+            @Override
+            public Task answer(InvocationOnMock invocation) throws Throwable {
+                return mockTask;
+            }
+        });
 
-        field2.put("Username", "bird");
-        field2.put("Email", "bird@hatemail.com");
-        field2.put("Android Id", "birdId");
-        field2.put("Highest Score", "45");
-        field2.put("Lowest Score", "18");
-        field2.put("Number Of Codes Scanned", "6");
-        field2.put("Total Score", "65");
-        field2.put("Player Ranking", "2");
-        field2.put("ScannedCodes", new HashMap<String,String>());
-
-        documents.put("birdId", field2);
-        documents.put("babyId", field1);
-        collections.put("Players", documents);
-
-        return collections;
+        PlayersDB playersDB = new PlayersDB(mockFirestore);
+        playersDB.addPlayer(player, new OnCompleteListener<Player>() {
+            @Override
+            public void onComplete(Player item, boolean success) {
+                assertTrue(success);
+                assertTrue(item.getUserName().equals(player.getUserName()));
+            }
+        });
     }
 }
